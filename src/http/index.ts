@@ -3,9 +3,10 @@ import { Toast } from 'vant'
 import { nextTick } from 'vue'
 import qs from 'qs'
 
+axios.defaults.timeout = 60000
 axios.interceptors.request.use((config) => {
   console.log(config)
-  if (config.url !== '/api/upload') {
+  if (config.url !== '/hbact/ossCommon/uploadOne') {
     Toast.loading({
       message: '加载中...',
       forbidClick: true,

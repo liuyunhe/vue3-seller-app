@@ -26,6 +26,9 @@ const store = createStore<GlobalDataProps>({
     github: 'https://github.com/weizhanzhan'
   },
   mutations: {
+    setToken(state, token) {
+      state.token = token
+    },
     setLoading(state, status) {
       state.loading = status
     },

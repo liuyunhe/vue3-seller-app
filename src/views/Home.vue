@@ -86,7 +86,7 @@ export default defineComponent({
       }
     ]
     const store = useStore()
-    state.user = store.state.user
+    state.user.name = store.state.name
     const toDetail = (path: string) => {
       router.push(path)
     }

@@ -36,10 +36,38 @@ const routes: Array<RouteRecordRaw> = [
     path: '/seller/register',
     name: 'Register',
     meta: {
-      title: '注册零售户'
+      title: '注册零售户',
+      keepAlive: true
     },
     component: () =>
-      import(/* webpackChunkName: "SHOP" */ '../views/seller/Register.vue')
+      import(/* webpackChunkName: "Register" */ '../views/seller/Register.vue')
+  },
+  {
+    path: '/customer/home',
+    name: 'CustomerHome',
+    meta: {
+      title: '零售户绑定',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/CustomerHome.vue'
+      )
+  },
+  {
+    path: '/common/transform',
+    name: 'Transform',
+    meta: {
+      title: ''
+    },
+    props: (route) => ({
+      token: route.query.token,
+      target: route.query.target
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "Transform" */ '../views/common/Transform.vue'
+      )
   },
   {
     path: '/shop',
@@ -100,9 +128,10 @@ router.beforeEach((to, from, next) => {
       document.title = to.meta.title as string
     }
     axios.defaults.headers.token = token
-    axios.defaults.timeout = 60000
   } else {
-    alert('no token')
+    if (to.path !== '/common/transform') {
+      alert('no token!')
+    }
   }
   next()
 })
