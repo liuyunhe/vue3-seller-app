@@ -234,10 +234,81 @@
       <div class="status">审核通过</div>
       <div class="text">恭喜您，成为专属零售户！拥有了专属二维码</div>
       <div class="text">可以邀请好友成为粉丝及参与平台活动，赶快去体验吧！</div>
-      <div class="btn">
-        <van-button square type="primary" style="width:8rem"
+      <div class="btn" v-if="contactPhone">
+        <van-button
+          square
+          type="primary"
+          style="width:8rem"
+          @click="showBindPhone = true"
           >绑定手机号</van-button
         >
+        <van-popup
+          v-model:show="showBindPhone"
+          style="background-color: #f6f6f6;"
+        >
+          <div class="form-bind">
+            <div class="title">绑定手机号</div>
+            <van-form
+              @submit="onSubmitPhone"
+              :show-error-message="false"
+              :show-error="true"
+              input-align="left"
+              label-width="4rem"
+            >
+              <van-cell-group inset>
+                <van-field
+                  v-model="contactPhone"
+                  name="contactPhone"
+                  label="手机号"
+                  placeholder="请输入手机号"
+                  :rules="[
+                    {
+                      required: true,
+                      pattern: phonePattern,
+                      message: '请输入手机号'
+                    }
+                  ]"
+                />
+                <van-field
+                  v-model="phoneCode"
+                  name="phoneCode"
+                  label="验证码"
+                  placeholder="请输入验证码"
+                  @update:model-value="handleCodeChange"
+                  :rules="[
+                    {
+                      required: true,
+                      pattern: phoneCodePattern,
+                      message: '请输入验证码'
+                    }
+                  ]"
+                >
+                  <template #button>
+                    <van-button
+                      :disabled="btnDisabled"
+                      size="mini"
+                      type="primary"
+                      @click="handleGetCode"
+                      >{{ phoneCodeText }}</van-button
+                    >
+                  </template>
+                </van-field>
+              </van-cell-group>
+              <div style="margin: 16px;">
+                <van-button
+                  round
+                  block
+                  type="primary"
+                  size="small"
+                  native-type="submit"
+                  style="width: 7rem;margin: auto;"
+                >
+                  提交
+                </van-button>
+              </div>
+            </van-form>
+          </div>
+        </van-popup>
       </div>
     </template>
     <template v-if="registerStatus === 2">
@@ -249,7 +320,7 @@
       </div>
       <div class="status">已提交</div>
       <div class="text">注册信息已提交，请您耐心等候审核！</div>
-      <div class="btn">
+      <!-- <div class="btn">
         <van-button
           square
           plain
@@ -257,7 +328,7 @@
           style="width:8rem;background-color:#f6f6f6"
           >返回</van-button
         >
-      </div>
+      </div> -->
     </template>
     <!-- 审核通过 -->
     <template v-if="registerStatus === 3">
@@ -297,13 +368,16 @@ import Compressor from 'compressorjs'
 import axios, { http } from '@/http'
 export default defineComponent({
   setup() {
+    const showBindPhone = ref(false)
+    const contactPhone = ref('')
+    const phoneCode = ref('')
+    const phoneCodeText = ref('发送验证码')
     const formDiabled = ref(false)
     const showForm = ref(true)
     const isRegister = ref(true) // 是否注册
     const registerStatus = ref(0) // 注册的状态， 1: 审核通过, 2: 待审核, 3: 审核不通过
     const shopName = ref('')
     const contactName = ref('')
-    const contactPhone = ref('')
     const detailAddr = ref('')
     const salesman = ref('')
     const licenseNo = ref('')
@@ -366,6 +440,7 @@ export default defineComponent({
 
     const phonePattern = /^1[3456789]\d{9}$/
     const licenseNoPattern = /\d{12}/
+    const phoneCodePattern = /\d{6}/
 
     const showRegionPopup = ref(false)
 
@@ -679,6 +754,66 @@ export default defineComponent({
         })
     }
 
+    const onSubmitPhone = () => {
+      const params = {
+        contactPhone: contactPhone.value,
+        phoneCode: phoneCode.value
+      }
+      console.log(params)
+      http
+        .post(' /hbSeller/seller/phoneCodeCheck', params, false)
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success('绑定成功')
+            showBindPhone.value = false
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+    }
+
+    const codeCount = ref(60)
+    const btnDisabled = ref(false)
+    const handleCodeChange = () => {
+      if (phoneCode.value.length > 6) {
+        phoneCode.value = phoneCode.value.substring(0, 6)
+      }
+    }
+    const handleGetCode = () => {
+      if (!phonePattern.test(contactPhone.value)) {
+        Toast.fail('请输入正确的手机号！')
+        return
+      }
+      http
+        .post(
+          ' /hbSeller/seller/phoneCodeSend',
+          { contactPhone: contactPhone.value },
+          false
+        )
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success('已发送！')
+            btnDisabled.value = true
+            phoneCodeText.value = `重新发送(${codeCount.value--})`
+            let countInter: number | undefined = setInterval(() => {
+              phoneCodeText.value = `重新发送(${codeCount.value--})`
+              if (codeCount.value < 0) {
+                clearInterval(countInter)
+                countInter = undefined
+                codeCount.value = 60
+                phoneCodeText.value = '发送验证码'
+                btnDisabled.value = false
+              }
+            }, 1000)
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
     const getRegion = () => {
       http
         .get('/syx/region/query/level', { level: 1 })
@@ -743,6 +878,7 @@ export default defineComponent({
       contactName,
       licenseNo,
       contactPhone,
+      phoneCode,
       detailAddr,
       salesman,
       password,
@@ -768,8 +904,10 @@ export default defineComponent({
       licenseImg,
       phonePattern,
       licenseNoPattern,
+      phoneCodePattern,
       handleClickField,
       onSubmit,
+      onSubmitPhone,
       minDate,
       maxDate,
       showRegionPopup,
@@ -781,7 +919,12 @@ export default defineComponent({
       cascaderValue,
       asyncBeforeRead,
       afterRead,
-      onOversize
+      onOversize,
+      showBindPhone,
+      phoneCodeText,
+      handleGetCode,
+      btnDisabled,
+      handleCodeChange
     }
   }
 })
@@ -836,5 +979,14 @@ export default defineComponent({
 }
 #mapPage {
   height: 100vh;
+}
+.form-bind {
+  width: 20rem;
+  box-sizing: border-box;
+  .title {
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+  }
 }
 </style>

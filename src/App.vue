@@ -14,6 +14,8 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const isLoading = computed(() => store.state.loading)
+    const token = computed(() => store.state.token)
+    sessionStorage.setItem('token', token.value)
     return {
       isLoading
     }
