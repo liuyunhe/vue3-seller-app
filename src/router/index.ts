@@ -11,49 +11,51 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'LAYOUT',
-    redirect: '/home',
+    redirect: '/sellerActs',
     component: () =>
       import(/* webpackChunkName: "layout" */ '../components/Layout/index.vue'),
     children: [
       {
-        path: 'home',
-        name: 'HOME',
+        path: 'sellerActs',
+        name: 'SellerActs',
         meta: {
-          title: '首页'
+          title: '专属活动'
         },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/Home.vue')
+          import(
+            /* webpackChunkName: "about" */ '../views/seller/SellerActs.vue'
+          )
       },
       {
-        path: 'about',
-        name: 'ABOUT',
+        path: 'sellerFans',
+        name: 'SellerFans',
+        meta: {
+          title: '我的粉丝'
+        },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/About.vue')
+          import(/* webpackChunkName: "about" */ '../views/seller/Fans.vue')
+      },
+      {
+        path: 'sellerMessage',
+        name: 'SellerMessage',
+        meta: {
+          title: '消息通知'
+        },
+        component: () =>
+          import(/* webpackChunkName: "about" */ '../views/seller/Message.vue')
+      },
+      {
+        path: 'sellerInfo',
+        name: 'SellerInfo',
+        meta: {
+          title: '个人中心'
+        },
+        component: () =>
+          import(/* webpackChunkName: "about" */ '../views/seller/Info.vue')
       }
     ]
   },
-  {
-    path: '/seller/register',
-    name: 'Register',
-    meta: {
-      title: '注册零售户',
-      keepAlive: true
-    },
-    component: () =>
-      import(/* webpackChunkName: "Register" */ '../views/seller/Register.vue')
-  },
-  {
-    path: '/customer/home',
-    name: 'CustomerHome',
-    meta: {
-      title: '零售户绑定',
-      keepAlive: true
-    },
-    component: () =>
-      import(
-        /* webpackChunkName: "Register" */ '../views/customer/CustomerHome.vue'
-      )
-  },
+  // 平台页面
   {
     path: '/common/transform',
     name: 'Transform',
@@ -70,28 +72,37 @@ const routes: Array<RouteRecordRaw> = [
       )
   },
   {
-    path: '/shop',
-    name: 'SHOP',
+    path: '/common/signIn',
+    name: 'SignIn',
+    meta: {
+      title: ''
+    },
     component: () =>
-      import(/* webpackChunkName: "SHOP" */ '../views/shop/index.vue')
+      import(/* webpackChunkName: "Transform" */ '../views/common/SignIn.vue')
   },
+  // 零售户
   {
-    path: '/vuex',
-    name: 'VUEX',
+    path: '/seller/register',
+    name: 'Register',
+    meta: {
+      title: '注册零售户',
+      keepAlive: true
+    },
     component: () =>
-      import(/* webpackChunkName: "vuex" */ '../views/vuex/index.vue')
+      import(/* webpackChunkName: "Register" */ '../views/seller/Register.vue')
   },
+  // 消费者
   {
-    path: '/message',
-    name: 'MESSAGE',
+    path: '/customer/home',
+    name: 'CustomerHome',
+    meta: {
+      title: '零售户绑定',
+      keepAlive: true
+    },
     component: () =>
-      import(/* webpackChunkName: "message" */ '../views/message/index.vue')
-  },
-  {
-    path: '/form',
-    name: 'FORM',
-    component: () =>
-      import(/* webpackChunkName: "form" */ '../views/message/form.vue')
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/CustomerHome.vue'
+      )
   }
 ]
 

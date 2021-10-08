@@ -8,26 +8,26 @@
       </router-view>
     </div>
     <div class="bottom-bar">
-      <van-tabbar v-model="active">
-        <van-tabbar-item name="/home">
+      <van-tabbar route>
+        <van-tabbar-item to="/sellerActs">
           <span>专属活动</span>
           <template #icon="props">
             <img :src="props.active ? icon1.active : icon1.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item name="/shop" icon="smile-o">
+        <van-tabbar-item to="/sellerFans">
           <span>我的粉丝</span>
           <template #icon="props">
             <img :src="props.active ? icon2.active : icon2.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item name="/vuex" icon="smile-o">
+        <van-tabbar-item to="/sellerMessage">
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item name="/about" icon="smile-o">
+        <van-tabbar-item to="/sellerInfo">
           <span>个人中心</span>
           <template #icon="props">
             <img :src="props.active ? icon4.active : icon4.inactive" />
@@ -38,16 +38,15 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, reactive, toRefs } from 'vue'
 export default defineComponent({
   name: 'Layout',
   setup() {
-    const router = useRouter()
     const state = reactive({
-      active: '/home',
       includeRoutes: ['ABOUT']
     })
+
+    console.log(1111)
 
     const icon1 = {
       active:
@@ -74,16 +73,6 @@ export default defineComponent({
         'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-4-0.png'
     }
 
-    watch(
-      () => state.active,
-      (val) => {
-        router.push(val)
-      }
-    )
-
-    onMounted(() => {
-      state.active = router.currentRoute.value.path
-    })
     return {
       ...toRefs(state),
       icon1,
@@ -100,12 +89,11 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   height: 100vh;
-  .bottom-bar {
-    height: 100px;
-  }
   .content {
     flex: 1;
     overflow: auto;
+    margin-bottom: 50px;
+    background-color: #f4f4f4;
   }
 }
 </style>
