@@ -761,7 +761,7 @@ export default defineComponent({
       }
       console.log(params)
       http
-        .post(' /hbSeller/seller/phoneCodeCheck', params, false)
+        .post('/hbSeller/seller/phoneCodeCheck', params, false)
         .then((res) => {
           if (res.code === '200') {
             Toast.success('绑定成功')

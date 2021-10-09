@@ -4,9 +4,8 @@ export interface GlobalDataProps {
   error: GlobalErrorProps
   token: string
   loading: boolean
-  name: string
-  age: number
-  github: string
+  lat: number | null
+  lng: number | null
 }
 
 export interface GlobalErrorProps {
@@ -21,11 +20,17 @@ const store = createStore<GlobalDataProps>({
       status: false
     },
     token: sessionStorage.getItem('token') || '',
-    name: 'VUE3.0快速入门',
-    age: 18,
-    github: 'https://github.com/weizhanzhan'
+    lat: null,
+    lng: null
   },
+  getters: {},
   mutations: {
+    setLat(state, lat) {
+      state.lat = lat
+    },
+    setLng(state, lng) {
+      state.lng = lng
+    },
     setToken(state, token) {
       state.token = token
     },
@@ -35,7 +40,8 @@ const store = createStore<GlobalDataProps>({
     setError(state, e: GlobalErrorProps) {
       state.error = e
     }
-  }
+  },
+  actions: {}
 })
 
 export default store
