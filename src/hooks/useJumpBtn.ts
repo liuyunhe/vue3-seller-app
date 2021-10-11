@@ -1,6 +1,5 @@
-import { useRouter } from 'vue-router'
+import { Router } from 'vue-router'
 
-const router = useRouter()
-export const handleClickJumpBtn = (path: string) => {
+export const handleClickJumpBtn = (router: Router, path: string) => {
   router.push(path)
 }

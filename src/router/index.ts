@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () =>
           import(
-            /* webpackChunkName: "about" */ '../views/seller/SellerActs.vue'
+            /* webpackChunkName: "SellerActs" */ '../views/seller/SellerActs.vue'
           )
       },
       {
@@ -33,7 +33,9 @@ const routes: Array<RouteRecordRaw> = [
           title: '我的粉丝'
         },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/seller/Fans.vue')
+          import(
+            /* webpackChunkName: "SellerFans" */ '../views/seller/Fans.vue'
+          )
       },
       {
         path: 'sellerMessage',
@@ -42,7 +44,9 @@ const routes: Array<RouteRecordRaw> = [
           title: '消息通知'
         },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/seller/Message.vue')
+          import(
+            /* webpackChunkName: "SellerMessage" */ '../views/seller/Message.vue'
+          )
       },
       {
         path: 'sellerInfo',
@@ -51,7 +55,9 @@ const routes: Array<RouteRecordRaw> = [
           title: '个人中心'
         },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/seller/Info.vue')
+          import(
+            /* webpackChunkName: "SellerInfo" */ '../views/seller/Info.vue'
+          )
       }
     ]
   },
@@ -78,7 +84,7 @@ const routes: Array<RouteRecordRaw> = [
       title: ''
     },
     component: () =>
-      import(/* webpackChunkName: "Transform" */ '../views/common/SignIn.vue')
+      import(/* webpackChunkName: "SignIn" */ '../views/common/SignIn.vue')
   },
   // 零售户
   {
@@ -91,6 +97,30 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "Register" */ '../views/seller/Register.vue')
   },
+  {
+    path: '/seller/inviteFans',
+    name: 'InviteFans',
+    meta: {
+      title: '粉丝邀约',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "InviteFans" */ '../views/seller/InviteFans.vue'
+      )
+  },
+  {
+    path: '/seller/bindFansQrcode',
+    name: 'BindFansQrcode',
+    meta: {
+      title: '粉丝绑定码',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "BindFansQrcode" */ '../views/seller/BindFansQrcode.vue'
+      )
+  },
   // 消费者
   {
     path: '/customer/home',
@@ -101,7 +131,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "Register" */ '../views/customer/CustomerHome.vue'
+        /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerHome.vue'
       )
   }
 ]

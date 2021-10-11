@@ -40,6 +40,7 @@ export default defineComponent({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const lat = computed(() => store.state.lat || 39.860464)
     const lng = computed(() => store.state.lng || 116.70602)
+    console.log(lat, lng)
     const showShopList = ref(false)
 
     const handleClickListBtn = () => {
@@ -49,7 +50,7 @@ export default defineComponent({
 
     onMounted(() => {
       TMapGL().then(() => {
-        const center = new TMap.LatLng(lat, lng)
+        const center = new TMap.LatLng(lat.value, lng.value)
         const map = new TMap.Map(document.getElementById('lbs-container'), {
           center: center, //  设置地图中心点坐标
           zoom: 12,
