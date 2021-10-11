@@ -1,6 +1,11 @@
 <template>
   <div class="sign-in-containner" v-show="showPage">
-    <div class="icon"></div>
+    <div class="icon">
+      <img
+        src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/sign-in-icon.png"
+        alt=""
+      />
+    </div>
     <p class="title">欢迎进入“私域企业生态平台”</p>
     <p class="tips">
       系统简介系统简介系统简介系统系统 简介简介简介简介简介简介系统 ……
@@ -101,6 +106,10 @@ export default defineComponent({
     width: 97px;
     height: 97px;
     margin: 0 auto 26px;
+    img {
+      width: 97px;
+      height: 97px;
+    }
   }
   p.title {
     height: 23px;

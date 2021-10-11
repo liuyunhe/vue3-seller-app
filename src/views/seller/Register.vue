@@ -795,7 +795,8 @@ export default defineComponent({
             Toast.success('已发送！')
             btnDisabled.value = true
             phoneCodeText.value = `重新发送(${codeCount.value--})`
-            let countInter: number | undefined = setInterval(() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let countInter: any = setInterval(() => {
               phoneCodeText.value = `重新发送(${codeCount.value--})`
               if (codeCount.value < 0) {
                 clearInterval(countInter)

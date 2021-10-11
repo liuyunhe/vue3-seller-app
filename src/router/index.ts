@@ -110,6 +110,18 @@ const routes: Array<RouteRecordRaw> = [
       )
   },
   {
+    path: '/seller/fansBind',
+    name: 'FansBind',
+    meta: {
+      title: '粉丝邀约',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "InviteFans" */ '../views/seller/FansBind.vue'
+      )
+  },
+  {
     path: '/seller/bindFansQrcode',
     name: 'BindFansQrcode',
     meta: {

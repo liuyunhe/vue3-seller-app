@@ -1,14 +1,7 @@
 <template>
-  <div class="invite-fans-container">
+  <div class="bind-fans-container">
     <div class="bg">
       <div class="invite-btn">分享好友绑定粉丝</div>
-      <router-link to="/seller/bindFansQrcode">
-        <div class="qrcode-bar">
-          <i class="qrcode-icon"></i>
-          <div class="text">粉丝绑定码</div>
-          <i class="back"></i>
-        </div>
-      </router-link>
       <div class="note">
         <div class="title">
           <i class="icon"></i>
@@ -32,7 +25,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'InviteFans',
+  name: 'FansBind',
   setup() {
     return {}
   }
@@ -41,7 +34,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @import '../../theme/common.less';
-.invite-fans-container {
+.bind-fans-container {
   height: 100vh;
   background-color: #527dfd;
   .bg {
@@ -61,38 +54,10 @@ export default defineComponent({
       box-shadow: 0px 6px 4px rgba(2, 113, 253, 0.42);
       border-radius: 4px;
       font-size: 17px;
-      margin: 0 auto 11px;
+      margin: 0 auto 45px;
       text-align: center;
       line-height: 44px;
       color: #ce5500;
-    }
-    .qrcode-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 20px;
-      margin: 0 135px 14px;
-      flex: 1;
-      .qrcode-icon {
-        .bg-img(
-          14px,
-          14px,
-          'https://qoss.qrmkt.cn/hbseller_client/invite-fans-qrcode.png'
-        );
-      }
-      .text {
-        font-size: 14px;
-        color: #ffffff;
-        line-height: 20px;
-      }
-      .back {
-        .bg-img(
-          5px,
-          11px,
-          'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-back.png'
-        );
-        margin-top: 2px;
-      }
     }
     .note {
       width: 345px;

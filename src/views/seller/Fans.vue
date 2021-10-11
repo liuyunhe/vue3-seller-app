@@ -1,25 +1,5 @@
 <template>
   <div class="fans-container">
-    <img
-      style="display:none"
-      src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-1.png"
-      alt=""
-    />
-    <img
-      style="display:none"
-      src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-2.png"
-      alt=""
-    />
-    <img
-      style="display:none"
-      src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-3.png"
-      alt=""
-    />
-    <img
-      style="display:none"
-      src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-4.png"
-      alt=""
-    />
     <div class="data-bar">
       <div class="data-item">
         <div class="number">{{ fansNum }}</div>
@@ -38,17 +18,14 @@
       <div class="router-item">
         <router-link to="/seller/inviteFans">
           <img
-            src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/fans-invite-icon.png"
+            src="https://qoss.qrmkt.cn/hbseller_client/fans-invite-icon.png"
             alt=""
           />
         </router-link>
       </div>
       <div class="router-item">
         <router-link to="/seller/inviteFans">
-          <img
-            src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/fy-icon.png"
-            alt=""
-          />
+          <img src="https://qoss.qrmkt.cn/hbseller_client/fy-icon.png" alt="" />
         </router-link>
       </div>
     </div>
@@ -173,16 +150,16 @@ export default defineComponent({
         color: #2b333b;
       }
       &:nth-child(1) {
-        background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-1.png');
+        background-image: url('https://qoss.qrmkt.cn/hbseller_client/data-item-1.png');
       }
       &:nth-child(2) {
-        background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-2.png');
+        background-image: url('https://qoss.qrmkt.cn/hbseller_client/data-item-2.png');
       }
       &:nth-child(3) {
-        background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-3.png');
+        background-image: url('https://qoss.qrmkt.cn/hbseller_client/data-item-3.png');
       }
       &:nth-child(4) {
-        background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/data-item-4.png');
+        background-image: url('https://qoss.qrmkt.cn/hbseller_client/data-item-4.png');
       }
     }
   }
