@@ -43,7 +43,7 @@ export default defineComponent({
   name: 'Layout',
   setup() {
     const state = reactive({
-      includeRoutes: ['SellerFans']
+      includeRoutes: ['SellerActs', 'SellerFans', 'SellerMessage', 'SellerInfo']
     })
 
     console.log(1111)

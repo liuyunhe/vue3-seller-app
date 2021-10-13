@@ -133,6 +133,20 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "BindFansQrcode" */ '../views/seller/BindFansQrcode.vue'
       )
   },
+  {
+    path: '/seller/messageDetail',
+    name: 'SelllerMessageDetail',
+    props: (route) => ({
+      id: route.query.id
+    }),
+    meta: {
+      title: '消息详情'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SelllerMessageDetail" */ '../views/seller/MessageDetail.vue'
+      )
+  },
   // 消费者
   {
     path: '/customer/home',
