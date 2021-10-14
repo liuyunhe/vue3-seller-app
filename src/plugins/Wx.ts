@@ -1,20 +1,22 @@
 import store from '@/store'
 import { http } from './../http/index'
+// eslint-disable-next-line
 declare const wx: any
 
 // 微信jssdk
-export const initWx = (callback: Function) => {
-  const init = (callback: Function) => {
-    var src = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js' //微信JSDK
-    var doc = window.document
-    var scr = doc.getElementsByTagName('script')[0]
-    var v = doc.createElement('script')
+export const initWx = (callback: () => void) => {
+  const init = (callback: () => void) => {
+    const src = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js' //微信JSDK
+    const doc = window.document
+    const scr = doc.getElementsByTagName('script')[0]
+    const v = doc.createElement('script')
     v.type = 'text/javascript'
     v.async = true
     v.src = src
     v.onload = function() {
       callback()
     }
+    // eslint-disable-next-line
     scr.parentNode!.insertBefore(v, scr)
   }
   typeof wx === 'undefined' ? init(callback) : callback()
@@ -23,10 +25,10 @@ export const initWx = (callback: Function) => {
 
 // 微信配置
 const wxConfig = (res: {
-  appId: any
-  timestamp: any
-  nonceStr: any
-  signature: any
+  appId: string
+  timestamp: number
+  nonceStr: string
+  signature: string
 }) => {
   const appId = res.appId //分享appid
   const timestamp = res.timestamp //分享时间戳
@@ -53,7 +55,8 @@ const wxConfig = (res: {
     // openTagList: ['wx-open-launch-weapp']
   })
 }
-export const wxOnReady = (cbs: Function[]) => {
+
+const wxOnReady = (cb: () => void) => {
   http
     .post(
       '/syx/wx/jsapi',
@@ -62,26 +65,23 @@ export const wxOnReady = (cbs: Function[]) => {
       },
       false
     )
+    // eslint-disable-next-line
     .then((result: any) => {
       if (sessionStorage.getItem('prefix')) {
         wxConfig(result)
         wx.ready(function() {
-          cbs.map((cb) => {
-            cb()
-          })
+          cb()
         })
       } else {
         http.get('/syx/org/property/commonList', {}).then((res) => {
           if (res.code == 200) {
-            let DATA = res.data
+            const DATA = res.data
             DATA.forEach((item: { propKey: string; propValue: string }) => {
               if (item.propKey == 'orgDomain') {
                 sessionStorage.setItem('prefix', item.propValue)
                 wxConfig(result)
                 wx.ready(function() {
-                  cbs.map((cb) => {
-                    cb()
-                  })
+                  cb()
                 })
               }
               if (item.propKey == 'score_valid_time') {
@@ -96,6 +96,15 @@ export const wxOnReady = (cbs: Function[]) => {
       console.log(err)
     })
 }
+
+export const initWxOnReady = (cb: () => void) => {
+  initWx(() => {
+    wxOnReady(() => {
+      cb()
+    })
+  })
+}
+
 // 微信分享
 interface ShareParams {
   shareUrl: string
@@ -111,55 +120,83 @@ export const wxShare = (params: ShareParams) => {
     title: shareTitle, // 分享标题
     link: shareLink, // 分享链接
     imgUrl: shareImg,
-    success: function() {},
-    error: function() {}
+    success: function() {
+      console.log('success')
+    },
+    error: function() {
+      console.log('error')
+    }
   })
   wx.onMenuShareAppMessage({
     title: shareTitle, // 分享标题
     link: shareLink, // 分享链接
     imgUrl: shareImg,
     desc: shareDesc, // 分享描述
-    success: function() {},
-    cancel: function() {},
-    fail: function() {}
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
   })
   wx.onMenuShareQQ({
     title: shareTitle, // 分享标题
     link: shareLink, // 分享链接
     imgUrl: shareImg,
     desc: shareDesc, // 分享描述
-    success: function() {},
-    cancel: function() {},
-    fail: function() {}
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
   })
   wx.onMenuShareWeibo({
     title: shareTitle, // 分享标题
     link: shareLink, // 分享链接
     imgUrl: shareImg,
     desc: shareDesc, // 分享描述
-    trigger: function() {},
-    success: function() {},
-    cancel: function() {},
-    fail: function() {}
+    trigger: function() {
+      console.log('trigger')
+    },
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
   })
   wx.onMenuShareQZone({
     title: shareTitle, // 分享标题
     desc: shareDesc, // 分享描述
     link: shareLink, // 分享链接
     imgUrl: shareImg, // 分享图标
-    success: function() {},
-    cancel: function() {}
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    }
   })
 }
 
 // 扫一扫
 interface ScanQRCodeParams {
   needResult: number
-  scanType: ['qrCode'] | ['barCode'] | ['qrCode', 'barCode']
+  scanType: ('qrCode' | 'barCode')[]
   successCb?: Function
 }
 export const wxScanQRCode = (params: ScanQRCodeParams) => {
-  var conf: ScanQRCodeParams = {
+  let conf: ScanQRCodeParams = {
     needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
     scanType: ['qrCode', 'barCode'] // 可以指定扫二维码还是一维码，默认二者都有
   }
@@ -168,6 +205,7 @@ export const wxScanQRCode = (params: ScanQRCodeParams) => {
   wx.scanQRCode({
     needResult: conf.needResult, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
     scanType: conf.scanType, // 可以指定扫二维码还是一维码，默认二者都有
+    // eslint-disable-next-line
     success: function(res: any) {
       // var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
       if (conf.successCb) {

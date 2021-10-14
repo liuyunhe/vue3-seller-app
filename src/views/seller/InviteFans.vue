@@ -29,11 +29,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { initWxOnReady, wxShare } from '@/plugins/Wx'
+import { defineComponent, onMounted } from 'vue'
 
 export default defineComponent({
   name: 'InviteFans',
   setup() {
+    onMounted(() => {
+      initWxOnReady(() => {
+        wxShare({
+          shareUrl: `${sessionStorage.prefix}/orgmenu/auth?menuCode=sellerFansBind`,
+          shareTitle: '分享好友绑定粉丝',
+          shareDesc: '分享好友绑定粉丝',
+          shareImg:
+            'https://qoss.qrmkt.cn/hbseller_client/invite-fans-qrcode.png'
+        })
+      })
+    })
     return {}
   }
 })

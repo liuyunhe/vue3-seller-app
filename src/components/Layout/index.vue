@@ -89,11 +89,11 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: #f4f4f4;
   .content {
     flex: 1;
     overflow: auto;
     margin-bottom: 50px;
-    background-color: #f4f4f4;
   }
 }
 </style>

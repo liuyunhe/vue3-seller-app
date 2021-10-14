@@ -37,7 +37,7 @@
             <div class="head-img"><img :src="item.fanHeadImg" alt="" /></div>
             <div class="info">
               <div class="nickname">{{ item.fanNickName }}</div>
-              <div class="role">{{ item.fanGender }}</div>
+              <div class="role">{{ item.fanGender === 1 ? '男' : '女' }}</div>
             </div>
             <div class="time">2021-06-11 10:20:21</div>
           </li>
@@ -57,7 +57,7 @@ interface FanInfo {
   id: number
   fanNickName: string
   fanHeadImg: string
-  fanGender: string
+  fanGender: number
 }
 
 export default defineComponent({

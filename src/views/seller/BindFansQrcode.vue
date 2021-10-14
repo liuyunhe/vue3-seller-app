@@ -36,8 +36,9 @@ export default defineComponent({
       const opts: QRCodeToDataURLOptions = {
         errorCorrectionLevel: 'H',
         type: 'image/jpeg',
-        rendererOpts: { quality: 0.8 },
-        margin: 3
+        rendererOpts: { quality: 1 },
+        margin: 3,
+        width: 258
       }
       const canvas = document.getElementById('canvas') as HTMLCanvasElement
       QRCode.toDataURL(canvas, url, opts, (err, url) => {

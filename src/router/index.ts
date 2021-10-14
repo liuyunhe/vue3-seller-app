@@ -1,7 +1,7 @@
 import {
   createRouter,
   createWebHistory,
-  Router,
+  // Router,
   RouteRecordRaw
 } from 'vue-router'
 import store from '@/store'
@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'SellerLayout',
-    redirect: '/sellerActs',
+    redirect: '/common/signIn',
     component: () =>
       import(/* webpackChunkName: "layout" */ '../components/Layout/index.vue'),
     children: [
@@ -177,15 +177,16 @@ const router = createRouter({
 //   console.log("路由拦截back");
 //   return router.go(-1);
 // };
-import provideStore from '@/utils/provideStore'
-function RouterStack(router: Router) {
-  // const stack = [];
-  router.afterEach((to, from) => {
-    console.log(to, from)
-    console.log(provideStore.planList.value)
-  })
-  return router
-}
+
+// import provideStore from '@/utils/provideStore'
+// function RouterStack(router: Router) {
+// const stack = [];
+// router.afterEach((to, from) => {
+// console.log(to, from)
+// console.log(provideStore.planList.value)
+// })
+// return router
+// }
 
 router.beforeEach((to, from, next) => {
   const { token } = store.state
@@ -203,6 +204,6 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-RouterStack(router)
+// RouterStack(router)
 
 export default router
