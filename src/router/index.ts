@@ -10,7 +10,7 @@ import axios from '@/http'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'LAYOUT',
+    name: 'SellerLayout',
     redirect: '/sellerActs',
     component: () =>
       import(/* webpackChunkName: "layout" */ '../components/Layout/index.vue'),
@@ -56,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () =>
           import(
-            /* webpackChunkName: "SellerInfo" */ '../views/seller/Info.vue'
+            /* webpackChunkName: "SellerInfo" */ '../views/seller/PersonalInfo.vue'
           )
       }
     ]
