@@ -3,20 +3,18 @@
     <div class="head">
       <div class="content">
         <div class="seller-head-img">
-          <img
-            src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/personal/Group.png"
-            alt=""
-          />
+          <img :src="headimgurl" alt="" />
         </div>
         <div class="info">
-          <div class="name">峰峰烟酒店<i class=""></i></div>
+          <div class="name">{{ shopName }}<i class=""></i></div>
           <div class="member">
-            <span class="lv">LV99 粉钻会员</span><span class="title"></span>
+            <span class="lv">LV{{ shopLevel }} 粉钻会员</span
+            ><span class="title"></span>
           </div>
         </div>
         <div class="btn"></div>
       </div>
-      <div class="tips">距离升级还需要20积分</div>
+      <div class="tips">距离升级还需要{{ upgradeScore }}积分</div>
     </div>
     <div class="main">
       <div class="title">我的功能</div>
@@ -61,12 +59,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { http } from '@/http'
+import { Toast } from 'vant'
+import { defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
   name: 'SellerInfo',
   setup() {
-    return {}
+    const shopName = ref('')
+    const headimgurl = ref('')
+    const shopLevel = ref(null)
+    const upgradeScore = ref(0)
+    const getSellerInfo = () => {
+      http
+        .post('/hbSeller/sellerPerson/personInfo', {}, false)
+        .then((res) => {
+          if (res.code === '200') {
+            shopName.value = res.data.personInfo.shopName
+            headimgurl.value = res.data.personInfo.headimgurl
+            shopLevel.value = res.data.personInfo.shopLevel
+            upgradeScore.value = res.data.upgradeScore
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    onMounted(() => {
+      getSellerInfo()
+    })
+    return {
+      shopName,
+      headimgurl,
+      shopLevel,
+      upgradeScore
+    }
   }
 })
 </script>
