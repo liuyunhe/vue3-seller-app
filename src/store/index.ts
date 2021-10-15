@@ -6,6 +6,7 @@ export interface GlobalDataProps {
   loading: boolean
   lat: number | null
   lng: number | null
+  wxUrl: string | null
 }
 
 export interface GlobalErrorProps {
@@ -21,7 +22,8 @@ const store = createStore<GlobalDataProps>({
     },
     token: sessionStorage.getItem('token') || '',
     lat: null,
-    lng: null
+    lng: null,
+    wxUrl: null
   },
   getters: {},
   mutations: {
@@ -30,6 +32,9 @@ const store = createStore<GlobalDataProps>({
     },
     setLng(state, lng) {
       state.lng = lng
+    },
+    setWxUrl(state, url) {
+      state.wxUrl = url
     },
     setToken(state, token) {
       state.token = token

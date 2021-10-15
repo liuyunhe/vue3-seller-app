@@ -57,15 +57,9 @@ const wxConfig = (res: {
   })
 }
 
-const wxOnReady = (cb: () => void) => {
+const wxOnReady = (url: string, cb: () => void) => {
   http
-    .post(
-      '/syx/wx/jsapi',
-      {
-        url: location.href.split('#')[0]
-      },
-      false
-    )
+    .post('/syx/wx/jsapi', { url }, false)
     // eslint-disable-next-line
     .then((result: any) => {
       if (sessionStorage.getItem('prefix')) {
@@ -98,9 +92,9 @@ const wxOnReady = (cb: () => void) => {
     })
 }
 
-export const initWxOnReady = (cb: () => void) => {
+export const initWxOnReady = (url: string, cb: () => void) => {
   initWx(() => {
-    wxOnReady(() => {
+    wxOnReady(url, () => {
       cb()
     })
   })
@@ -227,6 +221,7 @@ export const wxGetLocation = (toUrl?: string) => {
       // var accuracy = res.accuracy; // 位置精度
       store.commit('setLat', latitude)
       store.commit('setLng', longitude)
+      return
       if (toUrl) {
         const token = sessionStorage.getItem('token')
         window.location.replace(
@@ -235,6 +230,7 @@ export const wxGetLocation = (toUrl?: string) => {
       }
     },
     error: function() {
+      return
       if (toUrl) {
         const token = sessionStorage.getItem('token')
         window.location.replace(

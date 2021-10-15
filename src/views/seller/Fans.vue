@@ -24,9 +24,9 @@
         </router-link>
       </div>
       <div class="router-item">
-        <router-link to="/seller/inviteFans">
-          <img src="https://qoss.qrmkt.cn/hbseller_client/fy-icon.png" alt="" />
-        </router-link>
+        <!-- <router-link to="/seller/inviteFans"> -->
+        <img src="https://qoss.qrmkt.cn/hbseller_client/fy-icon.png" alt="" />
+        <!-- </router-link> -->
       </div>
     </div>
     <div class="fans-bar">

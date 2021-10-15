@@ -36,7 +36,7 @@ export default defineComponent({
   name: 'InviteFans',
   setup() {
     onMounted(() => {
-      initWxOnReady(() => {
+      initWxOnReady(location.href.split('#')[0], () => {
         wxShare({
           shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
           shareTitle: '分享好友绑定粉丝',
