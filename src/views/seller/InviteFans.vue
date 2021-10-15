@@ -36,16 +36,18 @@ export default defineComponent({
   name: 'InviteFans',
   setup() {
     onMounted(() => {
+      console.log(1111)
       initWxOnReady(() => {
         wxShare({
-          shareUrl: `${sessionStorage.prefix}/orgmenu/auth?menuCode=sellerFansBind`,
+          shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
           shareTitle: '分享好友绑定粉丝',
           shareDesc: '分享好友绑定粉丝',
           shareImg:
-            'https://qoss.qrmkt.cn/hbseller_client/invite-fans-qrcode.png'
+            'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
         })
       })
     })
+
     return {}
   }
 })

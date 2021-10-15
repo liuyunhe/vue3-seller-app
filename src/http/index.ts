@@ -5,7 +5,6 @@ import qs from 'qs'
 
 axios.defaults.timeout = 60000
 axios.interceptors.request.use((config) => {
-  console.log(config)
   if (config.url !== '/hbact/ossCommon/uploadOne') {
     Toast.loading({
       message: '加载中...',

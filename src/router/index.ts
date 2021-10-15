@@ -1,7 +1,7 @@
 import {
   createRouter,
   createWebHistory,
-  // Router,
+  Router,
   RouteRecordRaw
 } from 'vue-router'
 import store from '@/store'
@@ -179,14 +179,15 @@ const router = createRouter({
 // };
 
 // import provideStore from '@/utils/provideStore'
-// function RouterStack(router: Router) {
-// const stack = [];
-// router.afterEach((to, from) => {
-// console.log(to, from)
-// console.log(provideStore.planList.value)
-// })
-// return router
-// }
+function RouterStack(router: Router) {
+  // const stack = []
+  router.afterEach((to, from) => {
+    console.log(to, from)
+
+    // console.log(provideStore.planList.value)
+  })
+  return router
+}
 
 router.beforeEach((to, from, next) => {
   const { token } = store.state
@@ -204,6 +205,6 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-// RouterStack(router)
+RouterStack(router)
 
 export default router

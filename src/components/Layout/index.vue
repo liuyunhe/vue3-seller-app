@@ -45,9 +45,6 @@ export default defineComponent({
     const state = reactive({
       includeRoutes: ['SellerActs', 'SellerFans', 'SellerMessage', 'SellerInfo']
     })
-
-    console.log(1111)
-
     const icon1 = {
       active:
         'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-1-1.png',
