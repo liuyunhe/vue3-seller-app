@@ -41,7 +41,10 @@ export default defineComponent({
     return {}
   },
   beforeRouteEnter(to, from, next) {
-    sessionStorage.setItem('wxUrl', `${location.origin}${to.fullPath}`)
+    sessionStorage.setItem(
+      'wxUrl',
+      `${location.origin}/HbsClient${to.fullPath}`
+    )
     next()
   }
 })
