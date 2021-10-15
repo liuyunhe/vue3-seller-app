@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+import axios from '@/http'
 import { initWxOnReady, wxGetLocation, wxShare } from '@/plugins/Wx'
 import { GlobalDataProps } from '@/store'
 import { computed, defineComponent, onMounted } from 'vue'
@@ -32,6 +33,7 @@ export default defineComponent({
       if (props.token) {
         store.commit('setToken', props.token)
         sessionStorage.setItem('token', props.token)
+        axios.defaults.headers.token = props.token
       }
       if (props.target) {
         if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
