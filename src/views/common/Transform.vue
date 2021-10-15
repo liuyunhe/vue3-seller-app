@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import axios from '@/http'
-import { initWxOnReady, wxHideMenu } from '@/plugins/Wx'
+import { initWxOnReady, wxGetLocation, wxHideMenu } from '@/plugins/Wx'
 import { GlobalDataProps } from '@/store'
 import { computed, defineComponent, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -36,17 +36,16 @@ export default defineComponent({
         axios.defaults.headers.token = props.token
       }
       if (props.target) {
-        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-          console.log(wxUrl.value)
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          initWxOnReady(wxUrl.value!, () => {
-            wxHideMenu()
-          })
-        } else {
-          initWxOnReady(location.href.split('#')[0], () => {
-            wxHideMenu()
-          })
-        }
+        const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            wxUrl.value!
+          : location.href.split('#')[0]
+
+        initWxOnReady(url, () => {
+          wxGetLocation()
+          wxHideMenu()
+        })
+
         router.push(props.target)
       }
     })

@@ -196,7 +196,9 @@ router.beforeEach((to, from, next) => {
       /* 路由发生变化修改页面title */
       document.title = to.meta.title as string
     }
-    axios.defaults.headers.token = token
+    if (!axios.defaults.headers.token) {
+      axios.defaults.headers.token = token
+    }
   } else {
     if (to.path !== '/common/transform') {
       alert('no token!')
