@@ -48,7 +48,8 @@ const wxConfig = (res: {
       'onMenuShareQZone',
       'showOptionMenu',
       'scanQRCode',
-      'getLocation'
+      'getLocation',
+      'hideMenuItems'
       // "hideMenuItems",
       // "hideAllNonBaseMenuItem"
     ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
@@ -241,5 +242,22 @@ export const wxGetLocation = (toUrl?: string) => {
         )
       }
     }
+  })
+}
+
+//隐藏菜单
+export const wxHideMenu = () => {
+  wx.hideMenuItems({
+    menuList: [
+      'menuItem:share:appMessage',
+      'menuItem:share:timeline',
+      'menuItem:share:qq',
+      'menuItem:share:QZone',
+      'menuItem:share:email',
+      'menuItem:openWithSafari',
+      'menuItem:openWithQQBrowser',
+      'menuItem:favorite',
+      'menuItem:copyUrl'
+    ] // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
   })
 }

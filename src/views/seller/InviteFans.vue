@@ -29,14 +29,13 @@
 </template>
 
 <script lang="ts">
-import { initWxOnReady, wxShare } from '@/plugins/Wx'
+import { initWxOnReady, wxHideMenu, wxShare } from '@/plugins/Wx'
 import { defineComponent, onMounted } from 'vue'
 
 export default defineComponent({
   name: 'InviteFans',
   setup() {
     onMounted(() => {
-      console.log(1111)
       initWxOnReady(() => {
         wxShare({
           shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
@@ -49,6 +48,10 @@ export default defineComponent({
     })
 
     return {}
+  },
+  beforeRouteLeave(to, from, next) {
+    wxHideMenu()
+    next()
   }
 })
 </script>
@@ -146,3 +149,6 @@ export default defineComponent({
   }
 }
 </style>
+
+function beforeRouteLeave(to: any, from: any, next: any) { throw new
+Error('Function not implemented.') }

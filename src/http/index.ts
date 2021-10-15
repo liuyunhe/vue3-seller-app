@@ -22,16 +22,13 @@ axios.interceptors.response.use(
     return response
   },
   (e) => {
-    const { error } = e.response.data
     nextTick(() => {
+      if (process.env.NODE_ENV === 'production') {
+        window.location.href = '/yx/views/general/overtime-error.html'
+      }
       Toast.clear()
-      Toast.fail({
-        message: error,
-        forbidClick: true,
-        duration: 3000
-      })
     })
-    return Promise.reject(error)
+    return Promise.reject(e)
   }
 )
 
