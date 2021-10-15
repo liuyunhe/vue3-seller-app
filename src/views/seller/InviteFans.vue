@@ -1,7 +1,7 @@
 <template>
   <div class="invite-fans-container">
     <div class="bg">
-      <div class="invite-btn">分享好友绑定粉丝</div>
+      <div class="invite-btn">分享好友绑定粉丝,{{ lat }},{{ lng }}</div>
       <router-link to="/seller/bindFansQrcode">
         <div class="qrcode-bar">
           <i class="qrcode-icon"></i>
@@ -29,25 +29,50 @@
 </template>
 
 <script lang="ts">
-import { initWxOnReady, wxHideMenu, wxShare } from '@/plugins/Wx'
-import { defineComponent, onMounted } from 'vue'
+import { initWxOnReady, wxGetLocation, wxHideMenu, wxShare } from '@/plugins/Wx'
+import { GlobalDataProps } from '@/store'
+import { computed, defineComponent, onMounted } from 'vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'InviteFans',
   setup() {
+    const store = useStore<GlobalDataProps>()
+    const wxUrl = computed(() => store.state.wxUrl)
+    const lat = computed(() => store.state.lat)
+    const lng = computed(() => store.state.lng)
     onMounted(() => {
-      initWxOnReady(location.href.split('#')[0], () => {
-        wxShare({
-          shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
-          shareTitle: '分享好友绑定粉丝',
-          shareDesc: '分享好友绑定粉丝',
-          shareImg:
-            'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
+      if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+        console.log(wxUrl.value)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        initWxOnReady(wxUrl.value!, () => {
+          wxGetLocation()
+          wxShare({
+            shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
+            shareTitle: '分享好友绑定粉丝',
+            shareDesc: '分享好友绑定粉丝',
+            shareImg:
+              'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
+          })
         })
-      })
+      } else {
+        initWxOnReady(location.href.split('#')[0], () => {
+          wxGetLocation()
+          wxShare({
+            shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
+            shareTitle: '分享好友绑定粉丝',
+            shareDesc: '分享好友绑定粉丝',
+            shareImg:
+              'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
+          })
+        })
+      }
     })
 
-    return {}
+    return {
+      lat,
+      lng
+    }
   },
   beforeRouteLeave(to, from, next) {
     wxHideMenu()

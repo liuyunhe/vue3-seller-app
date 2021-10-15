@@ -4,9 +4,8 @@
 
 <script lang="ts">
 import axios from '@/http'
-import { initWxOnReady, wxGetLocation, wxShare } from '@/plugins/Wx'
 import { GlobalDataProps } from '@/store'
-import { computed, defineComponent, onMounted } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
@@ -25,7 +24,6 @@ export default defineComponent({
   setup(props) {
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
-    const wxUrl = computed(() => store.state.wxUrl)
     onMounted(() => {
       if (sessionStorage.getItem('wxUrl')) {
         store.commit('setWxUrl', sessionStorage.getItem('wxUrl'))
@@ -36,33 +34,7 @@ export default defineComponent({
         axios.defaults.headers.token = props.token
       }
       if (props.target) {
-        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-          console.log(wxUrl.value)
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          initWxOnReady(wxUrl.value!, () => {
-            wxGetLocation(props.target)
-            wxShare({
-              shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
-              shareTitle: '分享好友绑定粉丝',
-              shareDesc: '分享好友绑定粉丝',
-              shareImg:
-                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
-            })
-          })
-          router.push(props.target)
-        } else {
-          initWxOnReady(location.href.split('#')[0], () => {
-            wxGetLocation(props.target)
-            wxShare({
-              shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
-              shareTitle: '分享好友绑定粉丝',
-              shareDesc: '分享好友绑定粉丝',
-              shareImg:
-                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
-            })
-          })
-          router.push(props.target)
-        }
+        router.push(props.target)
       }
     })
 
