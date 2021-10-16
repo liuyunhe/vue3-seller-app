@@ -34,6 +34,8 @@ import { GlobalDataProps } from '@/store'
 import { computed, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
+const isiOS = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) //ios终端
+
 export default defineComponent({
   name: 'InviteFans',
   setup() {
@@ -41,7 +43,7 @@ export default defineComponent({
     const wxUrl = computed(() => store.state.wxUrl)
 
     onMounted(() => {
-      const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
+      const url: string = isiOS
         ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           wxUrl.value!
         : location.href.split('#')[0]
@@ -159,6 +161,3 @@ export default defineComponent({
   }
 }
 </style>
-
-function beforeRouteLeave(to: any, from: any, next: any) { throw new
-Error('Function not implemented.') }

@@ -6,6 +6,7 @@ import {
 } from 'vue-router'
 import store from '@/store'
 import axios from '@/http'
+import { initWxOnReady, wxGetLocation, wxHideMenu } from '@/plugins/Wx'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -190,7 +191,23 @@ function RouterStack(router: Router) {
 }
 
 router.beforeEach((to, from, next) => {
-  const { token } = store.state
+  const { token, wxUrl } = store.state
+  // 刷新的情况下重新配置wxjssdk
+  if (!wxUrl) {
+    store.commit('setWxUrl', `${location.origin}/HbsClient${to.fullPath}`)
+    if (sessionStorage.getItem('token')) {
+      axios.defaults.headers.token = sessionStorage.getItem('token')
+      const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
+        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          `${location.origin}/HbsClient${to.fullPath}`
+        : location.href.split('#')[0]
+
+      initWxOnReady(url, () => {
+        wxGetLocation()
+        wxHideMenu()
+      })
+    }
+  }
   if (token) {
     if (to.meta.title) {
       /* 路由发生变化修改页面title */
