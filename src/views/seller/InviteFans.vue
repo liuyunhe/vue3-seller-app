@@ -43,6 +43,11 @@ export default defineComponent({
     const wxUrl = computed(() => store.state.wxUrl)
 
     onMounted(() => {
+      if (!sessionStorage.getItem('ShareInviteFans')) {
+        sessionStorage.setItem('ShareInviteFans', '1')
+        window.location.reload()
+        return
+      }
       const url: string = isiOS
         ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           wxUrl.value!
