@@ -70,7 +70,7 @@ export default defineComponent({
             if (role == 1) {
               const register = (res.data.register as boolean) || false // 当role为1时候，有这个字段，如果是true代表注册绑定手机已完成
               if (register) {
-                router.push('/sellerFans')
+                router.push('/seller/sellerFans')
               } else {
                 // router.push('/seller/register')
               }

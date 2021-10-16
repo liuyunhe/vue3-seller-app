@@ -9,12 +9,50 @@ import axios from '@/http'
 import { initWxOnReady, wxGetLocation, wxHideMenu } from '@/plugins/Wx'
 
 const routes: Array<RouteRecordRaw> = [
+  // 首页
   {
     path: '/',
-    name: 'SellerLayout',
+    name: 'Home',
     redirect: '/common/signIn',
+    meta: {
+      title: ''
+    }
+  },
+
+  // 平台页面
+  {
+    path: '/common/transform',
+    name: 'Transform',
+    meta: {
+      title: ''
+    },
+    props: (route) => ({
+      token: route.query.token,
+      target: route.query.target
+    }),
     component: () =>
-      import(/* webpackChunkName: "layout" */ '../components/Layout/index.vue'),
+      import(
+        /* webpackChunkName: "Transform" */ '../views/common/Transform.vue'
+      )
+  },
+  {
+    path: '/common/signIn',
+    name: 'SignIn',
+    meta: {
+      title: ''
+    },
+    component: () =>
+      import(/* webpackChunkName: "SignIn" */ '../views/common/SignIn.vue')
+  },
+  // 零售户
+  {
+    path: '/seller',
+    name: 'SellerLayout',
+    redirect: '/seller/sellerFans',
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerLayout" */ '../components/SellerLayout/index.vue'
+      ),
     children: [
       {
         path: 'sellerActs',
@@ -62,32 +100,6 @@ const routes: Array<RouteRecordRaw> = [
       }
     ]
   },
-  // 平台页面
-  {
-    path: '/common/transform',
-    name: 'Transform',
-    meta: {
-      title: ''
-    },
-    props: (route) => ({
-      token: route.query.token,
-      target: route.query.target
-    }),
-    component: () =>
-      import(
-        /* webpackChunkName: "Transform" */ '../views/common/Transform.vue'
-      )
-  },
-  {
-    path: '/common/signIn',
-    name: 'SignIn',
-    meta: {
-      title: ''
-    },
-    component: () =>
-      import(/* webpackChunkName: "SignIn" */ '../views/common/SignIn.vue')
-  },
-  // 零售户
   {
     path: '/seller/register',
     name: 'Register',
@@ -198,8 +210,7 @@ router.beforeEach((to, from, next) => {
     if (sessionStorage.getItem('token')) {
       axios.defaults.headers.token = sessionStorage.getItem('token')
       const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          `${location.origin}/HbsClient${to.fullPath}`
+        ? `${location.origin}/HbsClient${to.fullPath}`
         : location.href.split('#')[0]
 
       initWxOnReady(url, () => {

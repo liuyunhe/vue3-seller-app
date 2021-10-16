@@ -9,25 +9,25 @@
     </div>
     <div class="bottom-bar">
       <van-tabbar route>
-        <van-tabbar-item to="/sellerActs">
+        <van-tabbar-item to="/seller/sellerActs">
           <span>专属活动</span>
           <template #icon="props">
             <img :src="props.active ? icon1.active : icon1.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/sellerFans">
+        <van-tabbar-item to="/seller/sellerFans">
           <span>我的粉丝</span>
           <template #icon="props">
             <img :src="props.active ? icon2.active : icon2.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/sellerMessage">
+        <van-tabbar-item to="/seller/sellerMessage">
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/sellerInfo">
+        <van-tabbar-item to="/seller/sellerInfo">
           <span>个人中心</span>
           <template #icon="props">
             <img :src="props.active ? icon4.active : icon4.inactive" />
@@ -40,7 +40,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue'
 export default defineComponent({
-  name: 'Layout',
+  name: 'SellerLayout',
   setup() {
     const state = reactive({
       includeRoutes: ['SellerActs', 'SellerFans', 'SellerMessage', 'SellerInfo']

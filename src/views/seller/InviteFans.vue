@@ -43,6 +43,7 @@ export default defineComponent({
     const wxUrl = computed(() => store.state.wxUrl)
 
     onMounted(() => {
+      // 分享时重新制定wxUrl
       if (!sessionStorage.getItem('ShareInviteFans')) {
         sessionStorage.setItem('ShareInviteFans', '1')
         window.location.reload()

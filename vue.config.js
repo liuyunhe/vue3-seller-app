@@ -16,7 +16,7 @@ function resolve(dir) {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const autoprefixer = require('autoprefixer')
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/HbsClient/' : '/',
   devServer: {
     overlay: {
       warnings: true,
