@@ -1,0 +1,232 @@
+<template>
+  <div class="my-invite-container">
+    <ul class="content">
+      <li class="message" v-for="item in inviteMsgList" :key="item.id">
+        <div class="title">
+          {{ item.title }}
+          <span v-if="item.status === 0" style="color:#FFAD20">审核中</span>
+          <span v-if="item.status === 1" style="color:#0180FF">已发送</span>
+          <span v-if="item.status === 2" style="color:#FF3400">审核失败</span>
+        </div>
+        <div class="content">{{ item.msgContent }}</div>
+        <div class="time">{{ item.ctime }}</div>
+      </li>
+    </ul>
+    <div class="btn" @click="showTplList = true">新建活动邀约</div>
+  </div>
+  <van-popup v-model:show="showTplList" style="border-radius:2.6vw">
+    <div class="tpl-list">
+      <ul>
+        <li v-for="item in msgTplList" :key="item.id">
+          <div class="title">{{ item.title }}</div>
+          <div class="content">
+            <p class="text">{{ item.content }}</p>
+            <router-link
+              replace
+              :to="
+                `/seller/editInvition?title=${item.title}&subTitle=${item.subTitle}&content=${item.content}`
+              "
+            >
+              <div class="btn">选择</div>
+            </router-link>
+          </div>
+          <!-- <div class="time">{{ item.ctime }}</div> -->
+        </li>
+      </ul>
+    </div>
+  </van-popup>
+</template>
+
+<script lang="ts">
+import { http } from '@/http'
+import { Toast } from 'vant'
+import { defineComponent, onMounted, ref } from 'vue'
+
+interface InviteMsg {
+  id: number
+  title: string //  主标题
+  subTitle: string //副标题
+  msgContent: string // 内容
+  shopId: number
+  status: number // 待审核, 1:审核通过, 2: 审核未通过
+  auditMsg: string
+  ctime: string
+}
+interface MsgTpl {
+  id: number
+  rcdNote: string | null
+  title: string
+  subTitle: string
+  content: string
+  idx: number
+  ctime: string
+}
+
+export default defineComponent({
+  name: 'MyInvite',
+  setup() {
+    const inviteMsgList = ref<InviteMsg[]>([])
+    const msgTplList = ref<MsgTpl[]>([])
+    const showTplList = ref(false)
+    const getMsgTplList = () => {
+      http
+        .post('/hbSeller/sellerInvite/msgTplList', {}, false)
+        .then((res) => {
+          if (res.code === '200') {
+            msgTplList.value = res.data.msgTplList
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    const getInviteMsgList = () => {
+      http
+        .post('/hbSeller/sellerInvite/inviteMsgList', {}, false)
+        .then((res) => {
+          if (res.code === '200') {
+            inviteMsgList.value = res.data
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    onMounted(() => {
+      getInviteMsgList()
+      getMsgTplList()
+    })
+    return {
+      inviteMsgList,
+      msgTplList,
+      showTplList
+    }
+  }
+})
+</script>
+
+<style lang="less" scoped>
+.my-invite-container {
+  height: 100vh;
+  background: #f6f6f6;
+  ul {
+    height: calc(100vh - 66px);
+    padding-top: 10px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    li {
+      width: 100%;
+      height: 95px;
+      background: #fff;
+      padding: 12px 15px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      .title {
+        height: 23px;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 23px;
+        color: #2b333b;
+        margin-bottom: 5px;
+        span {
+          font-size: 12px;
+          float: right;
+          color: #0180ff;
+        }
+      }
+      .content {
+        height: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        color: #666666;
+        margin-bottom: 8px;
+      }
+      .time {
+        height: 17px;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 17px;
+        color: #b1b1b1;
+      }
+    }
+  }
+  .btn {
+    width: 345px;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    color: #fff;
+    background: #0271fd;
+    opacity: 1;
+    border-radius: 4px;
+    margin: 0 auto;
+    margin-top: 10px;
+  }
+}
+.tpl-list {
+  width: 345px;
+  max-height: 420px;
+  overflow-y: scroll;
+  ul {
+    margin: 0 15px;
+    li {
+      height: 107px;
+      padding: 11px 0;
+      box-sizing: border-box;
+      border-bottom: 1px solid #eeeeee;
+      .title {
+        height: 23px;
+        line-height: 23px;
+        font-size: 16px;
+        color: #2b333b;
+        margin-bottom: 3px;
+      }
+      .content {
+        height: 60px;
+        position: relative;
+        .text {
+          width: 231px;
+          font-size: 14px;
+          height: 60px;
+          line-height: 20px;
+          color: #666666;
+          margin-bottom: 9px;
+          word-break: break-word;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+        }
+        .btn {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 60px;
+          height: 32px;
+          line-height: 32px;
+          text-align: center;
+          color: #fff;
+          background: #0271fd;
+          box-shadow: 0px 2px 3px rgba(2, 113, 253, 0.26);
+          border-radius: 4px;
+        }
+      }
+      .time {
+        height: 17px;
+        font-size: 12px;
+        line-height: 17px;
+        color: #b1b1b1;
+      }
+    }
+  }
+}
+</style>

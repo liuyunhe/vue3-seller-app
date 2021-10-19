@@ -40,14 +40,18 @@
         </div>
       </div>
       <div class="content">
-        <div class="item">
-          <i class="icon icon-invite"></i>
-          <div class="name">我的邀约</div>
-        </div>
-        <div class="item">
-          <i class="icon icon-qrcode"></i>
-          <div class="name">我的专属码</div>
-        </div>
+        <router-link to="/seller/myInvite">
+          <div class="item">
+            <i class="icon icon-invite"></i>
+            <div class="name">我的邀约</div>
+          </div>
+        </router-link>
+        <router-link to="/seller/bindFansQrcode">
+          <div class="item">
+            <i class="icon icon-qrcode"></i>
+            <div class="name">我的专属码</div>
+          </div>
+        </router-link>
         <div class="item">
           <i class="icon icon-survey"></i>
           <div class="name">我的问卷</div>

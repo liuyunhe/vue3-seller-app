@@ -171,6 +171,33 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "SellerMemberInfo" */ '../views/seller/MemberInfo.vue'
       )
   },
+  {
+    path: '/seller/myInvite',
+    name: 'SellerMyInvite',
+    meta: {
+      title: '我的邀约'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMyInvite" */ '../views/seller/MyInvite.vue'
+      )
+  },
+  {
+    path: '/seller/editInvition',
+    name: 'SellerEditInvition',
+    meta: {
+      title: '活动邀约'
+    },
+    props: (route) => ({
+      titleP: route.query.title,
+      subTitleP: route.query.subTitle,
+      contentP: route.query.content
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMyInvite" */ '../views/seller/EditInvition.vue'
+      )
+  },
   // 消费者
   {
     path: '/customer/home',
