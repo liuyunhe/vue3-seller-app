@@ -160,6 +160,17 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "SelllerMessageDetail" */ '../views/seller/MessageDetail.vue'
       )
   },
+  {
+    path: '/seller/memberInfo',
+    name: 'SellerMemberInfo',
+    meta: {
+      title: '会员等级'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMemberInfo" */ '../views/seller/MemberInfo.vue'
+      )
+  },
   // 消费者
   {
     path: '/customer/home',

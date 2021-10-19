@@ -1,19 +1,22 @@
 <template>
   <div class="personal-info-container">
     <div class="head">
-      <div class="content">
-        <div class="seller-head-img">
-          <img :src="headimgurl" alt="" />
-        </div>
-        <div class="info">
-          <div class="name">{{ shopName }}<i class=""></i></div>
-          <div class="member">
-            <span class="lv">LV{{ shopLevel }} 粉钻会员</span
-            ><span class="title"></span>
+      <router-link to="/seller/memberInfo">
+        <div class="content">
+          <div class="seller-head-img">
+            <img :src="headimgurl" alt="" />
           </div>
+          <div class="info">
+            <div class="name">{{ shopName }}<i class=""></i></div>
+            <div class="member">
+              <span class="lv">LV{{ shopLevel }} {{ levelName }}</span
+              ><span class="title"></span>
+            </div>
+          </div>
+          <div class="btn"></div>
         </div>
-        <div class="btn"></div>
-      </div>
+      </router-link>
+
       <div class="tips">距离升级还需要{{ upgradeScore }}积分</div>
     </div>
     <div class="main">
@@ -68,7 +71,8 @@ export default defineComponent({
   setup() {
     const shopName = ref('')
     const headimgurl = ref('')
-    const shopLevel = ref(null)
+    const shopLevel = ref(0)
+    const levelName = ref('')
     const upgradeScore = ref(0)
     const getSellerInfo = () => {
       http
@@ -78,6 +82,7 @@ export default defineComponent({
             shopName.value = res.data.personInfo.shopName
             headimgurl.value = res.data.personInfo.headimgurl
             shopLevel.value = res.data.personInfo.shopLevel
+            levelName.value = res.data.levelCode.levelName
             upgradeScore.value = res.data.upgradeScore
           } else {
             Toast.fail(res.msg)
@@ -94,6 +99,7 @@ export default defineComponent({
       shopName,
       headimgurl,
       shopLevel,
+      levelName,
       upgradeScore
     }
   }
