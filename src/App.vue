@@ -14,7 +14,12 @@ import { GlobalDataProps } from './store'
 export default defineComponent({
   name: 'App',
   setup() {
-    const includeRoutes = ['SellerLayout', 'MemberInfo', 'BindFansQrcode']
+    const includeRoutes = [
+      'SellerLayout',
+      'CustomerLayout',
+      'SellerMemberInfo',
+      'BindFansQrcode'
+    ]
     const store = useStore<GlobalDataProps>()
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)

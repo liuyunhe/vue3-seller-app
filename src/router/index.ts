@@ -200,16 +200,27 @@ const routes: Array<RouteRecordRaw> = [
   },
   // 消费者
   {
-    path: '/customer/home',
-    name: 'CustomerHome',
-    meta: {
-      title: '零售户绑定',
-      keepAlive: true
-    },
+    path: '/customer',
+    name: 'CustomerLayout',
+    redirect: '/customer/home',
     component: () =>
       import(
-        /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerHome.vue'
-      )
+        /* webpackChunkName: "SellerLayout" */ '../components/CustomerLayout/index.vue'
+      ),
+    children: [
+      {
+        path: 'home',
+        name: 'CustomerHome',
+        meta: {
+          title: '零售户绑定',
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerHome.vue'
+          )
+      }
+    ]
   }
 ]
 

@@ -20,6 +20,10 @@ export default defineComponent({
     target: {
       type: String,
       required: true
+    },
+    shopCode: {
+      type: String,
+      required: true
     }
   },
   setup(props) {
@@ -29,6 +33,10 @@ export default defineComponent({
     onMounted(() => {
       if (sessionStorage.getItem('wxUrl')) {
         store.commit('setWxUrl', sessionStorage.getItem('wxUrl'))
+      }
+      if (props.shopCode) {
+        store.commit('setShopCode', props.shopCode)
+        sessionStorage.setItem('shopCode', props.shopCode)
       }
       if (props.token) {
         store.commit('setToken', props.token)

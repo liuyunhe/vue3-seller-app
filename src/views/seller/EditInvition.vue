@@ -6,7 +6,8 @@
         v-model="title"
         rows="2"
         autosize
-        label="标题"
+        label="标题："
+        label-width="5em"
         type="textarea"
         maxlength="30"
         placeholder="请输入内容"
@@ -19,7 +20,8 @@
         v-model="subTitle"
         rows="2"
         autosize
-        label="副标题"
+        label="副标题："
+        label-width="5em"
         type="textarea"
         maxlength="30"
         placeholder="请输入内容"
@@ -32,7 +34,8 @@
         v-model="msgContent"
         rows="4"
         autosize
-        label="内容"
+        label="内容："
+        label-width="5em"
         type="textarea"
         maxlength="100"
         placeholder="请输入内容"

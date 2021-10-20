@@ -56,7 +56,7 @@ interface ShopLevel {
 }
 
 export default defineComponent({
-  name: 'MemberInfo',
+  name: 'SellerMemberInfo',
   setup() {
     const shopName = ref('')
     const headimgurl = ref('')

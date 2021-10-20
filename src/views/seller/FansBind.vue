@@ -1,7 +1,7 @@
 <template>
   <div class="bind-fans-container">
     <div class="bg">
-      <div class="invite-btn">分享好友绑定粉丝</div>
+      <div class="invite-btn">绑定粉丝</div>
       <div class="note">
         <div class="title">
           <i class="icon"></i>
@@ -22,12 +22,17 @@
 </template>
 
 <script lang="ts">
+import { GlobalDataProps } from '@/store'
 import { defineComponent } from 'vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'FansBind',
   setup() {
-    return {}
+    const store = useStore<GlobalDataProps>()
+    const shopCode = store.state.shopCode
+
+    return { shopCode }
   }
 })
 </script>

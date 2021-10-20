@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 export interface GlobalDataProps {
   error: GlobalErrorProps
   token: string
+  shopCode: string
   loading: boolean
   lat: number | null
   lng: number | null
@@ -20,6 +21,7 @@ const store = createStore<GlobalDataProps>({
     error: {
       status: false
     },
+    shopCode: sessionStorage.getItem('shopCode') || '',
     token: sessionStorage.getItem('token') || '',
     lat: null,
     lng: null,
@@ -38,6 +40,9 @@ const store = createStore<GlobalDataProps>({
     },
     setToken(state, token) {
       state.token = token
+    },
+    setShopCode(state, shopCode) {
+      state.shopCode = shopCode
     },
     setLoading(state, status) {
       state.loading = status
