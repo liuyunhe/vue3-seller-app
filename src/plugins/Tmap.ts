@@ -2,14 +2,11 @@
 declare const TMap: any
 const MapKey = 'XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW'
 export function TMapGL() {
-  // console.log(TMap == undefined)
-  // const TMap = window.TMap || null
   let r
   try {
     if (TMap) r = Promise.resolve()
   } catch {
     r = new Promise<void>(function(resolve, reject) {
-      console.log(11111)
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.src =

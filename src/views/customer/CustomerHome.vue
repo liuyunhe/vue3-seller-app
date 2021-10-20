@@ -38,18 +38,20 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const lat = computed(() => store.state.lat || 39.860464)
-    const lng = computed(() => store.state.lng || 116.70602)
-    console.log(lat, lng)
+    // const lat = computed(() => store.state.lat || 39.860464)
+    // const lng = computed(() => store.state.lng || 116.70602)
+
     const showShopList = ref(false)
 
     const handleClickListBtn = () => {
-      console.log(11111)
       showShopList.value = true
     }
 
     onMounted(() => {
       TMapGL().then(() => {
+        const lat = computed(() => store.state.lat)
+        const lng = computed(() => store.state.lng)
+        console.log(lat.value, lng.value)
         const center = new TMap.LatLng(lat.value, lng.value)
         const map = new TMap.Map(document.getElementById('lbs-container'), {
           center: center, //  设置地图中心点坐标
@@ -130,7 +132,8 @@ export default defineComponent({
               console.log(err)
             })
         }
-        getHomeInfo(lat.value, lng.value)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        getHomeInfo(lat.value!, lng.value!)
       })
     })
     return {
@@ -143,10 +146,11 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .customer-home-conatainer {
+  height: 100%;
   #lbs-container {
     /*地图(容器)显示大小*/
     width: 100%;
-    height: 100vh;
+    height: 100%;
   }
   .list-btn {
     position: absolute;
