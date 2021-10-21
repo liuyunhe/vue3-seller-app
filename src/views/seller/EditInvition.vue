@@ -44,35 +44,31 @@
     </van-cell-group>
     <div class="btn" @click="handleSubmit">提交</div>
   </div>
-  <van-popup
-    v-model:show="showPopup"
-    :close-on-click-overlay="false"
-    style="border-radius:2.6vw;background-color: unset;"
+  <popup-with-head
+    :show="showPopup"
+    needCancelBtn
+    headImg="
+      https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/edtIvt-icon.png
+    "
+    contentText="活动邀约已提交，请耐心等候审核"
+    @confirm="showPopup = false"
   >
-    <img
-      class="popup-icon"
-      src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/edtIvt-icon.png"
-      alt=""
-    />
-    <div class="popup-container">
-      <div class="text">活动邀约已提交，请耐心等候审核</div>
-      <div class="btns">
-        <router-link to="/seller/myInvite" replace>
-          <div class="light">取消</div>
-          <div class="plain">确定</div>
-        </router-link>
-      </div>
-    </div>
-  </van-popup>
+    <router-link to="/seller/myInvite" replace>
+      <div class="light">取消</div>
+      <div class="plain">确定</div>
+    </router-link>
+  </popup-with-head>
 </template>
 
 <script lang="ts">
 import { http } from '@/http'
 import { Toast } from 'vant'
 import { defineComponent, ref } from 'vue'
+import PopupWithHead from '@/components/PopupWithHead/index.vue'
 
 export default defineComponent({
   name: 'EditInvition',
+  components: { PopupWithHead },
   props: {
     titleP: {
       type: String,
@@ -147,52 +143,27 @@ export default defineComponent({
     margin-top: 60px;
   }
 }
-.popup-container {
-  width: 300px;
-  height: 280px;
-  margin-top: -98px;
-  background-color: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  .text {
-    margin-top: 130px;
-    height: 28px;
-    font-size: 17px;
-    text-align: center;
-    line-height: 28px;
-    color: #303133;
-  }
-  .btns {
-    margin: 44px 44px 0;
-    .light {
-      float: left;
-      width: 100px;
-      height: 44px;
-      line-height: 44px;
-      font-size: 16px;
-      border: 1px solid #0180ff;
-      text-align: center;
-      border-radius: 4px;
-      color: #0180ff;
-      box-sizing: border-box;
-    }
-    .plain {
-      float: right;
-      width: 100px;
-      height: 44px;
-      line-height: 44px;
-      font-size: 16px;
-      text-align: center;
-      background: #0271fd;
-      border-radius: 4px;
-      color: #fff;
-    }
-  }
+.light {
+  float: left;
+  width: 100px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 16px;
+  border: 1px solid #0180ff;
+  text-align: center;
+  border-radius: 4px;
+  color: #0180ff;
+  box-sizing: border-box;
 }
-.popup-icon {
-  display: block;
-  width: 115px;
-  height: 115px;
-  margin: 0 auto;
+.plain {
+  float: right;
+  width: 100px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 16px;
+  text-align: center;
+  background: #0271fd;
+  border-radius: 4px;
+  color: #fff;
 }
 </style>
