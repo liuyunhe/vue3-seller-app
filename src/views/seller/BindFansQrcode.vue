@@ -11,7 +11,7 @@
 <script lang="ts">
 import { http } from '@/http'
 import { Toast } from 'vant'
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import QRCode, { QRCodeToDataURLOptions } from 'qrcode'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
@@ -21,6 +21,7 @@ export default defineComponent({
   setup() {
     const qrcode = ref('')
     const store = useStore<GlobalDataProps>()
+    const shopCode = computed(() => store.state.shopCode)
 
     const useqrcode = (url: string) => {
       const opts: QRCodeToDataURLOptions = {
@@ -39,25 +40,35 @@ export default defineComponent({
     }
 
     const getQrcode = () => {
-      http
-        .post('/hbSeller/sellerFans/shopBindCode', {}, false)
-        .then((res) => {
-          if (res.code === '200') {
-            const shopCode = res.data.shopCode
-            store.commit('setShopCode', shopCode)
-            sessionStorage.setItem('shopCode', shopCode)
-            useqrcode(
-              `http://${sessionStorage.getItem(
-                'prefix'
-              )}/orgmenu/auth?menuCode=sellerFansBind&shopCode=${shopCode}`
-            )
-          } else {
-            Toast.fail(res.msg)
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      if (shopCode.value) {
+        useqrcode(
+          `http://${sessionStorage.getItem(
+            'prefix'
+          )}/orgmenu/auth?menuCode=sellerFansBind&shopCode=${
+            shopCode.value
+          }&bindChannel=3`
+        )
+      } else {
+        http
+          .post('/hbSeller/sellerFans/shopBindCode', {}, false)
+          .then((res) => {
+            if (res.code === '200') {
+              const shopCode = res.data.shopCode
+              store.commit('setShopCode', shopCode)
+              sessionStorage.setItem('shopCode', shopCode)
+              useqrcode(
+                `http://${sessionStorage.getItem(
+                  'prefix'
+                )}/orgmenu/auth?menuCode=sellerFansBind&shopCode=${shopCode}&bindChannel=3`
+              )
+            } else {
+              Toast.fail(res.msg)
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     }
 
     onMounted(() => {

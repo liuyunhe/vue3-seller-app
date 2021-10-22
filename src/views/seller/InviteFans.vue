@@ -29,8 +29,10 @@
 </template>
 
 <script lang="ts">
+import { http } from '@/http'
 import { initWxOnReady, wxHideMenu, wxShare } from '@/plugins/Wx'
 import { GlobalDataProps } from '@/store'
+import { Toast } from 'vant'
 import { computed, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
@@ -41,6 +43,38 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const wxUrl = computed(() => store.state.wxUrl)
+    const getQrcode = () => {
+      http
+        .post('/hbSeller/sellerFans/shopBindCode', {}, false)
+        .then((res) => {
+          if (res.code === '200') {
+            const shopCode = res.data.shopCode
+            store.commit('setShopCode', shopCode)
+            sessionStorage.setItem('shopCode', shopCode)
+            const url: string = isiOS
+              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                wxUrl.value!
+              : location.href.split('#')[0]
+
+            initWxOnReady(url, () => {
+              wxShare({
+                shareUrl: `http://${sessionStorage.getItem(
+                  'prefix'
+                )}/orgmenu/auth?menuCode=sellerFansBind&shopCode=${shopCode}&bindChannel=2`,
+                shareTitle: '消费者绑定链接',
+                shareDesc: '绑定成为零售户粉丝，享受粉丝专属权益',
+                shareImg:
+                  'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-share.png'
+              })
+            })
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
 
     onMounted(() => {
       // 分享时重新制定wxUrl
@@ -49,20 +83,7 @@ export default defineComponent({
         window.location.reload()
         return
       }
-      const url: string = isiOS
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          wxUrl.value!
-        : location.href.split('#')[0]
-
-      initWxOnReady(url, () => {
-        wxShare({
-          shareUrl: '/orgmenu/auth?menuCode=sellerFansBind',
-          shareTitle: '分享好友绑定粉丝',
-          shareDesc: '分享好友绑定粉丝',
-          shareImg:
-            'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png'
-        })
-      })
+      getQrcode()
     })
 
     return {}

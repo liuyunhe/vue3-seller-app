@@ -8,6 +8,7 @@ export interface GlobalDataProps {
   lat: number | null
   lng: number | null
   wxUrl: string | null
+  bindChannel: string
 }
 
 export interface GlobalErrorProps {
@@ -25,7 +26,8 @@ const store = createStore<GlobalDataProps>({
     token: sessionStorage.getItem('token') || '',
     lat: null,
     lng: null,
-    wxUrl: null
+    wxUrl: null,
+    bindChannel: ''
   },
   getters: {},
   mutations: {
@@ -43,6 +45,9 @@ const store = createStore<GlobalDataProps>({
     },
     setShopCode(state, shopCode) {
       state.shopCode = shopCode
+    },
+    setBindChannel(state, bindChannel) {
+      state.bindChannel = bindChannel
     },
     setLoading(state, status) {
       state.loading = status

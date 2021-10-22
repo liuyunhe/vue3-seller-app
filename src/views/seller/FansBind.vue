@@ -1,20 +1,20 @@
 <template>
   <div class="bind-fans-container">
     <div class="bg">
-      <div class="invite-btn">绑定粉丝</div>
+      <div class="invite-btn" @click="handleClickBind">绑定成为粉丝</div>
       <div class="note">
         <div class="title">
           <i class="icon"></i>
           <div class="text">邀约规则</div>
         </div>
         <p>
-          1、将页面分享给好友，好友获取后点击绑定成为粉丝按钮，绑定成功后，成为零售户的粉丝。
+          1、亲爱的好友，点击“绑定成为粉丝”即可成为我店铺的粉丝哦；
         </p>
         <p>
-          2、绑定成为粉丝后，参与活动抽大奖。
+          2、成为我店铺的粉丝后，可以参与粉丝专享的活动福利，打卡、签到、扫码等活动都有机会获取专属奖励；
         </p>
         <p>
-          3、这里是活动规则，需要细化。
+          3、店铺内的一些专享促销活动也会第一时间通知 到您。
         </p>
       </div>
     </div>
@@ -22,17 +22,39 @@
 </template>
 
 <script lang="ts">
+import { http } from '@/http'
 import { GlobalDataProps } from '@/store'
-import { defineComponent } from 'vue'
+import { Toast } from 'vant'
+import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'FansBind',
   setup() {
     const store = useStore<GlobalDataProps>()
-    const shopCode = store.state.shopCode
+    const shopCode = computed(() => store.state.shopCode)
+    const bindChannel = computed(() => store.state.bindChannel)
 
-    return { shopCode }
+    const handleClickBind = () => {
+      http
+        .post(
+          '/hbSeller/fans/bindShopInvite',
+          {
+            shopCode: shopCode.value,
+            bindChannel: bindChannel.value
+          },
+          false
+        )
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success('绑定成功！')
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+    }
+
+    return { handleClickBind }
   }
 })
 </script>

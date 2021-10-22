@@ -47,9 +47,9 @@ export default defineComponent({
     })
     const icon1 = {
       active:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-1-1.png',
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-5-1.png',
       inactive:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-1-0.png'
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-5-0.png'
     }
     const icon2 = {
       active:

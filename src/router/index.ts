@@ -28,7 +28,9 @@ const routes: Array<RouteRecordRaw> = [
     },
     props: (route) => ({
       token: route.query.token,
-      target: route.query.target
+      target: route.query.target,
+      shopCode: route.query.shopCode,
+      bindChannel: route.query.bindChannel
     }),
     component: () =>
       import(

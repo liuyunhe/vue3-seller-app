@@ -22,8 +22,10 @@ export default defineComponent({
       required: true
     },
     shopCode: {
-      type: String,
-      required: true
+      type: String
+    },
+    bindChannel: {
+      type: Number
     }
   },
   setup(props) {
@@ -37,6 +39,10 @@ export default defineComponent({
       if (props.shopCode) {
         store.commit('setShopCode', props.shopCode)
         sessionStorage.setItem('shopCode', props.shopCode)
+      }
+      if (props.bindChannel) {
+        store.commit('setBindChannel', props.bindChannel)
+        sessionStorage.setItem('setBindChannel', props.bindChannel + '')
       }
       if (props.token) {
         store.commit('setToken', props.token)

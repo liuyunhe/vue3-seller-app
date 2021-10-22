@@ -8,7 +8,11 @@
     ></div>
     <div class="list-container" v-show="showShopList">
       <ul>
-        <li v-for="item in shopListRef" :key="item.id">
+        <li
+          v-for="item in shopListRef"
+          :key="item.id"
+          @click="handleClickShop(item)"
+        >
           <div class="img"><img :src="item.shopImg" alt="" /></div>
           <div class="content">
             <div class="name">
@@ -34,24 +38,85 @@
     "
     contentText="您还没有专属零售户哦！赶快去绑定吧！"
     confirmBtnText="选择零售户"
+    needCloseBtn
     @confirm="showNoBind = false"
-  >
-  </popup-with-head>
-  <img
-    id="img"
-    src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-cq.png"
-    style="display:none"
-    alt=""
+    @cancel="showNoBind = false"
   />
+  <popup-with-head
+    :show="showShopDetail"
+    :headImgStyle="{
+      width: '80vw',
+      height: '52.26667vw ',
+      borderRadius: '2.66667vw'
+    }"
+    :headImg="shopDetail.shopImg"
+    confirmBtnText="绑定零售户"
+    needCloseBtn
+    @confirm="showBindPopup = true"
+    @cancel="showShopDetail = false"
+  >
+    <template #content>
+      <div class="shop-detail-container">
+        <div class="shop-detail-title">
+          {{ shopDetail.ShopName }}
+          <template v-if="bindShop">
+            <span
+              v-if="bindShop.shopId === shopDetail.id"
+              class="btn-unbind"
+              @click="handleClickUnbind"
+              >解绑零售户</span
+            >
+          </template>
+        </div>
+        <div class="shop-detail-content">地址：{{ shopDetail.addr }}</div>
+        <div class="shop-detail-content">
+          电话：{{ shopDetail.contactPhone }}
+        </div>
+      </div>
+    </template>
+    <div v-if="bindShop"></div>
+  </popup-with-head>
+  <popup-with-head
+    :show="showBindPopup"
+    headImg="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-debind-head.png"
+    needCancelBtn
+    @confirm="
+      () => {
+        showBindPopup = false
+        showShopDetail = false
+        handleBindShop()
+      }
+    "
+    @cancel="showBindPopup = false"
+  >
+    <template #content>
+      <div class="bind-popup-container">
+        绑定成为零售户专属粉丝后，就只能参与您当前绑定零售户店铺的互动不能在解绑了哦，您确定绑定吗？
+      </div>
+    </template>
+  </popup-with-head>
+  <popup-with-head
+    :show="showBindSuccess"
+    headImg="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-debind-head.png"
+    needCancelBtn
+    @confirm="showBindSuccess = false"
+    @cancel="showBindSuccess = false"
+  >
+    <template #content>
+      <div class="bind-popup-container">
+        恭喜您，成为零售户专属粉丝！赶快去参与专属活动吧！
+      </div>
+    </template>
+  </popup-with-head>
 </template>
 
 <script lang="ts">
 // eslint-disable-next-line
 declare let TMap: any
-import { computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { TMapGL } from '@/plugins/Tmap'
 import { http } from '@/http'
-import { Toast } from 'vant'
+import { Dialog, Toast } from 'vant'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import PopupWithHead from '@/components/PopupWithHead/index.vue'
@@ -95,6 +160,20 @@ export default defineComponent({
 
     const showShopList = ref(false)
     const showNoBind = ref(false)
+    const showBindPopup = ref(false)
+    const showShopDetail = ref(false)
+    const showBindSuccess = ref(false)
+
+    const shopDetail = ref<ShopInfo>({
+      id: 0,
+      shopImg: '',
+      ShopName: '',
+      contactPhone: '',
+      addr: '',
+      shopLat: 0,
+      shopLng: 0,
+      distance: 0
+    })
 
     Toast.loading({
       message: '加载中...',
@@ -104,6 +183,18 @@ export default defineComponent({
 
     const handleClickListBtn = () => {
       showShopList.value = !showShopList.value
+    }
+
+    const handleClickShop = (shop: ShopInfo) => {
+      shopDetail.value.id = shop.id
+      shopDetail.value.shopImg = shop.shopImg
+      shopDetail.value.ShopName = shop.ShopName
+      shopDetail.value.contactPhone = shop.contactPhone
+      shopDetail.value.addr = shop.addr
+      shopDetail.value.shopLat = shop.shopLat
+      shopDetail.value.shopLng = shop.shopLng
+      shopDetail.value.distance = shop.distance
+      showShopDetail.value = true
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,15 +229,20 @@ export default defineComponent({
               const markers = shopList.map((i: ShopInfo) => {
                 return {
                   id: i.id, //点标记唯一标识，后续如果有删除、修改位置等操作，都需要此id
-                  styleId: 'cqStyle', //指定样式id
+                  styleId:
+                    bindShop.value?.shopId === i.id ? 'bindedStyle' : 'cqStyle', //指定样式id
                   position: new TMap.LatLng(i.shopLat, i.shopLng), //点标记坐标位置
                   properties: {
                     //自定义属性
+                    id: i.id,
                     title: i.ShopName,
                     ShopName: i.ShopName,
                     addr: i.addr,
                     contactPhone: i.contactPhone,
-                    distance: i.distance
+                    distance: i.distance,
+                    shopImg: i.shopImg,
+                    shopLat: i.shopLat,
+                    shopLng: i.shopLng
                   }
                 }
               })
@@ -161,59 +257,136 @@ export default defineComponent({
         })
     }
 
+    const handleBindShop = () => {
+      http
+        .post('/hbSeller/fans/bindShop', { shopId: shopDetail.value.id }, false)
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success({
+              message: '绑定成功',
+              onClose: () => {
+                markerLayer.remove(shopListRef.value.map((i) => i.id))
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                getHomeInfo(lat.value!, lng.value!)
+              }
+            })
+            showBindSuccess.value = true
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    const handleClickUnbind = () => {
+      Dialog.confirm({
+        title: '提示',
+        message:
+          '尊敬的用户，解绑零售户，需在公众号留言“解绑零售户”，由客服人员后台操作处理，解绑前需领取未领取的奖品，如已领取请忽略，绑定关系解除后，已产生的相关活动数据会中断，需重新绑定零售户后参与店铺活动。',
+        closeOnClickOverlay: true,
+        confirmButtonText: '知道了'
+      })
+        .then(() => {
+          // on confirm
+        })
+        .catch(() => {
+          // on cancel
+        })
+    }
+
+    const initTmap = () => {
+      TMapGL().then(() => {
+        console.log(lat.value, lng.value)
+        const center = new TMap.LatLng(lat.value, lng.value)
+        const map = new TMap.Map(document.getElementById('lbs-container'), {
+          center: center, //  设置地图中心点坐标
+          zoom: 12,
+          draggable: false, //  是否支持拖拽移动地图，默认为true。
+          scrollable: false, // 是否支持鼠标滚轮缩放地图，默认为true
+          doubleClickZoom: false, // 是否支持双击缩放地图，默认为true。
+          showControl: false // 是否显示地图上的控件，默认true。
+        })
+        //初始marker样式
+        markerLayer = new TMap.MultiMarker({
+          id: 'marker-layer',
+          map: map,
+          styles: {
+            bindedStyle: new TMap.MarkerStyle({
+              width: 47, // 点标记样式宽度（像素）
+              height: 40, // 点标记样式高度（像素）
+              src:
+                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-binded.png', //图片路径
+              //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+              anchor: { x: 16, y: 32 }
+            }),
+            cqStyle: new TMap.MarkerStyle({
+              width: 47, // 点标记样式宽度（像素）
+              height: 40, // 点标记样式高度（像素）
+              src:
+                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-cq.png', //图片路径
+              //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+              anchor: { x: 16, y: 32 }
+            }),
+            hqStyle: new TMap.MarkerStyle({
+              width: 47, // 点标记样式宽度（像素）
+              height: 40, // 点标记样式高度（像素）
+              src:
+                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-hq.png', //图片路径
+              //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+              anchor: { x: 16, y: 32 }
+            })
+          },
+          geometries: []
+        })
+
+        //监听标注点击事件
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        markerLayer.on('click', function(evt: any) {
+          console.log(evt.geometry)
+          handleClickShop(evt.geometry.properties as ShopInfo)
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        getHomeInfo(lat.value!, lng.value!)
+      })
+    }
+
     watch(
       () => lat.value,
       () => {
         if (lat.value && lng.value) {
-          TMapGL().then(() => {
-            console.log(lat.value, lng.value)
-            const center = new TMap.LatLng(lat.value, lng.value)
-            const map = new TMap.Map(document.getElementById('lbs-container'), {
-              center: center, //  设置地图中心点坐标
-              zoom: 12,
-              draggable: false, //  是否支持拖拽移动地图，默认为true。
-              scrollable: false, // 是否支持鼠标滚轮缩放地图，默认为true
-              doubleClickZoom: false, // 是否支持双击缩放地图，默认为true。
-              showControl: false // 是否显示地图上的控件，默认true。
-            })
-            //初始marker样式
-            markerLayer = new TMap.MultiMarker({
-              id: 'marker-layer',
-              map: map,
-              styles: {
-                cqStyle: new TMap.MarkerStyle({
-                  width: 47, // 点标记样式宽度（像素）
-                  height: 40, // 点标记样式高度（像素）
-                  src: require('@/assets/images/lbs-icon-seller-cq.png'), //图片路径
-                  //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
-                  anchor: { x: 16, y: 32 }
-                })
-              },
-              geometries: []
-            })
-
-            //监听标注点击事件
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            markerLayer.on('click', function(evt: any) {
-              console.log(evt.geometry)
-            })
-
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            getHomeInfo(lat.value!, lng.value!)
-          })
+          initTmap()
         }
       }
     )
     if (process.env.NODE_ENV !== 'production') {
       store.commit('setLng', 116.70602)
       store.commit('setLat', 39.860464)
+      // initTmap()
     }
+    onMounted(() => {
+      if (!sessionStorage.getItem('CustomerHome')) {
+        sessionStorage.setItem('CustomerHome', '1')
+        window.location.reload()
+        return
+      }
+    })
 
     return {
-      handleClickListBtn,
       showShopList,
       showNoBind,
-      shopListRef
+      showBindPopup,
+      shopListRef,
+      showShopDetail,
+      showBindSuccess,
+      shopDetail,
+      bindShop,
+      handleClickListBtn,
+      handleClickShop,
+      handleBindShop,
+      handleClickUnbind
     }
   }
 })
@@ -321,5 +494,51 @@ export default defineComponent({
     right: 10px;
     z-index: 1003;
   }
+}
+.shop-detail-container {
+  padding-top: 110px;
+  margin: 0 17px -8vw;
+  box-sizing: border-box;
+  .shop-detail-title {
+    height: 27px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 27px;
+    color: #303133;
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    .btn-unbind {
+      float: right;
+      width: 67px;
+      height: 26px;
+      background: rgba(32, 105, 255, 0.06);
+      border: 1px solid #2069ff;
+      line-height: 26px;
+      text-align: center;
+      color: #2069ff;
+      font-size: 12px;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+  }
+  .shop-detail-content {
+    height: 27px;
+    font-size: 14px;
+    line-height: 27px;
+    color: #303133;
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.bind-popup-container {
+  margin: 108px 24px -15px;
+  font-size: 14px;
+  line-height: 24px;
+  color: #303133;
+  text-align: justify;
 }
 </style>
