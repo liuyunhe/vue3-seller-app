@@ -38,13 +38,17 @@
 <script lang="ts">
 import { http } from '@/http'
 import { Toast } from 'vant'
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, PropType, ref } from 'vue'
 
 export default defineComponent({
-  name: 'SelllerMessageDetail',
+  name: 'CustomerMessageDetail',
   props: {
     id: {
       type: String,
+      requried: true
+    },
+    type: {
+      type: String as PropType<'sys' | 'shop'>,
       requried: true
     }
   },
@@ -55,19 +59,25 @@ export default defineComponent({
     const msgContent = ref('')
     const sendTime = ref('')
     const getMessageInfo = () => {
-      http
-        .post('/hbSeller/sellerMsg/sysMsgItem', { msgId: props.id }, false)
-        .then((res) => {
-          if (res.code === '200') {
-            title.value = res.data.title
-            subTitle.value = res.data.subTitle
-            msgContent.value = res.data.msgContent
-            sendTime.value = res.data.sendTime
-            showMsg.value = true
-          } else {
-            Toast.fail(res.msg)
-          }
-        })
+      let url = ''
+      if (props.type === 'sys') {
+        url = '/hbSeller/fans/msg/system/detail'
+      } else if (props.type === 'shop') {
+        url = '/hbSeller/fans/msg/shop/detail'
+      }
+      http.post(url, { id: props.id }, false).then((res) => {
+        if (res.code === '200') {
+          title.value = res.data.data.title
+          subTitle.value = res.data.data.subTitle
+          msgContent.value = res.data.data.msgContent
+          sendTime.value = res.data.data.ctime
+            ? res.data.data.ctime
+            : res.data.data.sendTime
+          showMsg.value = true
+        } else {
+          Toast.fail(res.msg)
+        }
+      })
     }
     onMounted(() => {
       getMessageInfo()

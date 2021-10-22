@@ -15,13 +15,13 @@
             <img :src="props.active ? icon1.active : icon1.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/customer/home">
-          <span>我的粉丝</span>
+        <van-tabbar-item to="/customer/customerActs">
+          <span>专属活动</span>
           <template #icon="props">
             <img :src="props.active ? icon2.active : icon2.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/customer/home">
+        <van-tabbar-item to="/customer/customerMessage">
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
@@ -43,7 +43,7 @@ export default defineComponent({
   name: 'CustomerLayout',
   setup() {
     const state = reactive({
-      includeRoutes: ['CustomerHome']
+      includeRoutes: ['CustomerHome', 'CustomerActs', 'CustomerMessage']
     })
     const icon1 = {
       active:
@@ -53,9 +53,9 @@ export default defineComponent({
     }
     const icon2 = {
       active:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-2-1.png',
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-6-1.png',
       inactive:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-2-0.png'
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-6-0.png'
     }
     const icon3 = {
       active:

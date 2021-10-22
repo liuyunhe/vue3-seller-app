@@ -221,8 +221,47 @@ const routes: Array<RouteRecordRaw> = [
           import(
             /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerHome.vue'
           )
+      },
+      {
+        path: 'customerActs',
+        name: 'CustomerActs',
+        meta: {
+          title: '专属活动',
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerActs.vue'
+          )
+      },
+      {
+        path: 'customerMessage',
+        name: 'CustomerMessage',
+        meta: {
+          title: '我的消息',
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerHome" */ '../views/customer/Message.vue'
+          )
       }
     ]
+  },
+  {
+    path: '/customer/messageDetail',
+    name: 'CustomerMessageDetail',
+    props: (route) => ({
+      id: route.query.id,
+      type: route.query.type
+    }),
+    meta: {
+      title: '消息详情'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SelllerMessageDetail" */ '../views/customer/MessageDetail.vue'
+      )
   }
 ]
 

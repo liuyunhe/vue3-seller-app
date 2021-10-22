@@ -19,7 +19,9 @@ import {
   RadioGroup,
   DatetimePicker,
   Cascader,
-  Toast
+  Toast,
+  Tab,
+  Tabs
 } from 'vant'
 
 const plugins = [
@@ -42,7 +44,9 @@ const plugins = [
   RadioGroup,
   DatetimePicker,
   Cascader,
-  Toast
+  Toast,
+  Tab,
+  Tabs
 ]
 
 export const vantPlugins = {
