@@ -8,7 +8,7 @@
           </div>
           <div class="info">
             <div class="name">{{ fanNickName }}<i class=""></i></div>
-            <div class="tips"><span>亲，个人信息还未完善哦！</span></div>
+            <div class="tips"><span>点击查看个人信息详情</span></div>
           </div>
           <div class="btn"></div>
         </div>
@@ -17,14 +17,18 @@
     <div class="main">
       <div class="title">我的功能</div>
       <div class="content">
-        <div class="item">
-          <i class="icon icon-gift"></i>
-          <div class="name">我的礼品</div>
-        </div>
-        <div class="item">
-          <i class="icon icon-integral"></i>
-          <div class="name">我的积分</div>
-        </div>
+        <router-link to="/common/myGifts">
+          <div class="item">
+            <i class="icon icon-gift"></i>
+            <div class="name">我的礼品</div>
+          </div>
+        </router-link>
+        <router-link to="/common/myPoints">
+          <div class="item">
+            <i class="icon icon-integral"></i>
+            <div class="name">我的积分</div>
+          </div>
+        </router-link>
         <div class="item" @click="handleClickMySeller">
           <i class="icon icon-seller"></i>
           <div class="name">我的零售户</div>

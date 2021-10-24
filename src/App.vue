@@ -18,7 +18,8 @@ export default defineComponent({
       'SellerLayout',
       'CustomerLayout',
       'SellerMemberInfo',
-      'BindFansQrcode'
+      'BindFansQrcode',
+      'CustomerUserInfo'
     ]
     const store = useStore<GlobalDataProps>()
     const isLoading = computed(() => store.state.loading)

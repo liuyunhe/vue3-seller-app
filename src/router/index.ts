@@ -58,6 +58,24 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "Feedback" */ '../views/common/Feedback.vue')
   },
+  {
+    path: '/common/myGifts',
+    name: 'MyGifts',
+    meta: {
+      title: '我的礼品'
+    },
+    component: () =>
+      import(/* webpackChunkName: "MyGifts" */ '../views/common/MyGifts.vue')
+  },
+  {
+    path: '/common/myPoints',
+    name: 'MyPoints',
+    meta: {
+      title: '我的积分'
+    },
+    component: () =>
+      import(/* webpackChunkName: "MyGifts" */ '../views/common/MyPoints.vue')
+  },
   // 零售户
   {
     path: '/seller',
