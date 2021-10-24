@@ -27,7 +27,7 @@
             <img :src="props.active ? icon3.active : icon3.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/customer/home">
+        <van-tabbar-item to="/customer/customerInfo">
           <span>个人中心</span>
           <template #icon="props">
             <img :src="props.active ? icon4.active : icon4.inactive" />
@@ -43,7 +43,12 @@ export default defineComponent({
   name: 'CustomerLayout',
   setup() {
     const state = reactive({
-      includeRoutes: ['CustomerHome', 'CustomerActs', 'CustomerMessage']
+      includeRoutes: [
+        'CustomerHome',
+        'CustomerActs',
+        'CustomerMessage',
+        'CustomerInfo'
+      ]
     })
     const icon1 = {
       active:

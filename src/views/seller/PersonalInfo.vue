@@ -24,12 +24,14 @@
       <div class="content">
         <div class="item">
           <i class="icon icon-wallet"></i>
-          <div class="name">我的钱包</div>
+          <div class="name">我的返佣</div>
         </div>
-        <div class="item">
-          <i class="icon icon-virtual-currency"></i>
-          <div class="name">我的虚拟币</div>
-        </div>
+        <router-link to="/seller/bindFansQrcode">
+          <div class="item">
+            <i class="icon icon-qrcode"></i>
+            <div class="name">我的专属码</div>
+          </div>
+        </router-link>
         <div class="item">
           <i class="icon icon-integral"></i>
           <div class="name">我的积分</div>
@@ -46,20 +48,18 @@
             <div class="name">我的邀约</div>
           </div>
         </router-link>
-        <router-link to="/seller/bindFansQrcode">
-          <div class="item">
-            <i class="icon icon-qrcode"></i>
-            <div class="name">我的专属码</div>
-          </div>
-        </router-link>
+
         <div class="item">
           <i class="icon icon-survey"></i>
           <div class="name">我的问卷</div>
         </div>
-        <div class="item">
-          <i class="icon icon-opinion"></i>
-          <div class="name">意见反馈</div>
-        </div>
+        <router-link to="/common/feedback">
+          <div class="item">
+            <i class="icon icon-opinion"></i>
+            <div class="name">意见反馈</div>
+          </div>
+        </router-link>
+        <div class="item"></div>
       </div>
     </div>
   </div>
@@ -194,7 +194,7 @@ export default defineComponent({
     flex: 1;
     border-radius: 20px 20px 0px 0px;
     background-color: #fff;
-    padding: 24px 20px;
+    padding: 24px 12px;
     box-sizing: border-box;
     .title {
       height: 24px;
@@ -202,6 +202,7 @@ export default defineComponent({
       font-weight: bold;
       line-height: 25px;
       color: #333333;
+      margin-left: 8px;
       margin-bottom: 20px;
     }
     .content {
@@ -209,6 +210,7 @@ export default defineComponent({
       justify-content: space-between;
       margin-bottom: 30px;
       .item {
+        width: 74px;
         i.icon {
           display: block;
           margin: 0 auto;

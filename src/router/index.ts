@@ -46,6 +46,18 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "SignIn" */ '../views/common/SignIn.vue')
   },
+  {
+    path: '/common/feedback',
+    name: 'Feedback',
+    meta: {
+      title: '意见反馈'
+    },
+    props: (route) => ({
+      feedFrom: route.query.feedFrom
+    }),
+    component: () =>
+      import(/* webpackChunkName: "Feedback" */ '../views/common/Feedback.vue')
+  },
   // 零售户
   {
     path: '/seller',
@@ -132,9 +144,7 @@ const routes: Array<RouteRecordRaw> = [
       keepAlive: true
     },
     component: () =>
-      import(
-        /* webpackChunkName: "InviteFans" */ '../views/seller/FansBind.vue'
-      )
+      import(/* webpackChunkName: "FansBind" */ '../views/seller/FansBind.vue')
   },
   {
     path: '/seller/bindFansQrcode',
@@ -197,7 +207,7 @@ const routes: Array<RouteRecordRaw> = [
     }),
     component: () =>
       import(
-        /* webpackChunkName: "SellerMyInvite" */ '../views/seller/EditInvition.vue'
+        /* webpackChunkName: "SellerEditInvition" */ '../views/seller/EditInvition.vue'
       )
   },
   // 消费者
@@ -207,7 +217,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/customer/home',
     component: () =>
       import(
-        /* webpackChunkName: "SellerLayout" */ '../components/CustomerLayout/index.vue'
+        /* webpackChunkName: "CustomerLayout" */ '../components/CustomerLayout/index.vue'
       ),
     children: [
       {
@@ -231,7 +241,7 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () =>
           import(
-            /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerActs.vue'
+            /* webpackChunkName: "CustomerActs" */ '../views/customer/CustomerActs.vue'
           )
       },
       {
@@ -243,7 +253,18 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () =>
           import(
-            /* webpackChunkName: "CustomerHome" */ '../views/customer/Message.vue'
+            /* webpackChunkName: "CustomerMessage" */ '../views/customer/Message.vue'
+          )
+      },
+      {
+        path: 'customerInfo',
+        name: 'CustomerInfo',
+        meta: {
+          title: '个人中心'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerInfo" */ '../views/customer/PersonalInfo.vue'
           )
       }
     ]
@@ -260,7 +281,18 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "SelllerMessageDetail" */ '../views/customer/MessageDetail.vue'
+        /* webpackChunkName: "CustomerMessageDetail" */ '../views/customer/MessageDetail.vue'
+      )
+  },
+  {
+    path: '/customer/userInfo',
+    name: 'CustomerUserInfo',
+    meta: {
+      title: '个人资料'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "CustomerUserInfo" */ '../views/customer/UserInfo.vue'
       )
   }
 ]
