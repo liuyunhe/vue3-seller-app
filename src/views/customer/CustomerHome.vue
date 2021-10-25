@@ -178,8 +178,28 @@ export default defineComponent({
     Toast.loading({
       message: '加载中...',
       forbidClick: true,
-      duration: 0
+      duration: 10000
     })
+
+    let initMapFlag = false
+
+    setTimeout(() => {
+      if (!initMapFlag) {
+        Dialog.confirm({
+          title: '提示',
+          message:
+            '尊敬的用户，获取您的地理位置信息失败，请重新进入或刷新本页面。',
+          closeOnClickOverlay: true,
+          confirmButtonText: '知道了'
+        })
+          .then(() => {
+            // on confirm
+          })
+          .catch(() => {
+            // on cancel
+          })
+      }
+    }, 11000)
 
     const handleClickListBtn = () => {
       showShopList.value = !showShopList.value
@@ -299,6 +319,7 @@ export default defineComponent({
     const initTmap = () => {
       TMapGL().then(() => {
         console.log(lat.value, lng.value)
+        initMapFlag = true
         const center = new TMap.LatLng(lat.value, lng.value)
         const map = new TMap.Map(document.getElementById('lbs-container'), {
           center: center, //  设置地图中心点坐标
