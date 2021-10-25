@@ -355,8 +355,8 @@ export default defineComponent({
 
     watch(
       () => lat.value,
-      () => {
-        if (lat.value && lng.value) {
+      (nValue, oValue) => {
+        if (lat.value && lng.value && oValue == null) {
           initTmap()
         }
       }
@@ -364,9 +364,14 @@ export default defineComponent({
     if (process.env.NODE_ENV !== 'production') {
       store.commit('setLng', 116.70602)
       store.commit('setLat', 39.860464)
-      // initTmap()
     }
     onMounted(() => {
+      if (process.env.NODE_ENV === 'production') {
+        if (lat.value && lng.value) {
+          initTmap()
+          return
+        }
+      }
       if (!sessionStorage.getItem('CustomerHome')) {
         sessionStorage.setItem('CustomerHome', '1')
         window.location.reload()

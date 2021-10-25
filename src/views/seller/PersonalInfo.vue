@@ -32,14 +32,18 @@
             <div class="name">我的专属码</div>
           </div>
         </router-link>
-        <div class="item">
-          <i class="icon icon-integral"></i>
-          <div class="name">我的积分</div>
-        </div>
-        <div class="item">
-          <i class="icon icon-gift"></i>
-          <div class="name">我的礼品</div>
-        </div>
+        <router-link to="/common/myGifts">
+          <div class="item">
+            <i class="icon icon-gift"></i>
+            <div class="name">我的礼品</div>
+          </div>
+        </router-link>
+        <router-link to="/common/myPoints">
+          <div class="item">
+            <i class="icon icon-integral"></i>
+            <div class="name">我的积分</div>
+          </div>
+        </router-link>
       </div>
       <div class="content">
         <router-link to="/seller/myInvite">
@@ -48,7 +52,6 @@
             <div class="name">我的邀约</div>
           </div>
         </router-link>
-
         <div class="item">
           <i class="icon icon-survey"></i>
           <div class="name">我的问卷</div>
