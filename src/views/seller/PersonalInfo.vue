@@ -7,7 +7,9 @@
             <img :src="headimgurl" alt="" />
           </div>
           <div class="info">
-            <div class="name">{{ shopName }}<i class=""></i></div>
+            <div class="name">
+              {{ shopName }}<img class="icon-lv" :src="levelIconUrl" alt="" />
+            </div>
             <div class="member">
               <span class="lv">LV{{ shopLevel }} {{ levelName }}</span
               ><span class="title"></span>
@@ -80,6 +82,7 @@ export default defineComponent({
     const headimgurl = ref('')
     const shopLevel = ref(0)
     const levelName = ref('')
+    const levelIconUrl = ref('')
     const upgradeScore = ref(0)
     const getSellerInfo = () => {
       http
@@ -90,6 +93,7 @@ export default defineComponent({
             headimgurl.value = res.data.personInfo.headimgurl
             shopLevel.value = res.data.personInfo.shopLevel
             levelName.value = res.data.levelCode.levelName
+            levelIconUrl.value = res.data.levelCode.levelIconUrl
             upgradeScore.value = res.data.upgradeScore
           } else {
             Toast.fail(res.msg)
@@ -107,7 +111,8 @@ export default defineComponent({
       headimgurl,
       shopLevel,
       levelName,
-      upgradeScore
+      upgradeScore,
+      levelIconUrl
     }
   }
 })
@@ -152,6 +157,11 @@ export default defineComponent({
           line-height: 25px;
           margin-left: 5px;
           color: #fff;
+          .icon-lv {
+            display: inline-block;
+            width: 15px;
+            margin-left: 5px;
+          }
         }
         .member {
           .bg-img(

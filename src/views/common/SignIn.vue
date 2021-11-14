@@ -72,7 +72,7 @@ export default defineComponent({
               if (register) {
                 router.push('/seller/sellerFans')
               } else {
-                // router.push('/seller/register')
+                router.push('/seller/register')
               }
             } else if (role == 2) {
               router.push('/customer/home')
