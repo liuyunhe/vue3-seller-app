@@ -3,6 +3,11 @@
     <van-tabs v-model:active="activeName" title-active-color="#0271FD">
       <div class="list">
         <van-tab title="平台消息" name="sys">
+          <template v-if="sysMessageList.length === 0">
+            <div class="no-message">
+              暂无消息
+            </div>
+          </template>
           <template v-for="item in sysMessageList" :key="item.id">
             <router-link :to="`/customer/messageDetail?id=${item.id}&type=sys`">
               <div class="message-item">
@@ -24,6 +29,11 @@
           </template>
         </van-tab>
         <van-tab title="店铺消息" name="shop">
+          <template v-if="shopMessageList.length === 0">
+            <div class="no-message">
+              暂无消息
+            </div>
+          </template>
           <template v-for="item in shopMessageList" :key="item.id">
             <router-link
               :to="`/customer/messageDetail?id=${item.id}&type=shop`"
@@ -117,6 +127,14 @@ export default defineComponent({
   .list {
     padding: 10px 15px;
     box-sizing: border-box;
+  }
+  .no-message {
+    position: relative;
+    top: 200px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #b1b1b1;
   }
   .message-item {
     display: flex;

@@ -29,7 +29,7 @@
           rows="1"
           autosize
           label="联系方式："
-          label-width="5em"
+          label-width="5.5em"
           type="input"
           maxlength="11"
           placeholder="请输入手机号码"

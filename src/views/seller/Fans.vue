@@ -74,9 +74,13 @@ export default defineComponent({
         .then((res) => {
           if (res.code === '200') {
             if (res.data) {
-              fansNum.value = res.data.fansNum
-              sacnCodeNum.value = res.data.sacnCodeNum
-              shopScanActNum.value = res.data.shopScanActNum
+              fansNum.value = res.data.fansNum || 0
+              sacnCodeNum.value = res.data.sacnCodeNum || 0
+              shopScanActNum.value = res.data.shopScanActNum || 0
+            } else {
+              fansNum.value = '0'
+              sacnCodeNum.value = '0'
+              shopScanActNum.value = '0'
             }
           } else {
             Toast.fail(res.msg)

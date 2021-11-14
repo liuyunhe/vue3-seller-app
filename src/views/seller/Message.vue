@@ -1,5 +1,10 @@
 <template>
   <div class="message-container">
+    <template v-if="messageList.length === 0">
+      <div class="no-message">
+        暂无消息
+      </div>
+    </template>
     <template v-for="item in messageList" :key="item.id">
       <router-link :to="`/seller/messageDetail?id=${item.id}`">
         <div class="message-item">
@@ -73,6 +78,14 @@ export default defineComponent({
   box-sizing: border-box;
   min-height: 100%;
   background-color: #f4f4f4;
+  .no-message {
+    position: relative;
+    top: 200px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #b1b1b1;
+  }
   .message-item {
     display: flex;
     justify-content: space-between;

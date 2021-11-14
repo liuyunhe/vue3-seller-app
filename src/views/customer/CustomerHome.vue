@@ -130,6 +130,7 @@ interface ShopInfo {
   contactPhone: string
   distance: number | string
   shopImg: string
+  iconUrl: string
 }
 interface BindShop {
   id: number
@@ -172,7 +173,8 @@ export default defineComponent({
       addr: '',
       shopLat: 0,
       shopLng: 0,
-      distance: 0
+      distance: 0,
+      iconUrl: ''
     })
 
     Toast.loading({
@@ -231,7 +233,11 @@ export default defineComponent({
       })
       return shopList
     }
-
+    interface Styles {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [key: string]: any
+    }
+    let styles: Styles = {}
     const getHomeInfo = (lat: number, lng: number) => {
       http
         .post('/hbSeller/fans/homeInfo', { lat, lng }, false)
@@ -246,11 +252,46 @@ export default defineComponent({
             }
             if (shopList && shopList.length) {
               shopListRef.value = sortShopList(shopList)
+              styles = {
+                bindedStyle: new TMap.MarkerStyle({
+                  width: 47, // 点标记样式宽度（像素）
+                  height: 40, // 点标记样式高度（像素）
+                  src:
+                    'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-binded.png', //图片路径
+                  //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+                  anchor: { x: 16, y: 32 }
+                }),
+                cqStyle: new TMap.MarkerStyle({
+                  width: 47, // 点标记样式宽度（像素）
+                  height: 40, // 点标记样式高度（像素）
+                  src:
+                    'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-cq.png', //图片路径
+                  //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+                  anchor: { x: 16, y: 32 }
+                }),
+                hqStyle: new TMap.MarkerStyle({
+                  width: 47, // 点标记样式宽度（像素）
+                  height: 40, // 点标记样式高度（像素）
+                  src:
+                    'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-hq.png', //图片路径
+                  //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+                  anchor: { x: 16, y: 32 }
+                })
+              }
               const markers = shopList.map((i: ShopInfo) => {
+                const style = `style${i.id}`
+                styles[style] = new TMap.MarkerStyle({
+                  width: 47, // 点标记样式宽度（像素）
+                  height: 40, // 点标记样式高度（像素）
+                  src: i.iconUrl, //图片路径
+                  //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
+                  anchor: { x: 16, y: 32 }
+                })
+
                 return {
                   id: i.id, //点标记唯一标识，后续如果有删除、修改位置等操作，都需要此id
                   styleId:
-                    bindShop.value?.shopId === i.id ? 'bindedStyle' : 'cqStyle', //指定样式id
+                    bindShop.value?.shopId === i.id ? 'bindedStyle' : style, //指定样式id
                   position: new TMap.LatLng(i.shopLat, i.shopLng), //点标记坐标位置
                   properties: {
                     //自定义属性
@@ -266,6 +307,8 @@ export default defineComponent({
                   }
                 }
               })
+              console.log(markers)
+              markerLayer.setStyles(styles)
               markerLayer.add(markers)
             }
           } else {
@@ -333,32 +376,6 @@ export default defineComponent({
         markerLayer = new TMap.MultiMarker({
           id: 'marker-layer',
           map: map,
-          styles: {
-            bindedStyle: new TMap.MarkerStyle({
-              width: 47, // 点标记样式宽度（像素）
-              height: 40, // 点标记样式高度（像素）
-              src:
-                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-binded.png', //图片路径
-              //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
-              anchor: { x: 16, y: 32 }
-            }),
-            cqStyle: new TMap.MarkerStyle({
-              width: 47, // 点标记样式宽度（像素）
-              height: 40, // 点标记样式高度（像素）
-              src:
-                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-cq.png', //图片路径
-              //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
-              anchor: { x: 16, y: 32 }
-            }),
-            hqStyle: new TMap.MarkerStyle({
-              width: 47, // 点标记样式宽度（像素）
-              height: 40, // 点标记样式高度（像素）
-              src:
-                'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lbs-icon-seller-hq.png', //图片路径
-              //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
-              anchor: { x: 16, y: 32 }
-            })
-          },
           geometries: []
         })
 

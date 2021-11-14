@@ -14,11 +14,11 @@
         </div>
       </div>
       <div class="lv-content">
-        <div class="lv-num">lv{{ shopLevel }}</div>
+        <div class="lv-num">LV{{ shopLevel }}</div>
         <div class="lv-bar">
           <div class="active" :style="{ width: `${levelBarWidth}%` }"></div>
         </div>
-        <div class="lv-num">lv{{ shopLevel + 1 }}</div>
+        <div class="lv-num">LV{{ shopLevel + 1 }}</div>
       </div>
       <!-- <div class="tips">再增加11个粉丝可升值3级紫钻会员</div> -->
     </div>
@@ -77,8 +77,10 @@ export default defineComponent({
             upgradeScore.value = res.data.upgradeScore
             const levelScore =
               res.data.levelCode.levelScoreMax -
-              res.data.levelCode.levelScoreMin
-            levelBarWidth.value = (upgradeScore.value / levelScore) * 100
+              res.data.levelCode.levelScoreMin +
+              1
+            levelBarWidth.value =
+              ((levelScore - upgradeScore.value) / levelScore) * 100
           } else {
             Toast.fail(res.msg)
           }
