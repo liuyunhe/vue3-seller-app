@@ -234,7 +234,7 @@
       <div class="status">审核通过</div>
       <div class="text">恭喜您，成为专属零售户！拥有了专属二维码</div>
       <div class="text">可以邀请好友成为粉丝及参与平台活动，赶快去体验吧！</div>
-      <div class="btn" v-if="contactPhone">
+      <div class="btn" v-if="!hasPhone">
         <van-button
           square
           type="primary"
@@ -369,6 +369,7 @@ import axios, { http } from '@/http'
 export default defineComponent({
   setup() {
     const showBindPhone = ref(false)
+    const hasPhone = ref(false)
     const contactPhone = ref('')
     const phoneCode = ref('')
     const phoneCodeText = ref('发送验证码')
@@ -641,6 +642,7 @@ export default defineComponent({
         .then((res) => {
           if (res.code === '200') {
             console.log(res.data)
+            hasPhone.value = res.data.hasPhone
             isRegister.value = res.data.isRegister
             if (res.data.isRegister) {
               registerStatus.value = res.data.registerStatus
@@ -876,6 +878,7 @@ export default defineComponent({
       registerStatus,
       showForm,
       shopName,
+      hasPhone,
       contactName,
       licenseNo,
       contactPhone,
