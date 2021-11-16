@@ -9,8 +9,8 @@
     <van-form
       @submit="onSubmit"
       input-align="right"
-      :show-error-message="false"
-      :show-error="true"
+      :show-error-message="true"
+      :show-error="false"
       :disabled="formDiabled"
     >
       <van-cell-group inset style="margin:0">
@@ -19,14 +19,18 @@
           name="shopName"
           label="门店名称"
           placeholder="请输入门店名称"
-          :rules="[{ required: true, message: '请输入门店名称' }]"
+          maxlength="10"
+          error-message-align="right"
+          :rules="[{ required: true, message: '门店名称不能为空' }]"
         />
         <van-field
           v-model="contactName"
           name="contactName"
           label="经营人姓名"
           placeholder="请输入姓名"
-          :rules="[{ required: true, message: '请输入姓名' }]"
+          maxlength="10"
+          error-message-align="right"
+          :rules="[{ required: true, message: '经营人姓名不能为空' }]"
         />
         <van-field
           v-model="male"
@@ -35,8 +39,9 @@
           name="male"
           label="性别"
           placeholder="点击选择性别"
+          error-message-align="right"
           @click="handleClickField('showMalePicker')"
-          :rules="[{ required: true, message: '请输入姓名' }]"
+          :rules="[{ required: true, message: '性别不能为空' }]"
         />
         <van-popup v-model:show="showMalePicker" position="bottom">
           <van-picker
@@ -54,8 +59,9 @@
           name="date"
           label="出生日期"
           placeholder="点击选择时间"
+          error-message-align="right"
           @click="handleClickField('showDatetimePicker')"
-          :rules="[{ required: true, message: '点击选择时间' }]"
+          :rules="[{ required: true, message: '出生日期不能为空' }]"
         />
         <van-popup v-model:show="showDatetimePicker" position="bottom">
           <van-datetime-picker
@@ -75,8 +81,13 @@
           name="contactPhone"
           label="电话"
           placeholder="请输入电话号码"
+          error-message-align="right"
           :rules="[
-            { required: true, pattern: phonePattern, message: '请输入电话号码' }
+            {
+              required: true,
+              pattern: phonePattern,
+              message: '电话号码不能为空'
+            }
           ]"
         />
         <van-field
@@ -85,8 +96,9 @@
           readonly
           label="门店地址"
           placeholder="请选择门店地址"
+          error-message-align="right"
           @click="handleClickField('showRegionPopup')"
-          :rules="[{ required: true, message: '请选择门店地址' }]"
+          :rules="[{ required: true, message: '门店地址不能为空' }]"
         />
         <van-popup v-model:show="showRegionPopup" square position="bottom">
           <van-cascader
@@ -104,10 +116,10 @@
           name="detailAddr"
           label=""
           input-align="left"
+          maxlength="50"
+          error-message-align="left"
           placeholder="请输入详细地址，精确到街道门牌号"
-          :rules="[
-            { required: true, message: '请输入详细地址，精确到街道门牌号' }
-          ]"
+          :rules="[{ required: true, message: '详细地址不能为空' }]"
         />
         <van-field
           v-model="GPSValue"
@@ -116,11 +128,17 @@
           readonly
           label="门店定位"
           placeholder="请定位门店地址"
+          error-message-align="right"
           right-icon="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/rs-location.png"
           @click="handleClickField('showForm')"
           :rules="[{ required: true, message: '请定位门店地址' }]"
         />
-        <van-field name="uploader" label="门头照">
+        <van-field
+          name="uploader"
+          label="门头照"
+          error-message-align="right"
+          :rules="[{ required: true, message: '请上传门头照' }]"
+        >
           <template #input>
             <van-uploader
               :deletable="!formDiabled"
@@ -135,7 +153,12 @@
             />
           </template>
         </van-field>
-        <van-field name="uploader" label="烟草证照">
+        <van-field
+          name="uploader"
+          label="烟草证照"
+          error-message-align="right"
+          :rules="[{ required: true, message: '请上传烟草证照' }]"
+        >
           <template #input>
             <van-uploader
               :deletable="!formDiabled"
@@ -156,8 +179,13 @@
           name="licenseNo"
           label="烟草专卖许可证号"
           placeholder="请输入"
+          error-message-align="right"
           :rules="[
-            { required: true, pattern: licenseNoPattern, message: '请输入' }
+            {
+              required: true,
+              pattern: licenseNoPattern,
+              message: '请输入烟草专卖许可证号'
+            }
           ]"
         />
         <van-field name="radio" label="区域">
@@ -179,8 +207,9 @@
           name="saleZone"
           label="所属销区"
           placeholder="点击选择所属销区"
+          error-message-align="right"
           @click="handleClickField('showSaleZonePicker')"
-          :rules="[{ required: true, message: '请输入所属销区' }]"
+          :rules="[{ required: true, message: '请选择所属销区' }]"
         />
         <van-popup v-model:show="showSaleZonePicker" position="bottom">
           <van-picker
@@ -196,10 +225,11 @@
           name="salesman"
           label="业务员"
           placeholder="请输入业务员"
+          maxlength="10"
         />
       </van-cell-group>
       <div style="margin: 16px;" v-if="!formDiabled">
-        <van-button square block type="primary" native-type="submit">
+        <van-button block type="primary" native-type="submit">
           提交
         </van-button>
       </div>
@@ -236,7 +266,6 @@
       <div class="text">可以邀请好友成为粉丝及参与平台活动，赶快去体验吧！</div>
       <div class="btn" v-if="!hasPhone">
         <van-button
-          square
           type="primary"
           style="width:8rem"
           @click="showBindPhone = true"
@@ -274,6 +303,7 @@
                   name="phoneCode"
                   label="验证码"
                   placeholder="请输入验证码"
+                  center
                   @update:model-value="handleCodeChange"
                   :rules="[
                     {
@@ -286,7 +316,7 @@
                   <template #button>
                     <van-button
                       :disabled="btnDisabled"
-                      size="mini"
+                      size="small"
                       type="primary"
                       @click="handleGetCode"
                       >{{ phoneCodeText }}</van-button
@@ -296,7 +326,6 @@
               </van-cell-group>
               <div style="margin: 16px;">
                 <van-button
-                  round
                   block
                   type="primary"
                   size="small"
@@ -440,8 +469,8 @@ export default defineComponent({
     }
 
     const phonePattern = /^1[3456789]\d{9}$/
-    const licenseNoPattern = /\d{12}/
-    const phoneCodePattern = /\d{6}/
+    const licenseNoPattern = /^\d{12}$|^\d{13}$/
+    const phoneCodePattern = /^\d{6}$/
 
     const showRegionPopup = ref(false)
 
@@ -768,6 +797,7 @@ export default defineComponent({
           if (res.code === '200') {
             Toast.success('绑定成功')
             showBindPhone.value = false
+            getSellerInfo()
           } else {
             Toast.fail(res.msg)
           }
@@ -970,7 +1000,7 @@ export default defineComponent({
     margin-bottom: 8px;
   }
   .text {
-    font-size: 12px;
+    font-size: 14px;
     height: 20px;
     line-height: 20px;
     text-align: center;
