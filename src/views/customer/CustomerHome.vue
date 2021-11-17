@@ -7,6 +7,11 @@
       @click="handleClickListBtn"
     ></div>
     <div class="list-container" v-show="showShopList">
+      <template v-if="shopListRef.length === 0">
+        <div class="no-message">
+          当前区域未有注册零售户，请等待当地零售户开通注册！
+        </div>
+      </template>
       <ul>
         <li
           v-for="item in shopListRef"
@@ -39,8 +44,8 @@
     contentText="您还没有专属零售户哦！赶快去绑定吧！"
     confirmBtnText="选择零售户"
     needCloseBtn
-    @confirm="showNoBind = false"
-    @cancel="showNoBind = false"
+    @confirm="handleCloseNoBind"
+    @cancel="handleCloseNoBind"
   />
   <popup-with-head
     :show="showShopDetail"
@@ -247,8 +252,26 @@ export default defineComponent({
             // 店铺绑定信息
             if (!bindInfo) {
               showNoBind.value = true
+              store.commit('setBindShopFlag', false)
             } else {
               bindShop.value = bindInfo as BindShop
+              store.commit('setBindShopFlag', true)
+            }
+            if (shopList === null || shopList.length === 0) {
+              if (showNoBind.value !== true) {
+                Dialog.confirm({
+                  title: '提示',
+                  message: '当前区域未有注册零售户，请等待当地零售户开通注册。',
+                  closeOnClickOverlay: true,
+                  confirmButtonText: '知道了'
+                })
+                  .then(() => {
+                    // on confirm
+                  })
+                  .catch(() => {
+                    // on cancel
+                  })
+              }
             }
             if (shopList && shopList.length) {
               shopListRef.value = sortShopList(shopList)
@@ -319,6 +342,23 @@ export default defineComponent({
           console.log(err)
         })
     }
+    const handleCloseNoBind = () => {
+      showNoBind.value = false
+      if (shopListRef.value.length === 0) {
+        Dialog.confirm({
+          title: '提示',
+          message: '当前区域未有注册零售户，请等待当地零售户开通注册。',
+          closeOnClickOverlay: true,
+          confirmButtonText: '知道了'
+        })
+          .then(() => {
+            // on confirm
+          })
+          .catch(() => {
+            // on cancel
+          })
+      }
+    }
 
     const handleBindShop = () => {
       http
@@ -346,6 +386,7 @@ export default defineComponent({
     const handleClickUnbind = () => {
       Dialog.confirm({
         title: '提示',
+        messageAlign: 'left',
         message:
           '尊敬的用户，解绑零售户，需在公众号留言“解绑零售户”，由客服人员后台操作处理，解绑前需领取未领取的奖品，如已领取请忽略，绑定关系解除后，已产生的相关活动数据会中断，需重新绑定零售户后参与店铺活动。',
         closeOnClickOverlay: true,
@@ -429,7 +470,8 @@ export default defineComponent({
       handleClickListBtn,
       handleClickShop,
       handleBindShop,
-      handleClickUnbind
+      handleClickUnbind,
+      handleCloseNoBind
     }
   }
 })
@@ -449,6 +491,14 @@ export default defineComponent({
     padding-top: 10px;
     margin: 0 10px;
     box-sizing: border-box;
+    .no-message {
+      position: relative;
+      top: 200px;
+      line-height: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #b1b1b1;
+    }
     ul {
       li {
         display: flex;

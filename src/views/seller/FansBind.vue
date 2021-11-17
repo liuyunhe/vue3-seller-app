@@ -5,7 +5,7 @@
       <div class="note">
         <div class="title">
           <i class="icon"></i>
-          <div class="text">入驻规则</div>
+          <div class="text">活动规则</div>
         </div>
         <p>
           1、亲爱的好友，点击按钮即可成为我店铺的粉丝哦；

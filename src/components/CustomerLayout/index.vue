@@ -8,26 +8,57 @@
       </router-view>
     </div>
     <div class="bottom-bar">
-      <van-tabbar route>
-        <van-tabbar-item to="/customer/home">
+      <van-tabbar v-if="bindShopFlag" route>
+        <van-tabbar-item to="/customer/home" name="CustomerHome">
           <span>首页</span>
           <template #icon="props">
             <img :src="props.active ? icon1.active : icon1.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/customer/customerActs">
+        <van-tabbar-item to="/customer/customerActs" name="CustomerActs">
           <span>专属活动</span>
           <template #icon="props">
             <img :src="props.active ? icon2.active : icon2.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/customer/customerMessage">
+        <van-tabbar-item to="/customer/customerMessage" name="CustomerMessage">
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item to="/customer/customerInfo">
+        <van-tabbar-item to="/customer/customerInfo" name="CustomerInfo">
+          <span>个人中心</span>
+          <template #icon="props">
+            <img :src="props.active ? icon4.active : icon4.inactive" />
+          </template>
+        </van-tabbar-item>
+      </van-tabbar>
+
+      <van-tabbar
+        v-model="CustomerHome"
+        v-if="!bindShopFlag"
+        :before-change="handleChangeTabbar"
+      >
+        <van-tabbar-item name="CustomerHome">
+          <span>首页</span>
+          <template #icon="props">
+            <img :src="props.active ? icon1.active : icon1.inactive" />
+          </template>
+        </van-tabbar-item>
+        <van-tabbar-item name="CustomerActs">
+          <span>专属活动</span>
+          <template #icon="props">
+            <img :src="props.active ? icon2.active : icon2.inactive" />
+          </template>
+        </van-tabbar-item>
+        <van-tabbar-item name="CustomerMessage">
+          <span>消息通知</span>
+          <template #icon="props">
+            <img :src="props.active ? icon3.active : icon3.inactive" />
+          </template>
+        </van-tabbar-item>
+        <van-tabbar-item name="CustomerInfo">
           <span>个人中心</span>
           <template #icon="props">
             <img :src="props.active ? icon4.active : icon4.inactive" />
@@ -38,7 +69,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
+import store from '@/store'
+import { Dialog } from 'vant'
+import { computed, defineComponent, reactive, ref, toRefs } from 'vue'
 export default defineComponent({
   name: 'CustomerLayout',
   setup() {
@@ -74,13 +107,39 @@ export default defineComponent({
       inactive:
         'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-4-0.png'
     }
+    const bindShopFlag = computed(() => store.state.bindShopFlag)
+
+    console.log(bindShopFlag.value)
+
+    const handleChangeTabbar = (name: number | string) => {
+      console.log(name)
+      if (!bindShopFlag.value) {
+        Dialog.confirm({
+          title: '提示',
+          message: '您还没有专属零售户哦！赶快去绑定吧！',
+          closeOnClickOverlay: true,
+          confirmButtonText: '知道了'
+        })
+          .then(() => {
+            // on confirm
+          })
+          .catch(() => {
+            // on cancel
+          })
+        return false
+      }
+    }
+    const CustomerHome = ref('CustomerHome')
 
     return {
       ...toRefs(state),
       icon1,
       icon2,
       icon3,
-      icon4
+      icon4,
+      handleChangeTabbar,
+      bindShopFlag,
+      CustomerHome
     }
   }
 })
