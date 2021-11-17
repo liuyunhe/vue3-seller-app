@@ -58,7 +58,7 @@
           <i class="icon icon-survey"></i>
           <div class="name">我的问卷</div>
         </div>
-        <router-link to="/common/feedback">
+        <router-link to="/common/feedback?feedFrom=2">
           <div class="item">
             <i class="icon icon-opinion"></i>
             <div class="name">意见反馈</div>

@@ -26,13 +26,13 @@
       <div class="title">零售户等级制度</div>
       <div class="content">
         <div class="level title">等级</div>
-        <div class="jf title">所需积分</div>
+        <div class="jf title">所需克拉值</div>
         <div class="name title">名称</div>
       </div>
       <div class="content" v-for="item in shopLevelList" :key="item.id">
         <div class="level text">LV{{ item.shopLevel }}</div>
         <div class="jf text">
-          {{ item.levelScoreMin }} - {{ item.levelScoreMax }}积分
+          {{ item.levelScoreMin }} - {{ item.levelScoreMax }}克拉值
         </div>
         <div class="name text">{{ item.levelName }}</div>
       </div>
