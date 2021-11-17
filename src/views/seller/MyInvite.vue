@@ -1,5 +1,10 @@
 <template>
   <div class="my-invite-container">
+    <template v-if="inviteMsgList.length === 0">
+      <div class="no-message">
+        暂无活动邀约，赶快去创建吧！
+      </div>
+    </template>
     <ul class="content">
       <li class="message" v-for="item in inviteMsgList" :key="item.id">
         <div class="title">
@@ -113,6 +118,14 @@ export default defineComponent({
 .my-invite-container {
   height: 100vh;
   background: #f6f6f6;
+  .no-message {
+    position: relative;
+    top: 200px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #b1b1b1;
+  }
   ul {
     height: calc(100vh - 66px);
     padding-top: 10px;

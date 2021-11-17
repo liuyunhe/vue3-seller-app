@@ -85,8 +85,12 @@
           :rules="[
             {
               required: true,
-              pattern: phonePattern,
               message: '电话号码不能为空'
+            },
+            {
+              required: true,
+              pattern: phonePattern,
+              message: '电话号码格式错误'
             }
           ]"
         />
@@ -183,8 +187,12 @@
           :rules="[
             {
               required: true,
+              message: '烟草专卖许不能为空'
+            },
+            {
+              required: true,
               pattern: licenseNoPattern,
-              message: '请输入烟草专卖许可证号'
+              message: '烟草专卖许可证号格式错误'
             }
           ]"
         />
@@ -264,6 +272,11 @@
       <div class="status">审核通过</div>
       <div class="text">恭喜您，成为专属零售户！拥有了专属二维码</div>
       <div class="text">可以邀请好友成为粉丝及参与平台活动，赶快去体验吧！</div>
+      <div class="btn" v-if="hasPhone">
+        <router-link to="/seller/sellerFans">
+          <van-button type="primary" style="width:8rem">返回首页</van-button>
+        </router-link>
+      </div>
       <div class="btn" v-if="!hasPhone">
         <van-button
           type="primary"
