@@ -13,7 +13,11 @@
           <span v-if="item.status === 1" style="color:#0180FF">已发送</span>
           <span v-if="item.status === 2" style="color:#FF3400">审核失败</span>
         </div>
+        <div class="sub-title">{{ item.subTitle }}</div>
         <div class="content">{{ item.msgContent }}</div>
+        <div class="audit-msg" v-if="item.status === 2">
+          未审核通过原因：{{ item.auditMsg }}
+        </div>
         <div class="time">{{ item.ctime }}</div>
       </li>
     </ul>
@@ -119,7 +123,8 @@ export default defineComponent({
   height: 100vh;
   background: #f6f6f6;
   .no-message {
-    position: relative;
+    position: absolute;
+    width: 100%;
     top: 200px;
     line-height: 30px;
     text-align: center;
@@ -133,7 +138,7 @@ export default defineComponent({
     overflow-y: scroll;
     li {
       width: 100%;
-      height: 95px;
+      // height: 95px;
       background: #fff;
       padding: 12px 15px;
       box-sizing: border-box;
@@ -154,8 +159,24 @@ export default defineComponent({
           color: #0180ff;
         }
       }
+      .sub-title {
+        height: 23px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 23px;
+        color: #b1b1b1;
+        margin-bottom: 5px;
+      }
+      .audit-msg {
+        height: 23px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 23px;
+        color: #ff3400;
+        margin-bottom: 5px;
+      }
       .content {
-        height: 20px;
+        // height: 20px;
         font-size: 14px;
         font-weight: 500;
         line-height: 20px;

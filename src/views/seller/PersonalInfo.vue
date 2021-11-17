@@ -24,10 +24,16 @@
     <div class="main">
       <div class="title">我的功能</div>
       <div class="content">
-        <div class="item">
+        <router-link to="/seller/myInvite">
+          <div class="item">
+            <i class="icon icon-invite"></i>
+            <div class="name">我的邀约</div>
+          </div>
+        </router-link>
+        <!-- <div class="item">
           <i class="icon icon-wallet"></i>
           <div class="name">我的返佣</div>
-        </div>
+        </div> -->
         <router-link to="/seller/bindFansQrcode">
           <div class="item">
             <i class="icon icon-qrcode"></i>
@@ -48,22 +54,18 @@
         </router-link>
       </div>
       <div class="content">
-        <router-link to="/seller/myInvite">
-          <div class="item">
-            <i class="icon icon-invite"></i>
-            <div class="name">我的邀约</div>
-          </div>
-        </router-link>
-        <div class="item">
+        <!-- <div class="item">
           <i class="icon icon-survey"></i>
           <div class="name">我的问卷</div>
-        </div>
+        </div> -->
         <router-link to="/common/feedback?feedFrom=2">
           <div class="item">
             <i class="icon icon-opinion"></i>
             <div class="name">意见反馈</div>
           </div>
         </router-link>
+        <div class="item"></div>
+        <div class="item"></div>
         <div class="item"></div>
       </div>
     </div>

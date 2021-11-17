@@ -39,7 +39,7 @@
               <div class="nickname">{{ item.fanNickName }}</div>
               <div class="role">{{ item.fanGender === 1 ? '男' : '女' }}</div>
             </div>
-            <div class="time">2021-06-11 10:20:21</div>
+            <div class="time">{{ item.ctime }}</div>
           </li>
         </ul>
         <div class="no-fans-tips" v-else>暂无粉丝</div>
@@ -57,6 +57,7 @@ interface FanInfo {
   id: number
   fanNickName: string
   fanHeadImg: string
+  ctime: string
   fanGender: number
 }
 

@@ -61,11 +61,10 @@ export default defineComponent({
 
             initWxOnReady(url, () => {
               wxShare({
-                shareUrl: `http://${sessionStorage.getItem(
-                  'prefix'
-                )}/orgmenu/auth?menuCode=sellerFansBind&shopCode=${shopCode}&bindChannel=2`,
-                shareTitle: '消费者绑定链接',
-                shareDesc: '绑定成为零售户粉丝，享受粉丝专属权益',
+                shareUrl: `/orgmenu/auth?menuCode=sellerFansBind&shopCode=${shopCode}&bindChannel=2`,
+                shareTitle: '快绑定成我的粉丝吧！',
+                shareDesc:
+                  '点击链接完成绑定，即可成为我的粉丝，精彩活动丰厚奖励应有尽有！',
                 shareImg:
                   'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-share.png'
               })
