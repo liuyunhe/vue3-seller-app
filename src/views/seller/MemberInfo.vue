@@ -32,7 +32,7 @@
       <div class="content" v-for="item in shopLevelList" :key="item.id">
         <div class="level text">LV{{ item.shopLevel }}</div>
         <div class="jf text">
-          {{ item.levelScoreMin }} - {{ item.levelScoreMax }}克拉值
+          {{ item.levelScoreMin }} - {{ item.levelScoreMax }}
         </div>
         <div class="name text">{{ item.levelName }}</div>
       </div>
