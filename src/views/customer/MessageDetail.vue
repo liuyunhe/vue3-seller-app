@@ -166,8 +166,10 @@ export default defineComponent({
     padding: 20px 15px;
     box-sizing: border-box;
     .title {
+      width: 100%;
       height: 25px;
       line-height: 25px;
+      overflow: hidden;
       .icon {
         float: left;
         width: 5px;
