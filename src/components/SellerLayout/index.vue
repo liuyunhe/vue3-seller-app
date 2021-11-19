@@ -38,7 +38,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
+import { http } from '@/http'
+import store from '@/store'
+import { Toast } from 'vant'
+import { computed, defineComponent, onMounted, reactive, toRefs } from 'vue'
 export default defineComponent({
   name: 'SellerLayout',
   setup() {
@@ -69,6 +72,27 @@ export default defineComponent({
       inactive:
         'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-4-0.png'
     }
+    const hasMsg = computed(() => store.state.hasMsg)
+    onMounted(() => {
+      if (hasMsg.value === null) {
+        http
+          .get('/hbSeller/main/role', {})
+          .then((res) => {
+            if (res.code === '200') {
+              if (res.data.hasMsg) {
+                store.commit('setHasMsg', true)
+              } else {
+                store.commit('setHasMsg', false)
+              }
+            } else {
+              Toast.fail(res.msg)
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    })
 
     return {
       ...toRefs(state),

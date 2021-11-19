@@ -7,18 +7,28 @@
     </template>
     <ul class="content">
       <li class="message" v-for="item in inviteMsgList" :key="item.id">
-        <div class="title">
-          {{ item.title }}
-          <span v-if="item.status === 0" style="color:#FFAD20">审核中</span>
-          <span v-if="item.status === 1" style="color:#0180FF">已发送</span>
-          <span v-if="item.status === 2" style="color:#FF3400">审核失败</span>
+        <div class="container">
+          <div class="title">
+            <div class="text">
+              {{ item.title }}
+            </div>
+            <span> {{ item.ctime }}</span>
+          </div>
+          <div class="sub-title">
+            <div class="text">
+              {{ item.subTitle }}
+            </div>
+            <span v-if="item.status === 0" style="color:#FFAD20">审核中</span>
+            <span v-if="item.status === 1" style="color:#0180FF">已发送</span>
+            <span v-if="item.status === 2" style="color:#FF3400">审核失败</span>
+          </div>
+          <div class="border-line"></div>
+          <div class="content">{{ item.msgContent }}</div>
         </div>
-        <div class="sub-title">{{ item.subTitle }}</div>
-        <div class="content">{{ item.msgContent }}</div>
+
         <div class="audit-msg" v-if="item.status === 2">
           未审核通过原因：{{ item.auditMsg }}
         </div>
-        <div class="time">{{ item.ctime }}</div>
       </li>
     </ul>
     <div class="btn" @click="showTplList = true">新建活动邀约</div>
@@ -119,6 +129,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@import '@/theme/common';
 .my-invite-container {
   height: 100vh;
   background: #f6f6f6;
@@ -140,55 +151,73 @@ export default defineComponent({
       width: 100%;
       // height: 95px;
       background: #fff;
-      padding: 12px 15px;
-      box-sizing: border-box;
+      // border-radius: 7px;
       margin-bottom: 10px;
       &:last-child {
         margin-bottom: 0;
       }
-      .title {
-        height: 23px;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 23px;
-        color: #2b333b;
-        margin-bottom: 5px;
-        span {
-          font-size: 12px;
-          float: right;
-          color: #0180ff;
+      .container {
+        padding: 12px 15px;
+        box-sizing: border-box;
+        .title {
+          height: 23px;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 23px;
+          color: #2b333b;
+          margin-bottom: 5px;
+          .text {
+            width: 200px;
+            float: left;
+            .text-overflow();
+          }
+          span {
+            font-size: 12px;
+            float: right;
+            color: #b1b1b1;
+          }
+        }
+        .sub-title {
+          height: 23px;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 23px;
+          color: #b1b1b1;
+          margin-bottom: 5px;
+          .text {
+            width: 200px;
+            float: left;
+            .text-overflow();
+          }
+          span {
+            font-size: 12px;
+            float: right;
+            color: #0180ff;
+          }
+        }
+        .border-line {
+          height: 2px;
+          border-bottom: 1px solid #e6e6e6;
+          margin-bottom: 12px;
+        }
+        .content {
+          // height: 20px;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+          color: #2b2b2b;
+          text-align: justify;
         }
       }
-      .sub-title {
-        height: 23px;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 23px;
-        color: #b1b1b1;
-        margin-bottom: 5px;
-      }
       .audit-msg {
-        height: 23px;
+        height: 40px;
         font-size: 14px;
         font-weight: 500;
-        line-height: 23px;
-        color: #ff3400;
-        margin-bottom: 5px;
-      }
-      .content {
-        // height: 20px;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 20px;
-        color: #666666;
-        margin-bottom: 8px;
-      }
-      .time {
-        height: 17px;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 17px;
-        color: #b1b1b1;
+        line-height: 40px;
+        background: #fff4ee;
+        color: #ff660d;
+        padding: 0 15px;
+        box-sizing: border-box;
       }
     }
   }

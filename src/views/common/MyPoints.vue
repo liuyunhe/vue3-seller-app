@@ -11,7 +11,11 @@
         </div>
       </div>
       <div class="title">积分明细</div>
-      <template v-if="myPoints == null"></template>
+      <template v-if="myPoints == null || myPoints.length == 1">
+        <div class="no-message">
+          暂无积分
+        </div>
+      </template>
       <template v-else>
         <div class="list">
           <div class="item" v-for="item in myPoints" :key="item.id">
@@ -187,6 +191,14 @@ export default defineComponent({
   }
   .mb15 {
     height: 15px;
+  }
+  .no-message {
+    position: relative;
+    top: 200px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #b1b1b1;
   }
 }
 </style>

@@ -36,6 +36,7 @@ import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
 import { http } from '@/http'
 import { Dialog, Toast } from 'vant'
 import { Router, useRouter } from 'vue-router'
+import store from '@/store'
 
 export default defineComponent({
   name: 'SignIn',
@@ -66,6 +67,11 @@ export default defineComponent({
         .get('/hbSeller/main/role', {})
         .then((res) => {
           if (res.code === '200') {
+            if (res.data.hasMsg) {
+              store.commit('setHasMsg', true)
+            } else {
+              store.commit('setHasMsg', false)
+            }
             const role = res.data.role // 1.零售户 2.店铺粉丝 3. 啥也不是
             if (role == 1) {
               const register = (res.data.register as boolean) || false // 当role为1时候，有这个字段，如果是true代表注册绑定手机已完成

@@ -6,6 +6,7 @@ export interface GlobalDataProps {
   shopCode: string
   loading: boolean
   bindShopFlag: boolean
+  hasMsg: boolean | null
   lat: number | null
   lng: number | null
   wxUrl: string | null
@@ -29,7 +30,8 @@ const store = createStore<GlobalDataProps>({
     lng: null,
     wxUrl: null,
     bindChannel: '',
-    bindShopFlag: true
+    bindShopFlag: true,
+    hasMsg: null
   },
   getters: {},
   mutations: {
@@ -53,6 +55,9 @@ const store = createStore<GlobalDataProps>({
     },
     setLoading(state, status) {
       state.loading = status
+    },
+    setHasMsg(state, status) {
+      state.hasMsg = status
     },
     setError(state, e: GlobalErrorProps) {
       state.error = e

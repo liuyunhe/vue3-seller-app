@@ -179,7 +179,7 @@
         </van-field>
         <van-field
           v-model="licenseNo"
-          label-width="8.2em"
+          label-width="10.2em"
           name="licenseNo"
           label="烟草专卖许可证号"
           placeholder="请输入"
@@ -255,7 +255,7 @@
       width="100%"
       height="100%"
       frameborder="0"
-      src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW&referer=hbseller"
+      :src="iframeUrl"
     >
     </iframe>
   </div>
@@ -382,6 +382,7 @@
       </div>
       <div class="status">审核失败</div>
       <div class="text">很遗憾，审核失败，请核实信息后再来申请！</div>
+      <div class="text" style="margin:1rem">审核不通过原因:{{ auditMsg }}</div>
       <div class="btn">
         <van-button
           square
@@ -397,7 +398,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import {
   CascaderOption,
   CascaderFieldNames,
@@ -408,8 +409,16 @@ import {
 } from 'vant'
 import Compressor from 'compressorjs'
 import axios, { http } from '@/http'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
 export default defineComponent({
   setup() {
+    const store = useStore<GlobalDataProps>()
+    const lat = computed(() => store.state.lat)
+    const lng = computed(() => store.state.lng)
+    const iframeUrl = ref(
+      'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW&referer=hbseller'
+    )
     const showBindPhone = ref(false)
     const hasPhone = ref(false)
     const contactPhone = ref('')
@@ -430,6 +439,7 @@ export default defineComponent({
     const saleZoneIndex = ref(0)
     const saleZone = ref('')
     const date = ref('')
+    const auditMsg = ref('')
     const GPSValue = ref('')
     const showMalePicker = ref(false)
     const showSaleZonePicker = ref(false)
@@ -665,6 +675,9 @@ export default defineComponent({
         showSaleZonePicker.value = true
       }
       if (flag === 'showForm') {
+        if (lat.value && lng.value) {
+          // iframeUrl.value = `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW&referer=hbseller&coord=${lat.value},${lng.value}`
+        }
         showForm.value = false
       }
       if (flag === 'showRegionPopup') {
@@ -746,6 +759,7 @@ export default defineComponent({
                 )!
                 saleZone.value = saleZoneColumn.zoneName
                 salesman.value = regiserInfo.salesman || ''
+                auditMsg.value = regiserInfo.auditMsg || ''
                 if (regiserInfo.contactPhone != null) {
                   contactPhone.value = regiserInfo.contactPhone
                 }
@@ -916,6 +930,7 @@ export default defineComponent({
       )
     })
     return {
+      iframeUrl,
       formDiabled,
       isRegister,
       registerStatus,
@@ -971,7 +986,8 @@ export default defineComponent({
       phoneCodeText,
       handleGetCode,
       btnDisabled,
-      handleCodeChange
+      handleCodeChange,
+      auditMsg
     }
   }
 })

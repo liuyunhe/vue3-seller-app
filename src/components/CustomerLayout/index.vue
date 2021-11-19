@@ -69,9 +69,17 @@
   </div>
 </template>
 <script lang="ts">
+import { http } from '@/http'
 import store from '@/store'
-import { Dialog } from 'vant'
-import { computed, defineComponent, reactive, ref, toRefs } from 'vue'
+import { Dialog, Toast } from 'vant'
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  toRefs
+} from 'vue'
 export default defineComponent({
   name: 'CustomerLayout',
   setup() {
@@ -130,6 +138,29 @@ export default defineComponent({
       }
     }
     const CustomerHome = ref('CustomerHome')
+
+    const hasMsg = computed(() => store.state.hasMsg)
+
+    onMounted(() => {
+      if (hasMsg.value === null) {
+        http
+          .get('/hbSeller/main/role', {})
+          .then((res) => {
+            if (res.code === '200') {
+              if (res.data.hasMsg) {
+                store.commit('setHasMsg', true)
+              } else {
+                store.commit('setHasMsg', false)
+              }
+            } else {
+              Toast.fail(res.msg)
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    })
 
     return {
       ...toRefs(state),

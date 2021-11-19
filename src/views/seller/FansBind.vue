@@ -32,6 +32,7 @@ import { http } from '@/http'
 import { GlobalDataProps } from '@/store'
 import { Toast } from 'vant'
 import { computed, defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -40,6 +41,7 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const shopCode = computed(() => store.state.shopCode)
     const bindChannel = computed(() => store.state.bindChannel)
+    const router = useRouter()
 
     const handleClickBind = () => {
       http
@@ -53,7 +55,10 @@ export default defineComponent({
         )
         .then((res) => {
           if (res.code === '200') {
-            Toast.success('绑定成功！')
+            Toast.success('绑定成功!')
+            setTimeout(() => {
+              router.push('/customer/home')
+            }, 3000)
           } else {
             Toast.fail(res.msg)
           }
