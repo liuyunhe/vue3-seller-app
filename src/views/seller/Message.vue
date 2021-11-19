@@ -73,6 +73,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@import '@/theme/common';
 .message-container {
   padding: 15px;
   box-sizing: border-box;
@@ -116,6 +117,7 @@ export default defineComponent({
         font-size: 14px;
         color: #2b333b;
         text-align: left;
+        .text-overflow();
       }
       .time {
         width: 134px;

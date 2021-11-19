@@ -121,6 +121,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@import '@/theme/common';
 .message-container {
   min-height: 100%;
   background-color: #f4f4f4;
@@ -166,6 +167,7 @@ export default defineComponent({
         font-size: 14px;
         color: #2b333b;
         text-align: left;
+        .text-overflow();
       }
       .time {
         width: 134px;

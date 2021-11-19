@@ -33,13 +33,6 @@
           type="input"
           maxlength="11"
           placeholder="请输入手机号码"
-          :rules="[
-            {
-              required: true,
-              pattern: phonePattern,
-              message: '请输入手机号'
-            }
-          ]"
         />
       </van-cell-group>
       <div class="mg10"></div>
@@ -72,6 +65,10 @@ export default defineComponent({
     const phonePattern = /^1[3456789]\d{9}$/
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSubmit = (values: any) => {
+      if (values.phoneNo && !phonePattern.test(values.phoneNo)) {
+        Toast.fail('手机号格式错误！')
+        return
+      }
       const params = Object.assign(values, { feedFrom: props.feedFrom })
       http
         .post('/hbSeller/feedback/add', params, false)

@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="title">积分明细</div>
-      <template v-if="myPoints == null || myPoints.length == 1">
+      <template v-if="myPoints == null || myPoints.length === 0">
         <div class="no-message">
           暂无积分
         </div>
