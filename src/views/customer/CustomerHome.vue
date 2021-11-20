@@ -419,10 +419,13 @@ export default defineComponent({
           minZoom: 11,
           maxZoom: 13,
           zoom: 13,
+          mapZoomType: TMap.constants.MAP_ZOOM_TYPE.CENTER, //  根据地图中心点缩放（移动端和PC端）
           draggable: false, //  是否支持拖拽移动地图，默认为true。
           scrollable: true, // 是否支持鼠标滚轮缩放地图，默认为true
           doubleClickZoom: false, // 是否支持双击缩放地图，默认为true。
-          showControl: true // 是否显示地图上的控件，默认true。
+          showControl: false, // 是否显示地图上的控件，默认true。
+          pitchable: false, // 是否允许设置俯仰角度；默认为true。在2D视图下，此属性无效。
+          rotatable: false // 是否允许设置旋转角度；默认为true。在2D视图下，此属性无效。
         })
         //初始marker样式
         markerLayer = new TMap.MultiMarker({
