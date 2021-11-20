@@ -7,7 +7,7 @@
         rows="2"
         autosize
         type="textarea"
-        maxlength="30"
+        maxlength="12"
         placeholder="请输入内容"
         show-word-limit
       />
@@ -19,7 +19,7 @@
         rows="2"
         autosize
         type="textarea"
-        maxlength="30"
+        maxlength="20"
         placeholder="请输入内容"
         show-word-limit
       />

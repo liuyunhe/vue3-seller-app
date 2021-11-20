@@ -185,7 +185,7 @@ export default defineComponent({
           color: #b1b1b1;
           margin-bottom: 5px;
           .text {
-            width: 200px;
+            width: 280px;
             float: left;
             .text-overflow();
           }
