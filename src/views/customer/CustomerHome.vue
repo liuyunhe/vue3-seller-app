@@ -276,6 +276,11 @@ export default defineComponent({
             if (shopList && shopList.length) {
               shopListRef.value = sortShopList(shopList)
               styles = {
+                pMarker: new TMap.MarkerStyle({
+                  width: 20, // 样式宽
+                  height: 30, // 样式高
+                  anchor: { x: 10, y: 30 } // 描点位置
+                }),
                 bindedStyle: new TMap.MarkerStyle({
                   width: 47, // 点标记样式宽度（像素）
                   height: 40, // 点标记样式高度（像素）
@@ -330,7 +335,11 @@ export default defineComponent({
                   }
                 }
               })
-              console.log(markers)
+              markers.push({
+                id: 0, //点标记唯一标识，后续如果有删除、修改位置等操作，都需要此id
+                styleId: 'pMarker', //指定样式id
+                position: new TMap.LatLng(lat, lng) //点标记坐标位置
+              })
               markerLayer.setStyles(styles)
               markerLayer.add(markers)
             }
@@ -407,11 +416,13 @@ export default defineComponent({
         const center = new TMap.LatLng(lat.value, lng.value)
         const map = new TMap.Map(document.getElementById('lbs-container'), {
           center: center, //  设置地图中心点坐标
-          zoom: 12,
+          minZoom: 11,
+          maxZoom: 13,
+          zoom: 13,
           draggable: false, //  是否支持拖拽移动地图，默认为true。
-          scrollable: false, // 是否支持鼠标滚轮缩放地图，默认为true
+          scrollable: true, // 是否支持鼠标滚轮缩放地图，默认为true
           doubleClickZoom: false, // 是否支持双击缩放地图，默认为true。
-          showControl: false // 是否显示地图上的控件，默认true。
+          showControl: true // 是否显示地图上的控件，默认true。
         })
         //初始marker样式
         markerLayer = new TMap.MultiMarker({
@@ -476,7 +487,11 @@ export default defineComponent({
   }
 })
 </script>
-
+<style>
+.van-dialog__message--left {
+  text-align: justify;
+}
+</style>
 <style lang="less" scoped>
 @import '@/theme/common';
 .customer-home-conatainer {
@@ -523,7 +538,7 @@ export default defineComponent({
           .name {
             width: 200px;
             height: 20px;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 20px;
             color: #303133;
             margin-bottom: 22px;
@@ -546,7 +561,7 @@ export default defineComponent({
           .addr {
             width: 195px;
             height: 17px;
-            font-size: 12px;
+            font-size: 14px;
             line-height: 17px;
             color: #606266;
             overflow: hidden;

@@ -40,7 +40,7 @@
           </div>
         </router-link>
       </div>
-      <div class="content">
+      <!-- <div class="content">
         <div class="item">
           <i class="icon icon-survey"></i>
           <div class="name">我的问卷</div>
@@ -51,7 +51,7 @@
         </div>
         <div class="item"></div>
         <div class="item"></div>
-      </div>
+      </div> -->
     </div>
   </div>
   <popup-with-head
@@ -159,6 +159,7 @@ export default defineComponent({
     const handleClickUnbind = () => {
       Dialog.confirm({
         title: '提示',
+        messageAlign: 'left',
         message:
           '尊敬的用户，解绑零售户，需在公众号留言“解绑零售户”，由客服人员后台操作处理，解绑前需领取未领取的奖品，如已领取请忽略，绑定关系解除后，已产生的相关活动数据会中断，需重新绑定零售户后参与店铺活动。',
         closeOnClickOverlay: true,
@@ -187,7 +188,11 @@ export default defineComponent({
   }
 })
 </script>
-
+<style>
+.van-dialog__message--left {
+  text-align: justify;
+}
+</style>
 <style lang="less" scoped>
 @import '@/theme/common';
 .personal-info-container {
@@ -329,7 +334,7 @@ export default defineComponent({
     white-space: nowrap;
     .btn-unbind {
       float: right;
-      width: 67px;
+      width: 80px;
       height: 26px;
       background: rgba(32, 105, 255, 0.06);
       border: 1px solid #2069ff;
@@ -337,7 +342,7 @@ export default defineComponent({
       text-align: center;
       color: #2069ff;
       font-size: 12px;
-      border-radius: 5px;
+      border-radius: 4px;
       box-sizing: border-box;
     }
   }

@@ -411,13 +411,15 @@ import Compressor from 'compressorjs'
 import axios, { http } from '@/http'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
+import { MapKey } from '@/plugins/Tmap'
 export default defineComponent({
+  name: 'SellerRegister',
   setup() {
     const store = useStore<GlobalDataProps>()
     const lat = computed(() => store.state.lat)
     const lng = computed(() => store.state.lng)
     const iframeUrl = ref(
-      'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW&referer=hbseller'
+      `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=${MapKey}&referer=hbseller`
     )
     const showBindPhone = ref(false)
     const hasPhone = ref(false)
@@ -676,7 +678,7 @@ export default defineComponent({
       }
       if (flag === 'showForm') {
         if (lat.value && lng.value) {
-          // iframeUrl.value = `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW&referer=hbseller&coord=${lat.value},${lng.value}`
+          iframeUrl.value = `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=${MapKey}&referer=webtest&coord=${lat.value},${lng.value}`
         }
         showForm.value = false
       }
@@ -910,6 +912,15 @@ export default defineComponent({
     }
 
     onMounted(async () => {
+      if (!sessionStorage.getItem('SellerRegister')) {
+        sessionStorage.setItem('SellerRegister', '1')
+        window.location.reload()
+        return
+      }
+      if (process.env.NODE_ENV !== 'production') {
+        store.commit('setLng', 116.70602)
+        store.commit('setLat', 39.860464)
+      }
       getRegion()
       getSaleZoneList()
       window.addEventListener(

@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 declare const TMap: any
-const MapKey = 'XA6BZ-LXHKS-424O2-6IBRS-FP4Q2-5EFTW'
+export const MapKey = 'LMLBZ-V4CCP-OJEDJ-LETNS-PT7IS-HDFR6'
 export function TMapGL() {
   let r
   try {

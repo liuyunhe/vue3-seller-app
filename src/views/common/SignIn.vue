@@ -6,9 +6,10 @@
         alt=""
       />
     </div>
-    <p class="title">欢迎进入“私域企业生态平台”</p>
-    <p class="tips">
-      系统简介系统简介系统简介系统系统 简介简介简介简介简介简介系统 ……
+    <p class="title">欢迎来到“私域全生态平台”</p>
+    <p class="tips">如果您是零售户，这将是您维系粉丝的最佳工具；</p>
+    <p class="tips" style="margin-bottom:4rem">
+      如果您是消费者，这里有最好玩的专享活动。
     </p>
     <div class="bar">
       <van-button
@@ -123,13 +124,15 @@ export default defineComponent({
     line-height: 23px;
     color: #303133;
     text-align: center;
+    margin-bottom: 30px;
   }
   p.tips {
-    width: 201px;
+    width: 300px;
     font-size: 12px;
     line-height: 18px;
     color: #b1b1b1;
-    margin: 0 auto 92px;
+    text-align: center;
+    margin: 0 auto 10px;
   }
   .bar {
     display: flex;
