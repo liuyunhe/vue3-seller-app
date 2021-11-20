@@ -39,7 +39,7 @@
         <li v-for="item in msgTplList" :key="item.id">
           <div class="title">{{ item.title }}</div>
           <div class="content">
-            <p class="text">{{ item.content }}</p>
+            <p class="text">{{ item.subTitle }}</p>
             <router-link
               replace
               :to="
@@ -85,7 +85,26 @@ export default defineComponent({
   name: 'MyInvite',
   setup() {
     const inviteMsgList = ref<InviteMsg[]>([])
-    const msgTplList = ref<MsgTpl[]>([])
+    const msgTplList = ref<MsgTpl[]>([
+      {
+        id: 0,
+        rcdNote: null,
+        title: 'title2',
+        subTitle: 'sub2',
+        content: '33',
+        idx: 1,
+        ctime: ''
+      },
+      {
+        id: 0,
+        rcdNote: null,
+        title: 'title2',
+        subTitle: 'sub2',
+        content: '33',
+        idx: 1,
+        ctime: ''
+      }
+    ])
     const showTplList = ref(false)
     const getMsgTplList = () => {
       http
@@ -253,12 +272,14 @@ export default defineComponent({
         margin-bottom: 3px;
       }
       .content {
-        height: 60px;
+        height: 40px;
         position: relative;
         .text {
+          position: relative;
+          top: 0.1rem;
           width: 231px;
           font-size: 14px;
-          height: 60px;
+          height: 40px;
           line-height: 20px;
           color: #666666;
           margin-bottom: 9px;
@@ -266,7 +287,7 @@ export default defineComponent({
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
-          -webkit-line-clamp: 3;
+          -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
         }
         .btn {
