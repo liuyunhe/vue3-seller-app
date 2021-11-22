@@ -25,6 +25,7 @@
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
+            <div v-if="hasMsg" class="has-msg"></div>
           </template>
         </van-tabbar-item>
         <van-tabbar-item to="/customer/customerInfo" name="CustomerInfo">
@@ -56,6 +57,7 @@
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
+            <!-- <div v-if="hasMsg" class="has-msg"></div> -->
           </template>
         </van-tabbar-item>
         <van-tabbar-item name="CustomerInfo">
@@ -107,7 +109,11 @@ export default defineComponent({
       active:
         'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-1.png',
       inactive:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-0.png'
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-0.png',
+      hmActive:
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-1-1.png',
+      hmInactive:
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-1-0.png'
     }
     const icon4 = {
       active:
@@ -170,7 +176,8 @@ export default defineComponent({
       icon4,
       handleChangeTabbar,
       bindShopFlag,
-      CustomerHome
+      CustomerHome,
+      hasMsg
     }
   }
 })
@@ -187,5 +194,14 @@ export default defineComponent({
     overflow: auto;
     margin-bottom: 50px;
   }
+}
+.has-msg {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: red;
+  position: absolute;
+  top: -2px;
+  right: -3px;
 }
 </style>
