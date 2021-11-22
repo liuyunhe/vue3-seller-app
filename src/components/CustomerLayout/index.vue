@@ -109,11 +109,7 @@ export default defineComponent({
       active:
         'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-1.png',
       inactive:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-0.png',
-      hmActive:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-1-1.png',
-      hmInactive:
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-1-0.png'
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/tb-3-0.png'
     }
     const icon4 = {
       active:

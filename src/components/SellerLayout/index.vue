@@ -25,6 +25,7 @@
           <span>消息通知</span>
           <template #icon="props">
             <img :src="props.active ? icon3.active : icon3.inactive" />
+            <div v-if="hasMsg" class="has-msg"></div>
           </template>
         </van-tabbar-item>
         <van-tabbar-item to="/seller/sellerInfo">
@@ -99,7 +100,8 @@ export default defineComponent({
       icon1,
       icon2,
       icon3,
-      icon4
+      icon4,
+      hasMsg
     }
   }
 })
@@ -116,5 +118,14 @@ export default defineComponent({
     overflow: auto;
     margin-bottom: 50px;
   }
+}
+.has-msg {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: red;
+  position: absolute;
+  top: -2px;
+  right: -3px;
 }
 </style>
