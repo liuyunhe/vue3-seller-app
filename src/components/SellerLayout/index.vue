@@ -120,12 +120,12 @@ export default defineComponent({
   }
 }
 .has-msg {
-  width: 4px;
-  height: 4px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: red;
+  background: #fc3603;
   position: absolute;
-  top: -2px;
-  right: -3px;
+  top: -3px;
+  right: -10px;
 }
 </style>
