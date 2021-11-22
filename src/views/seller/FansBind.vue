@@ -59,6 +59,11 @@ export default defineComponent({
             setTimeout(() => {
               router.push('/customer/home')
             }, 3000)
+          } else if (res.code === '600') {
+            Toast.fail(res.msg)
+            setTimeout(() => {
+              router.push('/customer/home')
+            }, 3000)
           } else {
             Toast.fail(res.msg)
           }
