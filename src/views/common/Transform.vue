@@ -42,7 +42,7 @@ export default defineComponent({
       }
       if (props.bindChannel) {
         store.commit('setBindChannel', props.bindChannel)
-        sessionStorage.setItem('setBindChannel', props.bindChannel + '')
+        sessionStorage.setItem('bindChannel', props.bindChannel + '')
       }
       if (props.token) {
         store.commit('setToken', props.token)

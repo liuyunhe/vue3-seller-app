@@ -50,6 +50,8 @@ export default defineComponent({
           {
             shopCode: shopCode.value,
             bindChannel: bindChannel.value
+              ? bindChannel.value
+              : sessionStorage.bindChannel
           },
           false
         )

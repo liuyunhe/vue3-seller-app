@@ -29,7 +29,7 @@ const store = createStore<GlobalDataProps>({
     lat: null,
     lng: null,
     wxUrl: null,
-    bindChannel: '',
+    bindChannel: sessionStorage.getItem('bindChannel') || '',
     bindShopFlag: true,
     hasMsg: null
   },
