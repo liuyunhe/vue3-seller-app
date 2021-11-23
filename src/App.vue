@@ -1,6 +1,8 @@
 <template>
   <router-view v-slot="{ Component }">
-    <component :is="Component" />
+    <keep-alive :include="includeRoutes">
+      <component :is="Component" />
+    </keep-alive>
   </router-view>
 </template>
 
@@ -12,10 +14,20 @@ import { GlobalDataProps } from './store'
 export default defineComponent({
   name: 'App',
   setup() {
+    const includeRoutes = [
+      'SellerLayout',
+      'CustomerLayout',
+      'SellerMemberInfo',
+      'BindFansQrcode',
+      'CustomerUserInfo'
+    ]
     const store = useStore<GlobalDataProps>()
     const isLoading = computed(() => store.state.loading)
+    const token = computed(() => store.state.token)
+    sessionStorage.setItem('token', token.value)
     return {
-      isLoading
+      isLoading,
+      includeRoutes
     }
   }
 })

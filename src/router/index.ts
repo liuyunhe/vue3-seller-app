@@ -6,29 +6,129 @@ import {
 } from 'vue-router'
 import store from '@/store'
 import axios from '@/http'
+import { initWxOnReady, wxGetLocation, wxHideMenu } from '@/plugins/Wx'
 
 const routes: Array<RouteRecordRaw> = [
+  // 首页
   {
     path: '/',
-    name: 'LAYOUT',
-    redirect: '/home',
+    name: 'Home',
+    redirect: '/common/signIn',
+    meta: {
+      title: ''
+    }
+  },
+
+  // 平台页面
+  {
+    path: '/common/transform',
+    name: 'Transform',
+    meta: {
+      title: ''
+    },
+    props: (route) => ({
+      token: route.query.token,
+      target: route.query.target,
+      shopCode: route.query.shopCode,
+      bindChannel: route.query.bindChannel
+    }),
     component: () =>
-      import(/* webpackChunkName: "layout" */ '../components/Layout/index.vue'),
+      import(
+        /* webpackChunkName: "Transform" */ '../views/common/Transform.vue'
+      )
+  },
+  {
+    path: '/common/signIn',
+    name: 'SignIn',
+    meta: {
+      title: ''
+    },
+    component: () =>
+      import(/* webpackChunkName: "SignIn" */ '../views/common/SignIn.vue')
+  },
+  {
+    path: '/common/feedback',
+    name: 'Feedback',
+    meta: {
+      title: '意见反馈'
+    },
+    props: (route) => ({
+      feedFrom: route.query.feedFrom
+    }),
+    component: () =>
+      import(/* webpackChunkName: "Feedback" */ '../views/common/Feedback.vue')
+  },
+  {
+    path: '/common/myGifts',
+    name: 'MyGifts',
+    meta: {
+      title: '我的礼品'
+    },
+    component: () =>
+      import(/* webpackChunkName: "MyGifts" */ '../views/common/MyGifts.vue')
+  },
+  {
+    path: '/common/myPoints',
+    name: 'MyPoints',
+    meta: {
+      title: '我的积分'
+    },
+    component: () =>
+      import(/* webpackChunkName: "MyGifts" */ '../views/common/MyPoints.vue')
+  },
+  // 零售户
+  {
+    path: '/seller',
+    name: 'SellerLayout',
+    redirect: '/seller/sellerFans',
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerLayout" */ '../components/SellerLayout/index.vue'
+      ),
     children: [
       {
-        path: 'home',
-        name: 'HOME',
+        path: 'sellerActs',
+        name: 'SellerActs',
         meta: {
-          title: '首页'
+          title: '专属活动'
         },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/Home.vue')
+          import(
+            /* webpackChunkName: "SellerActs" */ '../views/seller/SellerActs.vue'
+          )
       },
       {
-        path: 'about',
-        name: 'ABOUT',
+        path: 'sellerFans',
+        name: 'SellerFans',
+        meta: {
+          title: '我的粉丝'
+        },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/About.vue')
+          import(
+            /* webpackChunkName: "SellerFans" */ '../views/seller/Fans.vue'
+          )
+      },
+      {
+        path: 'sellerMessage',
+        name: 'SellerMessage',
+        meta: {
+          title: '消息通知'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "SellerMessage" */ '../views/seller/Message.vue'
+          )
+      },
+      {
+        path: 'sellerInfo',
+        name: 'SellerInfo',
+        meta: {
+          title: '个人中心'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "SellerInfo" */ '../views/seller/PersonalInfo.vue'
+          )
       }
     ]
   },
@@ -36,34 +136,182 @@ const routes: Array<RouteRecordRaw> = [
     path: '/seller/register',
     name: 'Register',
     meta: {
-      title: '注册零售户'
+      title: '注册零售户',
+      keepAlive: true
     },
     component: () =>
-      import(/* webpackChunkName: "SHOP" */ '../views/seller/Register.vue')
+      import(/* webpackChunkName: "Register" */ '../views/seller/Register.vue')
   },
   {
-    path: '/shop',
-    name: 'SHOP',
+    path: '/seller/inviteFans',
+    name: 'InviteFans',
+    meta: {
+      title: '粉丝邀约',
+      keepAlive: true
+    },
     component: () =>
-      import(/* webpackChunkName: "SHOP" */ '../views/shop/index.vue')
+      import(
+        /* webpackChunkName: "InviteFans" */ '../views/seller/InviteFans.vue'
+      )
   },
   {
-    path: '/vuex',
-    name: 'VUEX',
+    path: '/seller/fansBind',
+    name: 'FansBind',
+    meta: {
+      title: '粉丝邀约',
+      keepAlive: true
+    },
     component: () =>
-      import(/* webpackChunkName: "vuex" */ '../views/vuex/index.vue')
+      import(/* webpackChunkName: "FansBind" */ '../views/seller/FansBind.vue')
   },
   {
-    path: '/message',
-    name: 'MESSAGE',
+    path: '/seller/bindFansQrcode',
+    name: 'BindFansQrcode',
+    meta: {
+      title: '粉丝绑定码',
+      keepAlive: true
+    },
     component: () =>
-      import(/* webpackChunkName: "message" */ '../views/message/index.vue')
+      import(
+        /* webpackChunkName: "BindFansQrcode" */ '../views/seller/BindFansQrcode.vue'
+      )
   },
   {
-    path: '/form',
-    name: 'FORM',
+    path: '/seller/messageDetail',
+    name: 'SelllerMessageDetail',
+    props: (route) => ({
+      id: route.query.id
+    }),
+    meta: {
+      title: '消息详情'
+    },
     component: () =>
-      import(/* webpackChunkName: "form" */ '../views/message/form.vue')
+      import(
+        /* webpackChunkName: "SelllerMessageDetail" */ '../views/seller/MessageDetail.vue'
+      )
+  },
+  {
+    path: '/seller/memberInfo',
+    name: 'SellerMemberInfo',
+    meta: {
+      title: '会员等级'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMemberInfo" */ '../views/seller/MemberInfo.vue'
+      )
+  },
+  {
+    path: '/seller/myInvite',
+    name: 'SellerMyInvite',
+    meta: {
+      title: '我的邀约'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMyInvite" */ '../views/seller/MyInvite.vue'
+      )
+  },
+  {
+    path: '/seller/editInvition',
+    name: 'SellerEditInvition',
+    meta: {
+      title: '活动邀约'
+    },
+    props: (route) => ({
+      titleP: route.query.title,
+      subTitleP: route.query.subTitle,
+      contentP: route.query.content
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerEditInvition" */ '../views/seller/EditInvition.vue'
+      )
+  },
+  // 消费者
+  {
+    path: '/customer',
+    name: 'CustomerLayout',
+    redirect: '/customer/home',
+    component: () =>
+      import(
+        /* webpackChunkName: "CustomerLayout" */ '../components/CustomerLayout/index.vue'
+      ),
+    children: [
+      {
+        path: 'home',
+        name: 'CustomerHome',
+        meta: {
+          title: '零售户绑定',
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerHome" */ '../views/customer/CustomerHome.vue'
+          )
+      },
+      {
+        path: 'customerActs',
+        name: 'CustomerActs',
+        meta: {
+          title: '专属活动',
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerActs" */ '../views/customer/CustomerActs.vue'
+          )
+      },
+      {
+        path: 'customerMessage',
+        name: 'CustomerMessage',
+        meta: {
+          title: '我的消息',
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerMessage" */ '../views/customer/Message.vue'
+          )
+      },
+      {
+        path: 'customerInfo',
+        name: 'CustomerInfo',
+        meta: {
+          title: '个人中心'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "CustomerInfo" */ '../views/customer/PersonalInfo.vue'
+          )
+      }
+    ]
+  },
+  {
+    path: '/customer/messageDetail',
+    name: 'CustomerMessageDetail',
+    props: (route) => ({
+      id: route.query.id,
+      type: route.query.type
+    }),
+    meta: {
+      title: '消息详情'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "CustomerMessageDetail" */ '../views/customer/MessageDetail.vue'
+      )
+  },
+  {
+    path: '/customer/userInfo',
+    name: 'CustomerUserInfo',
+    meta: {
+      title: '个人资料'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "CustomerUserInfo" */ '../views/customer/UserInfo.vue'
+      )
   }
 ]
 
@@ -82,27 +330,47 @@ const router = createRouter({
 //   console.log("路由拦截back");
 //   return router.go(-1);
 // };
-import provideStore from '@/utils/provideStore'
+
+// import provideStore from '@/utils/provideStore'
 function RouterStack(router: Router) {
-  // const stack = [];
+  // const stack = []
   router.afterEach((to, from) => {
     console.log(to, from)
-    console.log(provideStore.planList.value)
+
+    // console.log(provideStore.planList.value)
   })
   return router
 }
 
 router.beforeEach((to, from, next) => {
-  const { token } = store.state
+  const { token, wxUrl } = store.state
+  // 刷新的情况下重新配置wxjssdk
+  if (!wxUrl) {
+    store.commit('setWxUrl', `${location.origin}/HbsClient${to.fullPath}`)
+    if (sessionStorage.getItem('token')) {
+      axios.defaults.headers.token = sessionStorage.getItem('token')
+      const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
+        ? `${location.origin}/HbsClient${to.fullPath}`
+        : location.href.split('#')[0]
+
+      initWxOnReady(url, () => {
+        wxGetLocation()
+        wxHideMenu()
+      })
+    }
+  }
   if (token) {
     if (to.meta.title) {
       /* 路由发生变化修改页面title */
       document.title = to.meta.title as string
     }
-    axios.defaults.headers.token = token
-    axios.defaults.timeout = 60000
+    if (!axios.defaults.headers.token) {
+      axios.defaults.headers.token = token
+    }
   } else {
-    alert('no token')
+    if (to.path !== '/common/transform') {
+      alert('no token!')
+    }
   }
   next()
 })

@@ -3,9 +3,9 @@ import { Toast } from 'vant'
 import { nextTick } from 'vue'
 import qs from 'qs'
 
+axios.defaults.timeout = 60000
 axios.interceptors.request.use((config) => {
-  console.log(config)
-  if (config.url !== '/api/upload') {
+  if (config.url !== '/hbact/ossCommon/uploadOne') {
     Toast.loading({
       message: '加载中...',
       forbidClick: true,
@@ -22,16 +22,13 @@ axios.interceptors.response.use(
     return response
   },
   (e) => {
-    const { error } = e.response.data
     nextTick(() => {
+      if (process.env.NODE_ENV === 'production') {
+        window.location.href = '/yx/views/general/overtime-error.html'
+      }
       Toast.clear()
-      Toast.fail({
-        message: error,
-        forbidClick: true,
-        duration: 3000
-      })
     })
-    return Promise.reject(error)
+    return Promise.reject(e)
   }
 )
 

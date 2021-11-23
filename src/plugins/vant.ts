@@ -4,6 +4,7 @@ import {
   List,
   Cell,
   Tabbar,
+  Dialog,
   TabbarItem,
   Icon,
   NavBar,
@@ -18,13 +19,16 @@ import {
   RadioGroup,
   DatetimePicker,
   Cascader,
-  Toast
+  Toast,
+  Tab,
+  Tabs
 } from 'vant'
 
 const plugins = [
   Button,
   List,
   Cell,
+  Dialog,
   Tabbar,
   TabbarItem,
   Icon,
@@ -40,7 +44,9 @@ const plugins = [
   RadioGroup,
   DatetimePicker,
   Cascader,
-  Toast
+  Toast,
+  Tab,
+  Tabs
 ]
 
 export const vantPlugins = {

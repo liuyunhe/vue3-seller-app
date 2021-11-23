@@ -16,6 +16,7 @@ function resolve(dir) {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const autoprefixer = require('autoprefixer')
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? '/HbsClient/' : '/',
   devServer: {
     overlay: {
       warnings: true,
@@ -31,8 +32,12 @@ module.exports = {
         target: 'https://cs-yxc.qrmkt.cn', //跨域接口的地址
         changeOrigin: true
       },
-      '/api': {
-        target: 'http://api.vikingship.xyz', //跨域接口的地址
+      '/hbact': {
+        target: 'https://cs-yxc.qrmkt.cn', //跨域接口的地址
+        changeOrigin: true
+      },
+      '/hbSeller': {
+        target: 'https://cs-yxc.qrmkt.cn', //跨域接口的地址
         changeOrigin: true
       }
     },

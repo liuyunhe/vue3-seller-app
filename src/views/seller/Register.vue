@@ -1,5 +1,5 @@
 <template>
-  <div class="register-container">
+  <div class="register-container" v-show="!isRegister && showForm">
     <div class="banner">
       <img
         src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/register-banner.png"
@@ -9,51 +9,59 @@
     <van-form
       @submit="onSubmit"
       input-align="right"
-      :show-error-message="false"
-      :show-error="true"
+      :show-error-message="true"
+      :show-error="false"
+      :disabled="formDiabled"
     >
       <van-cell-group inset style="margin:0">
         <van-field
-          v-model="username"
-          name="门店名称"
+          v-model="shopName"
+          name="shopName"
           label="门店名称"
           placeholder="请输入门店名称"
-          :rules="[{ required: true, message: '请输入门店名称' }]"
+          maxlength="10"
+          error-message-align="right"
+          :rules="[{ required: true, message: '门店名称不能为空' }]"
         />
         <van-field
-          v-model="username"
-          name="经营人姓名"
+          v-model="contactName"
+          name="contactName"
           label="经营人姓名"
           placeholder="请输入姓名"
-          :rules="[{ required: true, message: '请输入姓名' }]"
+          maxlength="10"
+          error-message-align="right"
+          :rules="[{ required: true, message: '经营人姓名不能为空' }]"
         />
         <van-field
-          v-model="result"
-          is-link
+          v-model="male"
+          :is-link="!formDiabled"
           readonly
-          name="picker"
+          name="male"
           label="性别"
           placeholder="点击选择性别"
-          @click="showPicker = true"
-          :rules="[{ required: true, message: '请输入姓名' }]"
+          error-message-align="right"
+          @click="handleClickField('showMalePicker')"
+          :rules="[{ required: true, message: '性别不能为空' }]"
         />
-        <van-popup v-model:show="showPicker" position="bottom">
+        <van-popup v-model:show="showMalePicker" position="bottom">
           <van-picker
-            :columns="columns"
-            :columns-field-names="customFieldName"
-            @confirm="onConfirm"
-            @cancel="showPicker = false"
+            :columns="maleColumns"
+            :columns-field-names="maleCustomFieldName"
+            :default-index="maleIndex"
+            @confirm="onMaleConfirm"
+            @cancel="showMalePicker = false"
           />
         </van-popup>
         <van-field
           v-model="date"
-          is-link
+          :is-link="!formDiabled"
           readonly
-          name="datetimePicker"
+          name="date"
           label="出生日期"
           placeholder="点击选择时间"
-          @click="showDatetimePicker = true"
-          :rules="[{ required: true, message: '点击选择时间' }]"
+          error-message-align="right"
+          @click="handleClickField('showDatetimePicker')"
+          :rules="[{ required: true, message: '出生日期不能为空' }]"
         />
         <van-popup v-model:show="showDatetimePicker" position="bottom">
           <van-datetime-picker
@@ -68,20 +76,33 @@
         </van-popup>
 
         <van-field
-          v-model="username"
-          name="电话"
+          v-if="contactPhone"
+          v-model="contactPhone"
+          name="contactPhone"
           label="电话"
           placeholder="请输入电话号码"
-          :rules="[{ required: true, message: '请输入电话号码' }]"
+          error-message-align="right"
+          :rules="[
+            {
+              required: true,
+              message: '电话号码不能为空'
+            },
+            {
+              required: true,
+              pattern: phonePattern,
+              message: '电话号码格式错误'
+            }
+          ]"
         />
         <van-field
           v-model="fieldValue"
-          is-link
+          :is-link="!formDiabled"
           readonly
           label="门店地址"
           placeholder="请选择门店地址"
-          @click="showRegionPopup = true"
-          :rules="[{ required: true, message: '请选择门店地址' }]"
+          error-message-align="right"
+          @click="handleClickField('showRegionPopup')"
+          :rules="[{ required: true, message: '门店地址不能为空' }]"
         />
         <van-popup v-model:show="showRegionPopup" square position="bottom">
           <van-cascader
@@ -95,37 +116,61 @@
           />
         </van-popup>
         <van-field
-          v-model="username"
-          name=""
+          v-model="detailAddr"
+          name="detailAddr"
           label=""
           input-align="left"
+          maxlength="50"
+          error-message-align="left"
           placeholder="请输入详细地址，精确到街道门牌号"
-          :rules="[
-            { required: true, message: '请输入详细地址，精确到街道门牌号' }
-          ]"
+          :rules="[{ required: true, message: '详细地址不能为空' }]"
         />
-        <van-field name="uploader" label="门头照">
+        <van-field
+          v-model="GPSValue"
+          :is-link="!formDiabled"
+          disabled
+          readonly
+          label="门店定位"
+          placeholder="请定位门店地址"
+          error-message-align="right"
+          right-icon="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/rs-location.png"
+          @click="handleClickField('showForm')"
+          :rules="[{ required: true, message: '请定位门店地址' }]"
+        />
+        <van-field
+          name="uploader"
+          label="门头照"
+          error-message-align="right"
+          :rules="[{ required: true, message: '请上传门头照' }]"
+        >
           <template #input>
             <van-uploader
-              v-model="headImg"
+              :deletable="!formDiabled"
+              v-model="shopImg"
               capture="camera"
               max-count="1"
               :before-read="asyncBeforeRead"
-              :after-read="(file) => afterRead(file, 'headImg')"
+              :after-read="(file) => afterRead(file, 'shopImg')"
               upload-text="上传门头照片"
               :max-size="6000 * 1024"
               @oversize="onOversize"
             />
           </template>
         </van-field>
-        <van-field name="uploader" label="烟草证照">
+        <van-field
+          name="uploader"
+          label="烟草证照"
+          error-message-align="right"
+          :rules="[{ required: true, message: '请上传烟草证照' }]"
+        >
           <template #input>
             <van-uploader
-              v-model="licenceImg"
+              :deletable="!formDiabled"
+              v-model="licenseImg"
               capture="camera"
               max-count="1"
               :before-read="asyncBeforeRead"
-              :after-read="(file) => afterRead(file, 'licenceImg')"
+              :after-read="(file) => afterRead(file, 'licenseImg')"
               upload-text="上传烟草证件"
               :max-size="6000 * 1024"
               @oversize="onOversize"
@@ -133,89 +178,308 @@
           </template>
         </van-field>
         <van-field
-          v-model="username"
-          label-width="8.2em"
-          name="烟草专卖许可证号"
+          v-model="licenseNo"
+          label-width="10.2em"
+          name="licenseNo"
           label="烟草专卖许可证号"
           placeholder="请输入"
-          :rules="[{ required: true, pattern, message: '请输入' }]"
+          error-message-align="right"
+          :rules="[
+            {
+              required: true,
+              message: '烟草专卖许不能为空'
+            },
+            {
+              required: true,
+              pattern: licenseNoPattern,
+              message: '烟草专卖许可证号格式错误'
+            }
+          ]"
         />
         <van-field name="radio" label="区域">
           <template #input>
-            <van-radio-group v-model="checked" direction="horizontal">
-              <van-radio name="1">城镇</van-radio>
-              <van-radio name="2">乡村</van-radio>
+            <van-radio-group
+              v-model="areaType"
+              :disabled="formDiabled"
+              direction="horizontal"
+            >
+              <van-radio :name="1">城镇</van-radio>
+              <van-radio :name="2">乡村</van-radio>
             </van-radio-group>
           </template>
         </van-field>
         <van-field
-          v-model="result"
-          is-link
+          v-model="saleZone"
+          :is-link="!formDiabled"
           readonly
-          name="picker"
+          name="saleZone"
           label="所属销区"
           placeholder="点击选择所属销区"
-          @click="showPicker = true"
-          :rules="[{ required: true, message: '请输入所属销区' }]"
+          error-message-align="right"
+          @click="handleClickField('showSaleZonePicker')"
+          :rules="[{ required: true, message: '请选择所属销区' }]"
         />
-        <van-popup v-model:show="showPicker" position="bottom">
+        <van-popup v-model:show="showSaleZonePicker" position="bottom">
           <van-picker
-            :columns="columns"
-            :columns-field-names="customFieldName"
-            @confirm="onConfirm"
-            @cancel="showPicker = false"
+            :columns="saleZoneCodeColumns"
+            :columns-field-names="saleZoneCodeCustomFieldName"
+            :default-index="saleZoneIndex"
+            @confirm="onSaleZoneConfirm"
+            @cancel="showSaleZonePicker = false"
           />
         </van-popup>
         <van-field
-          v-model="username"
-          name="业务员"
+          v-model="salesman"
+          name="salesman"
           label="业务员"
           placeholder="请输入业务员"
+          maxlength="10"
         />
       </van-cell-group>
-      <div style="margin: 16px;">
-        <van-button square block type="primary" native-type="submit">
+      <div style="margin: 16px;" v-if="!formDiabled">
+        <van-button block type="primary" native-type="submit">
           提交
+        </van-button>
+      </div>
+      <div style="margin: 16px;" v-else>
+        <van-button square block type="primary">
+          返回
         </van-button>
       </div>
     </van-form>
   </div>
+  <!-- 定位 -->
+  <div class="register-location-container" v-if="!isRegister && !showForm">
+    <iframe
+      id="mapPage"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      :src="iframeUrl"
+    >
+    </iframe>
+  </div>
+  <!-- 审核状态 -->
+  <div class="is-register-container" v-if="isRegister">
+    <!-- 审核通过 -->
+    <template v-if="registerStatus === 1">
+      <div class="icon">
+        <img
+          src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/rs-ok.png"
+          alt=""
+        />
+      </div>
+      <div class="status">审核通过</div>
+      <div class="text">恭喜您，成为专属零售户！拥有了专属二维码</div>
+      <div class="text">可以邀请好友成为粉丝及参与平台活动，赶快去体验吧！</div>
+      <div class="btn" v-if="hasPhone">
+        <router-link to="/seller/sellerFans">
+          <van-button type="primary" style="width:8rem">返回首页</van-button>
+        </router-link>
+      </div>
+      <div class="btn" v-if="!hasPhone">
+        <van-button
+          type="primary"
+          style="width:8rem"
+          @click="showBindPhone = true"
+          >绑定手机号</van-button
+        >
+        <van-popup
+          v-model:show="showBindPhone"
+          style="background-color: #f6f6f6;"
+        >
+          <div class="form-bind">
+            <div class="title">绑定手机号</div>
+            <van-form
+              @submit="onSubmitPhone"
+              :show-error-message="false"
+              :show-error="true"
+              input-align="left"
+              label-width="4rem"
+            >
+              <van-cell-group inset>
+                <van-field
+                  v-model="contactPhone"
+                  name="contactPhone"
+                  label="手机号"
+                  placeholder="请输入手机号"
+                  :rules="[
+                    {
+                      required: true,
+                      pattern: phonePattern,
+                      message: '请输入手机号'
+                    }
+                  ]"
+                />
+                <van-field
+                  v-model="phoneCode"
+                  name="phoneCode"
+                  label="验证码"
+                  placeholder="请输入验证码"
+                  center
+                  @update:model-value="handleCodeChange"
+                  :rules="[
+                    {
+                      required: true,
+                      pattern: phoneCodePattern,
+                      message: '请输入验证码'
+                    }
+                  ]"
+                >
+                  <template #button>
+                    <van-button
+                      :disabled="btnDisabled"
+                      size="small"
+                      type="primary"
+                      @click="handleGetCode"
+                      >{{ phoneCodeText }}</van-button
+                    >
+                  </template>
+                </van-field>
+              </van-cell-group>
+              <div style="margin: 16px;">
+                <van-button
+                  block
+                  type="primary"
+                  size="small"
+                  native-type="submit"
+                  style="width: 7rem;margin: auto;"
+                >
+                  提交
+                </van-button>
+              </div>
+            </van-form>
+          </div>
+        </van-popup>
+      </div>
+    </template>
+    <template v-if="registerStatus === 2">
+      <div class="icon">
+        <img
+          src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/rs-wait.png"
+          alt=""
+        />
+      </div>
+      <div class="status">已提交</div>
+      <div class="text">注册信息已提交，请您耐心等候审核！</div>
+      <!-- <div class="btn">
+        <van-button
+          square
+          plain
+          type="primary"
+          style="width:8rem;background-color:#f6f6f6"
+          >返回</van-button
+        >
+      </div> -->
+    </template>
+    <!-- 审核通过 -->
+    <template v-if="registerStatus === 3">
+      <div class="icon">
+        <img
+          src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/rs-failed.png"
+          alt=""
+        />
+      </div>
+      <div class="status">审核失败</div>
+      <div class="text">很遗憾，审核失败，请核实信息后再来申请！</div>
+      <div class="text" style="margin:1rem">审核不通过原因:{{ auditMsg }}</div>
+      <div class="btn">
+        <van-button
+          square
+          plain
+          type="primary"
+          style="width:8rem;background-color:#f6f6f6"
+          @click="isRegister = false"
+          >返回</van-button
+        >
+      </div>
+    </template>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import {
   CascaderOption,
   CascaderFieldNames,
   UploaderFileListItem,
-  Toast
+  Toast,
+  PickerFieldNames,
+  PickerObjectOption
 } from 'vant'
 import Compressor from 'compressorjs'
 import axios, { http } from '@/http'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
+import { MapKey } from '@/plugins/Tmap'
 export default defineComponent({
+  name: 'SellerRegister',
   setup() {
-    const username = ref('')
+    const store = useStore<GlobalDataProps>()
+    const lat = computed(() => store.state.lat)
+    const lng = computed(() => store.state.lng)
+    const iframeUrl = ref(
+      `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=${MapKey}&referer=hbseller`
+    )
+    const showBindPhone = ref(false)
+    const hasPhone = ref(false)
+    const contactPhone = ref('')
+    const phoneCode = ref('')
+    const phoneCodeText = ref('发送验证码')
+    const formDiabled = ref(false)
+    const showForm = ref(true)
+    const isRegister = ref(true) // 是否注册
+    const registerStatus = ref(0) // 注册的状态， 1: 审核通过, 2: 待审核, 3: 审核不通过
+    const shopName = ref('')
+    const contactName = ref('')
+    const detailAddr = ref('')
+    const salesman = ref('')
+    const licenseNo = ref('')
     const password = ref('')
-    const result = ref('')
+    const male = ref('')
+    const maleIndex = ref(0)
+    const saleZoneIndex = ref(0)
+    const saleZone = ref('')
     const date = ref('')
-    const showPicker = ref(false)
+    const auditMsg = ref('')
+    const GPSValue = ref('')
+    const showMalePicker = ref(false)
+    const showSaleZonePicker = ref(false)
     const currentDate = ref(new Date())
     const showDatetimePicker = ref(false)
-    const checked = ref('1')
-    const headImg = ref<UploaderFileListItem[]>([])
-    const licenceImg = ref<UploaderFileListItem[]>([])
-    const columns = [
-      { cityName: '男', id: 1 },
-      { cityName: '女', id: 2 }
+    const areaType = ref(1)
+    const shopImg = ref<UploaderFileListItem[]>([])
+    const licenseImg = ref<UploaderFileListItem[]>([])
+    const maleColumns = [
+      { name: '男', id: 1 },
+      { name: '女', id: 2 }
     ]
-    const customFieldName = {
-      text: 'cityName'
+    const maleCustomFieldName: PickerFieldNames = {
+      text: 'name'
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const onConfirm = (value: any) => {
-      result.value = value.cityName
-      showPicker.value = false
-      console.log(value)
+    interface SaleZoneOption {
+      zoneName: string
+      zoneCode: string
+    }
+    const saleZoneCodeColumns = ref<SaleZoneOption[]>([])
+    const saleZoneCodeCustomFieldName: PickerFieldNames = {
+      text: 'zoneName'
+    }
+
+    let gender: string
+    const onMaleConfirm = (value: PickerObjectOption) => {
+      male.value = value.name
+      gender = value.id
+      showMalePicker.value = false
+      console.log(gender)
+    }
+
+    let saleZoneCode: string
+    const onSaleZoneConfirm = (value: PickerObjectOption) => {
+      saleZone.value = value.zoneName
+      saleZoneCode = value.zoneCode
+      showSaleZonePicker.value = false
+      console.log(saleZoneCode)
     }
     const onDatetimeConfirm = (value: Date) => {
       const d = new Date(value)
@@ -229,10 +493,9 @@ export default defineComponent({
       console.log(value)
     }
 
-    const pattern = /\d{12}/
-    const onSubmit = (values: unknown) => {
-      console.log('submit', values)
-    }
+    const phonePattern = /^1[3456789]\d{9}$/
+    const licenseNoPattern = /^\d{12}$|^\d{13}$/
+    const phoneCodePattern = /^\d{6}$/
 
     const showRegionPopup = ref(false)
 
@@ -246,9 +509,12 @@ export default defineComponent({
     }
     const options = ref<CascaderOption>([])
     let option: CascaderOption
-    let province: string
-    let city: string
-    let district: string
+    let provName: string
+    let cityName: string
+    let countyName: string
+    let provCode: string
+    let cityCode: string
+    let countyCode: string
     const onRegionChange = async ({ value, tabIndex }: CascaderOption) => {
       if (tabIndex === 0) {
         option = (options.value as CascaderOption[]).find(
@@ -263,7 +529,7 @@ export default defineComponent({
               })
               option.items = res.data
             } else {
-              alert(res.msg)
+              Toast.fail(res.msg)
             }
           })
           .catch((err) => {
@@ -280,7 +546,7 @@ export default defineComponent({
             if (res.code === '200') {
               op.items = res.data
             } else {
-              alert(res.msg)
+              Toast.fail(res.msg)
             }
           })
           .catch((err) => {
@@ -293,13 +559,21 @@ export default defineComponent({
       showRegionPopup.value = false
       fieldValue.value = selectedOptions
         .map((option: { name: string; code: string }, index: number) => {
-          if (index == 0) province = option.code
-          if (index == 1) city = option.code
-          if (index == 2) district = option.code
+          if (index == 0) {
+            provName = option.name
+            provCode = option.code
+          }
+          if (index == 1) {
+            cityName = option.name
+            cityCode = option.code
+          }
+          if (index == 2) {
+            countyName = option.name
+            countyCode = option.code
+          }
           return option.name
         })
         .join('/')
-      console.log(province, city, district)
     }
 
     const onOversize = (file: UploaderFileListItem) => {
@@ -307,6 +581,8 @@ export default defineComponent({
       Toast('文件大小不能超过 6Mb')
     }
 
+    let shopImgCode: string
+    let licenseImgCode: string
     const asyncBeforeRead = (file: File) =>
       new Promise((resolve, reject) => {
         if (
@@ -330,7 +606,7 @@ export default defineComponent({
       })
     const afterRead = async (
       file: UploaderFileListItem,
-      target: 'headImg' | 'licenceImg'
+      target: 'shopImg' | 'licenseImg'
     ) => {
       console.log(target, file.file)
       file.status = 'uploading'
@@ -345,32 +621,36 @@ export default defineComponent({
         }
       )
       formData.append('file', imgFile)
+      formData.append('channel', 'hb-SellerInfo')
       console.log(formData, imgFile)
       axios
-        .post('/api/upload', formData, {
+        .post('/hbact/ossCommon/uploadOne', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         })
         .then(({ data: res }) => {
           console.log(res)
-          if (res.code == '0') {
+          if (res.code === '200') {
             file.status = 'done'
-            if (target === 'headImg') {
-              headImg.value = [
+            if (target === 'shopImg') {
+              shopImgCode = res.data.rdmCode
+              shopImg.value = [
                 {
-                  url: res.data.url
+                  url: res.data.filePath
                 }
               ]
             }
-            if (target === 'licenceImg') {
-              licenceImg.value = [
+            if (target === 'licenseImg') {
+              licenseImgCode = res.data.rdmCode
+              licenseImg.value = [
                 {
-                  url: res.data.url
+                  url: res.data.filePath
                 }
               ]
             }
           }
+          console.log(shopImgCode, licenseImgCode)
         })
         .catch((err) => {
           console.log(err)
@@ -382,7 +662,221 @@ export default defineComponent({
     const minDate = ref(new Date(1920, 0, 1))
     const maxDate = ref(new Date())
 
-    onMounted(async () => {
+    let shopLat: number
+    let shopLng: number
+
+    type Flag =
+      | 'showSaleZonePicker'
+      | 'showForm'
+      | 'showRegionPopup'
+      | 'showDatetimePicker'
+      | 'showMalePicker'
+    const handleClickField = (flag: Flag) => {
+      if (formDiabled.value) return
+      if (flag === 'showSaleZonePicker') {
+        showSaleZonePicker.value = true
+      }
+      if (flag === 'showForm') {
+        if (lat.value && lng.value) {
+          iframeUrl.value = `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=${MapKey}&referer=webtest&coord=${lat.value},${lng.value}`
+        }
+        showForm.value = false
+      }
+      if (flag === 'showRegionPopup') {
+        showRegionPopup.value = true
+      }
+      if (flag === 'showDatetimePicker') {
+        showDatetimePicker.value = true
+      }
+      if (flag === 'showMalePicker') {
+        showMalePicker.value = true
+      }
+    }
+
+    const getSellerInfo = () => {
+      http
+        .get('/hbSeller/seller/isRegister', {})
+        .then((res) => {
+          if (res.code === '200') {
+            console.log(res.data)
+            hasPhone.value = res.data.hasPhone
+            isRegister.value = res.data.isRegister
+            if (res.data.isRegister) {
+              registerStatus.value = res.data.registerStatus
+              if (registerStatus.value === 3) {
+                const regiserInfo = res.data.regiserInfo
+                shopName.value = regiserInfo.shopName
+                contactName.value = regiserInfo.contactName
+                gender = regiserInfo.gender
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const maleColumn = maleColumns.find((item, index) => {
+                  if (item.id == regiserInfo.gender) {
+                    maleIndex.value = index
+                    return true
+                  }
+                })!
+                male.value = maleColumn.name
+                date.value = regiserInfo.birthday
+                const birthday = (regiserInfo.birthday as string).split('-')
+                const year = Number(birthday[0])
+                const month = Number(birthday[1]) - 1
+                const day = Number(birthday[2])
+                currentDate.value = new Date(year, month, day)
+                provName = regiserInfo.provName
+                cityName = regiserInfo.cityName
+                countyName = regiserInfo.countyName
+                fieldValue.value = provName + '/' + cityName + '/' + countyName
+                provCode = regiserInfo.provCode
+                cityCode = regiserInfo.cityCode
+                countyCode = regiserInfo.countyCode
+                detailAddr.value = regiserInfo.detailAddr
+                if (regiserInfo.shopLat && regiserInfo.shopLng) {
+                  GPSValue.value = '已定位'
+                  shopLat = regiserInfo.shopLat
+                  shopLng = regiserInfo.shopLng
+                }
+                licenseImgCode = regiserInfo.licenseImgCode
+                licenseImg.value = [
+                  {
+                    url: regiserInfo.licenseImg as string
+                  }
+                ]
+                shopImgCode = regiserInfo.shopImgCode
+                shopImg.value = [
+                  {
+                    url: regiserInfo.shopImg as string
+                  }
+                ]
+                licenseNo.value = regiserInfo.licenseNo
+                areaType.value = regiserInfo.areaType
+                saleZoneCode = regiserInfo.saleZoneCode
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const saleZoneColumn = saleZoneCodeColumns.value.find(
+                  (item, index) => {
+                    if (item.zoneCode == regiserInfo.saleZoneCode) {
+                      saleZoneIndex.value = index
+                      return true
+                    }
+                  }
+                )!
+                saleZone.value = saleZoneColumn.zoneName
+                salesman.value = regiserInfo.salesman || ''
+                auditMsg.value = regiserInfo.auditMsg || ''
+                if (regiserInfo.contactPhone != null) {
+                  contactPhone.value = regiserInfo.contactPhone
+                }
+              }
+            }
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    const onSubmit = () => {
+      const params = {
+        licenseNo: licenseNo.value,
+        licenseImgCode,
+        shopName: shopName.value,
+        shopImgCode,
+        contactName: contactName.value,
+        areaType: areaType.value,
+        provCode,
+        provName,
+        cityCode,
+        cityName,
+        countyCode,
+        countyName,
+        detailAddr: detailAddr.value,
+        saleZoneCode,
+        shopLat,
+        shopLng,
+        salesman: salesman.value,
+        gender,
+        birthday: date.value
+      }
+      console.log('submit', params)
+      http
+        .post('/hbSeller/seller/register', params, true)
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success(res.msg)
+            getSellerInfo()
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    const onSubmitPhone = () => {
+      const params = {
+        contactPhone: contactPhone.value,
+        phoneCode: phoneCode.value
+      }
+      console.log(params)
+      http
+        .post('/hbSeller/seller/phoneCodeCheck', params, false)
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success('绑定成功')
+            showBindPhone.value = false
+            getSellerInfo()
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+    }
+
+    const codeCount = ref(60)
+    const btnDisabled = ref(false)
+    const handleCodeChange = () => {
+      if (phoneCode.value.length > 6) {
+        phoneCode.value = phoneCode.value.substring(0, 6)
+      }
+    }
+    const handleGetCode = () => {
+      if (!phonePattern.test(contactPhone.value)) {
+        Toast.fail('请输入正确的手机号！')
+        return
+      }
+      http
+        .post(
+          ' /hbSeller/seller/phoneCodeSend',
+          { contactPhone: contactPhone.value },
+          false
+        )
+        .then((res) => {
+          if (res.code === '200') {
+            Toast.success('已发送！')
+            btnDisabled.value = true
+            phoneCodeText.value = `重新发送(${codeCount.value--})`
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let countInter: any = setInterval(() => {
+              phoneCodeText.value = `重新发送(${codeCount.value--})`
+              if (codeCount.value < 0) {
+                clearInterval(countInter)
+                countInter = undefined
+                codeCount.value = 60
+                phoneCodeText.value = '发送验证码'
+                btnDisabled.value = false
+              }
+            }, 1000)
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    const getRegion = () => {
       http
         .get('/syx/region/query/level', { level: 1 })
         .then((res) => {
@@ -392,30 +886,101 @@ export default defineComponent({
             })
             options.value = res.data
           } else {
-            alert(res.msg)
+            Toast.fail(res.msg)
           }
         })
         .catch((err) => {
           console.log(err)
         })
+    }
+
+    const getSaleZoneList = () => {
+      http
+        .get('/hbSeller/saleZone/allList', {})
+        .then((res) => {
+          if (res) {
+            console.log(res)
+            saleZoneCodeColumns.value = res
+            getSellerInfo()
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    onMounted(async () => {
+      if (!sessionStorage.getItem('SellerRegister')) {
+        sessionStorage.setItem('SellerRegister', '1')
+        window.location.reload()
+        return
+      }
+      if (process.env.NODE_ENV !== 'production') {
+        store.commit('setLng', 116.70602)
+        store.commit('setLat', 39.860464)
+      }
+      getRegion()
+      getSaleZoneList()
+      window.addEventListener(
+        'message',
+        function(event) {
+          // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+          const loc = event.data
+          if (loc && loc.module == 'locationPicker') {
+            //防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+            console.log('location', loc)
+            GPSValue.value = '已定位'
+            shopLat = loc.latlng.lat
+            shopLng = loc.latlng.lng
+            showForm.value = true
+          }
+        },
+        false
+      )
     })
     return {
-      username,
+      iframeUrl,
+      formDiabled,
+      isRegister,
+      registerStatus,
+      showForm,
+      shopName,
+      hasPhone,
+      contactName,
+      licenseNo,
+      contactPhone,
+      phoneCode,
+      detailAddr,
+      salesman,
       password,
-      columns,
-      customFieldName,
-      showPicker,
+      maleColumns,
+      maleCustomFieldName,
+      saleZoneCodeColumns,
+      saleZoneCodeCustomFieldName,
+      showMalePicker,
+      showSaleZonePicker,
       currentDate,
       showDatetimePicker,
-      checked,
-      onConfirm,
+      areaType,
+      onMaleConfirm,
+      onSaleZoneConfirm,
       onDatetimeConfirm,
-      result,
+      male,
+      maleIndex,
+      saleZoneIndex,
+      saleZone,
+      GPSValue,
       date,
-      headImg,
-      licenceImg,
-      pattern,
+      shopImg,
+      licenseImg,
+      phonePattern,
+      licenseNoPattern,
+      phoneCodePattern,
+      handleClickField,
       onSubmit,
+      onSubmitPhone,
       minDate,
       maxDate,
       showRegionPopup,
@@ -427,7 +992,13 @@ export default defineComponent({
       cascaderValue,
       asyncBeforeRead,
       afterRead,
-      onOversize
+      onOversize,
+      showBindPhone,
+      phoneCodeText,
+      handleGetCode,
+      btnDisabled,
+      handleCodeChange,
+      auditMsg
     }
   }
 })
@@ -444,6 +1015,52 @@ export default defineComponent({
       width: 100%;
       height: 105px;
     }
+  }
+}
+.is-register-container {
+  background-color: #f6f6f6;
+  height: 100vh;
+  padding-top: 81px;
+  box-sizing: border-box;
+  .icon {
+    margin-bottom: 28px;
+    img {
+      width: 70px;
+      height: 70px;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+  .status {
+    font-size: 16px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    color: #2b333b;
+    margin-bottom: 8px;
+  }
+  .text {
+    font-size: 14px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #b1b1b1;
+  }
+  .btn {
+    margin-top: 36px;
+    text-align: center;
+  }
+}
+#mapPage {
+  height: 100vh;
+}
+.form-bind {
+  width: 20rem;
+  box-sizing: border-box;
+  .title {
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
   }
 }
 </style>
