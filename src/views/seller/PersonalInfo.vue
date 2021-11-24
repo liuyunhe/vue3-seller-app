@@ -40,7 +40,7 @@
             <div class="name">我的礼品</div>
           </div>
         </router-link>
-        <router-link to="/common/myPoints">
+        <router-link :to="`/common/myPoints?shopName=${shopName}`">
           <div class="item">
             <i class="icon icon-integral"></i>
             <div class="name">我的积分</div>

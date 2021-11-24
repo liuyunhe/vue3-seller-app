@@ -6,7 +6,7 @@
           <img :src="headimg" alt="" />
         </div>
         <div class="user-info">
-          <div class="t">积分账户</div>
+          <div class="t">{{ nickname }}</div>
           <div class="numb">{{ point }}</div>
         </div>
       </div>
@@ -50,11 +50,17 @@ interface Point {
 
 export default defineComponent({
   name: 'MyPoints',
-  setup() {
+  props: {
+    shopName: {
+      type: String
+    }
+  },
+  setup(props) {
     const loading = ref(true)
     const point = ref<number | null>(null)
     const headimg = ref<string>('')
     const myPoints = ref<Point[] | null>(null)
+    const nickname = ref('')
     const getUserInfo = () => {
       http
         .get('/syx/user/info', {})
@@ -63,6 +69,11 @@ export default defineComponent({
           if (res.code === '200') {
             point.value = res.data.point
             headimg.value = res.data.user.headimg
+            if (props.shopName) {
+              nickname.value = props.shopName
+            } else {
+              nickname.value = res.data.user.nickname
+            }
           } else {
             Toast.fail(res.msg)
           }
@@ -94,7 +105,8 @@ export default defineComponent({
       loading,
       myPoints,
       point,
-      headimg
+      headimg,
+      nickname
     }
   }
 })
@@ -126,7 +138,7 @@ export default defineComponent({
     }
     .user-info {
       float: left;
-      margin-left: 10px;
+      margin-left: 5px;
       padding-top: 10px;
       box-sizing: border-box;
       .t {
@@ -140,6 +152,7 @@ export default defineComponent({
         line-height: 50px;
         font-size: 35px;
         color: #ffffff;
+        margin-left: -5px;
       }
     }
   }
