@@ -73,6 +73,9 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '我的积分'
     },
+    props: (route) => ({
+      shopName: route.query.shopName
+    }),
     component: () =>
       import(/* webpackChunkName: "MyGifts" */ '../views/common/MyPoints.vue')
   },
@@ -242,7 +245,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'home',
         name: 'CustomerHome',
         meta: {
-          title: '零售户绑定',
+          title: '零售户店铺',
           keepAlive: true
         },
         component: () =>
