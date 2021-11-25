@@ -1,6 +1,6 @@
 <template>
   <div class="edit-invition-container">
-    <div class="mg40">主标题：</div>
+    <div class="mg40">主标题</div>
     <van-cell-group inset>
       <van-field
         v-model="title"
@@ -12,7 +12,7 @@
         show-word-limit
       />
     </van-cell-group>
-    <div class="mg40">副标题：</div>
+    <div class="mg40">副标题</div>
     <van-cell-group inset>
       <van-field
         v-model="subTitle"
@@ -24,7 +24,7 @@
         show-word-limit
       />
     </van-cell-group>
-    <div class="mg40">消息内容：</div>
+    <div class="mg40">消息内容</div>
     <van-cell-group inset>
       <van-field
         v-model="msgContent"
@@ -126,7 +126,7 @@ export default defineComponent({
     line-height: 40px;
     color: #333;
     margin: 0 20px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .btn {
     width: 345px;

@@ -37,7 +37,7 @@
             <div class="head-img"><img :src="item.fanHeadImg" alt="" /></div>
             <div class="info">
               <div class="nickname">{{ item.fanNickName }}</div>
-              <div class="time">{{ item.ctime }}</div>
+              <div class="time">绑定时间：{{ item.ctime }}</div>
             </div>
             <div class="role">{{ item.fanGender === 1 ? '男' : '女' }}</div>
           </li>
