@@ -37,6 +37,23 @@
         <div class="name text">{{ item.levelName }}</div>
       </div>
     </div>
+    <div class="main" style="padding-top:0">
+      <div class="title">等级制度规则</div>
+      <div class="note">
+        <p>
+          1、私域生态平台将采用克拉值累加的等级制度；
+        </p>
+        <p>
+          2、您可以通过邀请您的消费者成为您的粉丝来获取克拉值；
+        </p>
+        <p>
+          3、每一个新粉丝将为您带来一定量的克拉值；
+        </p>
+        <p>
+          4、等级所需的克拉值以及名称都有可能会随着活动的开展进行调整，请以页面显示为主。
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -305,6 +322,42 @@ export default defineComponent({
           border-right: 1px solid rgba(226, 226, 225, 0.5);
         }
       }
+    }
+  }
+  .note {
+    width: 303px;
+    // height: 220px;
+    background: #ffffff;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    border: 1px solid rgba(226, 226, 225, 0.5);
+    .title {
+      height: 25px;
+      line-height: 25px;
+      .icon {
+        float: left;
+        width: 5px;
+        height: 17px;
+        margin-top: 4px;
+        background: #527dfd;
+        box-shadow: 0px 2px 3px rgba(2, 113, 253, 0.49);
+        border-radius: 3px;
+      }
+      .text {
+        float: left;
+        font-size: 16px;
+        margin-left: 8px;
+        color: #2b333b;
+      }
+    }
+    p {
+      font-size: 12px;
+      line-height: 28px;
+      color: #666666;
+      text-align: justify;
     }
   }
 }

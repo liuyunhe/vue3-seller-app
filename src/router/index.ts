@@ -171,7 +171,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/seller/bindFansQrcode',
     name: 'BindFansQrcode',
     meta: {
-      title: '粉丝绑定码',
+      title: '我的邀请码',
       keepAlive: true
     },
     component: () =>
@@ -229,6 +229,20 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(
         /* webpackChunkName: "SellerEditInvition" */ '../views/seller/EditInvition.vue'
+      )
+  },
+  {
+    path: '/seller/inviteDetail',
+    name: 'SelllerInviteDetail',
+    props: (route) => ({
+      id: route.query.id
+    }),
+    meta: {
+      title: '消息详情'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SelllerMessageDetail" */ '../views/seller/InviteDetail.vue'
       )
   },
   // 消费者

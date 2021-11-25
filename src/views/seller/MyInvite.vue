@@ -7,28 +7,32 @@
     </template>
     <ul class="content">
       <li class="message" v-for="item in inviteMsgList" :key="item.id">
-        <div class="container">
-          <div class="title">
-            <div class="text">
-              {{ item.title }}
+        <router-link :to="`/seller/inviteDetail?id=${item.id}`">
+          <div class="container">
+            <div class="title">
+              <div class="text">
+                {{ item.title }}
+              </div>
+              <span> {{ item.ctime }}</span>
             </div>
-            <span> {{ item.ctime }}</span>
-          </div>
-          <div class="sub-title">
-            <div class="text">
-              {{ item.subTitle }}
+            <div class="sub-title">
+              <div class="text">
+                {{ item.subTitle }}
+              </div>
+              <span v-if="item.status === 0" style="color:#FFAD20">审核中</span>
+              <span v-if="item.status === 1" style="color:#0180FF">已发送</span>
+              <span v-if="item.status === 2" style="color:#FF3400"
+                >审核失败</span
+              >
             </div>
-            <span v-if="item.status === 0" style="color:#FFAD20">审核中</span>
-            <span v-if="item.status === 1" style="color:#0180FF">已发送</span>
-            <span v-if="item.status === 2" style="color:#FF3400">审核失败</span>
+            <!-- <div class="border-line"></div> -->
+            <!-- <div class="content">{{ item.msgContent }}</div> -->
           </div>
-          <div class="border-line"></div>
-          <div class="content">{{ item.msgContent }}</div>
-        </div>
 
-        <div class="audit-msg" v-if="item.status === 2">
-          未审核通过原因：{{ item.auditMsg }}
-        </div>
+          <div class="audit-msg" v-if="item.status === 2">
+            未审核通过原因：{{ item.auditMsg }}
+          </div>
+        </router-link>
       </li>
     </ul>
     <div class="btn" @click="showTplList = true">新建活动邀约</div>

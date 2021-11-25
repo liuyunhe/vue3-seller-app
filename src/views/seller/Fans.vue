@@ -37,9 +37,9 @@
             <div class="head-img"><img :src="item.fanHeadImg" alt="" /></div>
             <div class="info">
               <div class="nickname">{{ item.fanNickName }}</div>
-              <div class="role">{{ item.fanGender === 1 ? '男' : '女' }}</div>
+              <div class="time">{{ item.ctime }}</div>
             </div>
-            <div class="time">{{ item.ctime }}</div>
+            <div class="role">{{ item.fanGender === 1 ? '男' : '女' }}</div>
           </li>
         </ul>
         <div class="no-fans-tips" v-else>暂无粉丝</div>
@@ -219,7 +219,7 @@ export default defineComponent({
             }
           }
           .info {
-            width: 110px;
+            width: 220px;
             height: 50px;
             padding: 2px 0;
             box-sizing: border-box;
@@ -231,20 +231,21 @@ export default defineComponent({
               color: #2b333b;
               margin-bottom: 9px;
             }
-            .role {
+            .time {
               width: 100%;
+              color: #999999;
               height: 17px;
               line-height: 17px;
-              font-size: 14px;
-              color: #999999;
+              font-size: 12px;
             }
           }
-          .time {
-            width: 130px;
+          .role {
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 14px;
             color: #999999;
-            height: 17px;
-            font-size: 12px;
-            padding-bottom: 22px;
+            padding-bottom: 25px;
           }
         }
       }

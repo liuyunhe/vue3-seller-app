@@ -21,7 +21,9 @@ import {
   Cascader,
   Toast,
   Tab,
-  Tabs
+  Tabs,
+  Checkbox,
+  CheckboxGroup
 } from 'vant'
 
 const plugins = [
@@ -46,7 +48,9 @@ const plugins = [
   Cascader,
   Toast,
   Tab,
-  Tabs
+  Tabs,
+  Checkbox,
+  CheckboxGroup
 ]
 
 export const vantPlugins = {

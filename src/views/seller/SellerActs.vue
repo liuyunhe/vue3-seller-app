@@ -1,12 +1,8 @@
 <template>
   <div class="seller-home-container">
-    <div class="building-icon">
-      <img
-        src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/building-icon.png"
-        alt=""
-      />
-    </div>
-    <p class="building-tips">系统正在建设中</p>
+    <div class="h15"></div>
+    <div class="building-icon"></div>
+    <p class="building-tips">— 更多活动 敬请期待 —</p>
   </div>
 </template>
 
@@ -22,24 +18,27 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@import '@/theme/common';
 .seller-home-container {
   height: 100%;
+  .h15 {
+    height: 15px;
+  }
   .building-icon {
-    width: 175px;
-    height: 156px;
-    padding-top: 168px;
-    margin: 0 auto 35px;
-    img {
-      display: block;
-      width: 175px;
-      height: 156px;
-    }
+    padding-top: 20px;
+    margin: 0 auto 10px;
+    .bg-img(
+      345px,
+      640px,
+      'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/lsh-acts.png'
+    );
   }
   p.building-tips {
+    height: 33px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 13px;
-    color: #0271fd;
+    color: #b1b1b1;
   }
 }
 </style>

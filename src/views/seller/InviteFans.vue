@@ -1,7 +1,7 @@
 <template>
   <div class="invite-fans-container">
     <div class="bg">
-      <div class="invite-btn">分享好友绑定粉丝</div>
+      <div class="invite-btn" @click="showInvite = true">分享好友绑定粉丝</div>
       <router-link to="/seller/bindFansQrcode">
         <div class="qrcode-bar">
           <i class="qrcode-icon"></i>
@@ -28,6 +28,12 @@
         </p>
       </div>
     </div>
+    <!--    邀请弹层-->
+    <div class="layer" v-show="showInvite">
+      <div class="layer-bg"></div>
+      <div class="invite-zf"></div>
+      <div class="invite-gb" @click="showInvite = false"></div>
+    </div>
   </div>
 </template>
 
@@ -36,7 +42,7 @@ import { http } from '@/http'
 import { initWxOnReady, wxHideMenu, wxShare } from '@/plugins/Wx'
 import { GlobalDataProps } from '@/store'
 import { Toast } from 'vant'
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 
 const isiOS = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) //ios终端
@@ -46,6 +52,7 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const wxUrl = computed(() => store.state.wxUrl)
+    const showInvite = ref(false)
     const getQrcode = () => {
       http
         .post('/hbSeller/sellerFans/shopBindCode', {}, false)
@@ -88,7 +95,7 @@ export default defineComponent({
       getQrcode()
     })
 
-    return {}
+    return { showInvite }
   },
   beforeRouteLeave(to, from, next) {
     wxHideMenu()
@@ -186,6 +193,43 @@ export default defineComponent({
         line-height: 28px;
         color: #666666;
       }
+    }
+  }
+  .layer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    .layer-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      right: 0;
+      background: #111;
+      opacity: 0.9;
+    }
+    .invite-zf {
+      position: absolute;
+      .bg-img(
+        192px,
+        82px,
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/common/memberDay/packour/invite-zf.png'
+      );
+      right: 27px;
+      top: 14px;
+    }
+    .invite-gb {
+      position: absolute;
+      .bg-img(
+        140px,
+        38px,
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/common/memberDay/packour/invite-gb.png'
+      );
+      left: 119px;
+      bottom: 109px;
     }
   }
 }
