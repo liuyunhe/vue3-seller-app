@@ -104,8 +104,8 @@
     :show="showBindSuccess"
     headImg="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-debind-head.png"
     needCancelBtn
-    @confirm="showBindSuccess = false"
-    @cancel="showBindSuccess = false"
+    @confirm="handleCloseBindSuccess"
+    @cancel="handleCloseBindSuccess"
   >
     <template #content>
       <div class="bind-popup-container">
@@ -125,6 +125,7 @@ import { Dialog, Toast } from 'vant'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import PopupWithHead from '@/components/PopupWithHead/index.vue'
+import { useRouter } from 'vue-router'
 
 interface ShopInfo {
   id: number
@@ -159,8 +160,10 @@ export default defineComponent({
   components: { PopupWithHead },
   setup() {
     const store = useStore<GlobalDataProps>()
+    const router = useRouter()
     const lat = computed(() => store.state.lat)
     const lng = computed(() => store.state.lng)
+    const needComplete = computed(() => store.state.needComplete)
     const shopListRef = ref<ShopInfo[]>([])
     const bindShop = ref<BindShop | null>(null)
 
@@ -238,6 +241,21 @@ export default defineComponent({
       })
       return shopList
     }
+    const handleCloseBindSuccess = () => {
+      showBindSuccess.value = false
+      if (needComplete.value === true) {
+        Dialog.alert({
+          title: '提示',
+          message:
+            '赶快前往本平台个人中心完善您的性别、电话、生日等信息吧，未完善信息无法参与本平台的相关活动哦~',
+          messageAlign: 'left',
+          closeOnClickOverlay: false
+        }).then(() => {
+          // on close
+          router.push('/customer/userInfo')
+        })
+      }
+    }
     interface Styles {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any
@@ -257,7 +275,9 @@ export default defineComponent({
               bindShop.value = bindInfo as BindShop
               store.commit('setBindShopFlag', true)
             }
+            //  当前区域未有注册零售户
             if (shopList === null || shopList.length === 0) {
+              //  已绑定店铺
               if (showNoBind.value !== true) {
                 Dialog.confirm({
                   title: '提示',
@@ -267,10 +287,20 @@ export default defineComponent({
                 })
                   .then(() => {
                     // on confirm
+                    if (needComplete.value) {
+                      handleCloseBindSuccess()
+                    }
                   })
                   .catch(() => {
                     // on cancel
+                    if (needComplete.value) {
+                      handleCloseBindSuccess()
+                    }
                   })
+              }
+            } else {
+              if (needComplete.value && !showNoBind.value) {
+                handleCloseBindSuccess()
               }
             }
             if (shopList && shopList.length) {
@@ -382,6 +412,13 @@ export default defineComponent({
                 getHomeInfo(lat.value!, lng.value!)
               }
             })
+            const needComplete = res.data.needComplete as boolean
+            store.commit('setNeedComplete', res.data.needComplete)
+            if (needComplete) {
+              sessionStorage.setItem('needComplete', '1')
+            } else {
+              sessionStorage.setItem('needComplete', '0')
+            }
             showBindSuccess.value = true
           } else {
             Toast.fail(res.msg)
@@ -485,7 +522,8 @@ export default defineComponent({
       handleClickShop,
       handleBindShop,
       handleClickUnbind,
-      handleCloseNoBind
+      handleCloseNoBind,
+      handleCloseBindSuccess
     }
   }
 })

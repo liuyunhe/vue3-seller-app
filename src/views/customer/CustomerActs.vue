@@ -1,7 +1,10 @@
 <template>
   <div class="customer-home-container">
     <div class="h15"></div>
-    <div class="building-icon"></div>
+    <router-link to="/customer/actDetail">
+      <div class="building-icon"></div>
+    </router-link>
+
     <p class="building-tips">— 更多活动 敬请期待 —</p>
   </div>
 </template>

@@ -86,7 +86,7 @@ export default defineComponent({
     const getSysMessageList = () => {
       http.post('/hbSeller/fans/msg/system', {}, false).then((res) => {
         if (res.code === '200') {
-          sysMessageList.value = res.data
+          sysMessageList.value = res.data || []
         } else {
           Toast.fail(res.msg)
         }
@@ -95,7 +95,7 @@ export default defineComponent({
     const getShopMessageList = () => {
       http.post('/hbSeller/fans/msg/shop/query', {}, false).then((res) => {
         if (res.code === '200') {
-          shopMessageList.value = res.data
+          shopMessageList.value = res.data || []
         } else {
           Toast.fail(res.msg)
         }

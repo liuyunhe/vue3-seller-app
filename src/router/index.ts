@@ -146,6 +146,16 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "Register" */ '../views/seller/Register.vue')
   },
   {
+    path: '/seller/actDetail',
+    name: 'SellerActDetail',
+    meta: {
+      title: '活动详情',
+      keepAlive: true
+    },
+    component: () =>
+      import(/* webpackChunkName: "Register" */ '../views/seller/ActDetail.vue')
+  },
+  {
     path: '/seller/inviteFans',
     name: 'InviteFans',
     meta: {
@@ -303,6 +313,18 @@ const routes: Array<RouteRecordRaw> = [
           )
       }
     ]
+  },
+  {
+    path: '/customer/actDetail',
+    name: 'CustomerActDetail',
+    meta: {
+      title: '活动详情',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/ActDetail.vue'
+      )
   },
   {
     path: '/customer/messageDetail',

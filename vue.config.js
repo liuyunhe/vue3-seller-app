@@ -39,6 +39,10 @@ module.exports = {
       '/hbSeller': {
         target: 'https://cs-yxc.qrmkt.cn', //跨域接口的地址
         changeOrigin: true
+      },
+      '/spoint': {
+        target: 'https://cs-yxc.qrmkt.cn', //跨域接口的地址
+        changeOrigin: true
       }
     },
     headers: {
