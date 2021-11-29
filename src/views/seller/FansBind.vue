@@ -57,12 +57,12 @@ export default defineComponent({
           if (res.code === '200') {
             Toast.success('绑定成功!')
             setTimeout(() => {
-              router.push('/customer/home')
+              router.push('/')
             }, 3000)
           } else if (res.code === '600') {
             Toast.fail(res.msg)
             setTimeout(() => {
-              router.push('/customer/home')
+              router.push('/')
             }, 3000)
           } else {
             Toast.fail(res.msg)

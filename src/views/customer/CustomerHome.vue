@@ -299,7 +299,12 @@ export default defineComponent({
                   })
               }
             } else {
-              if (needComplete.value && !showNoBind.value) {
+              console.log(needComplete.value, !showNoBind.value)
+              if (
+                needComplete.value &&
+                !showNoBind.value &&
+                !showBindSuccess.value
+              ) {
                 handleCloseBindSuccess()
               }
             }

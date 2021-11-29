@@ -26,6 +26,7 @@
     <van-form @submit="onSubmit" input-align="right" v-if="needComplete">
       <van-cell-group inset>
         <van-field
+          v-if="!fanGenderFlag"
           v-model="fanGender"
           name=""
           label="性别"
@@ -43,7 +44,12 @@
             @cancel="showMalePicker = false"
           />
         </van-popup>
+        <div class="content" style="margin:0" v-if="fanGenderFlag">
+          <div class="name">性别</div>
+          <div class="value">{{ fanGender }}</div>
+        </div>
         <van-field
+          v-if="!birthdayFlag"
           v-model="birthday"
           name=""
           label="生日"
@@ -63,7 +69,12 @@
             @cancel="showDatetimePicker = false"
           />
         </van-popup>
+        <div class="content" style="margin:0" v-if="birthdayFlag">
+          <div class="name">生日</div>
+          <div class="value">{{ birthday }}</div>
+        </div>
         <van-field
+          v-if="!fanMobileFlag"
           v-model="fanMobile"
           name=""
           label="手机号"
@@ -81,7 +92,12 @@
             }
           ]"
         />
+        <div class="content" style="margin:0" v-if="fanMobileFlag">
+          <div class="name">手机号</div>
+          <div class="value">{{ fanMobile }}</div>
+        </div>
         <van-field
+          v-if="!fanMobileFlag"
           class="phoneCode"
           v-model="phoneCode"
           name="phoneCode"
@@ -152,8 +168,8 @@ export default defineComponent({
     const minDate = ref(new Date(1920, 0, 1))
     const maxDate = ref(new Date())
     const maleColumns = [
-      { name: '男', id: 1 },
-      { name: '女', id: 2 }
+      { name: '男', id: '1' },
+      { name: '女', id: '2' }
     ]
     const maleCustomFieldName: PickerFieldNames = {
       text: 'name'
@@ -163,6 +179,9 @@ export default defineComponent({
     const phoneCodeText = ref('发送验证码')
     const codeCount = ref(60)
     const btnDisabled = ref(false)
+    const fanGenderFlag = ref(false)
+    const birthdayFlag = ref(false)
+    const fanMobileFlag = ref(false)
     const jumpToAddr = () => {
       window.location.href = '/yx/views/general/addr-mgr.html'
     }
@@ -182,6 +201,9 @@ export default defineComponent({
                 ? '女'
                 : ''
             fanHeadImg.value = res.data.info.fanHeadImg
+            if (fanGender.value) fanGenderFlag.value = true
+            if (birthday.value) birthdayFlag.value = true
+            if (fanMobile.value) fanMobileFlag.value = true
           } else {
             Toast.fail(res.msg)
           }
@@ -228,11 +250,7 @@ export default defineComponent({
         return
       }
       http
-        .post(
-          ' /hbSeller/seller/phoneCodeSend',
-          { contactPhone: fanMobile.value },
-          false
-        )
+        .post('/syx/user/bind/svcode', { mobile: fanMobile.value }, false)
         .then((res) => {
           if (res.code === '200') {
             Toast.success('已发送！')
@@ -271,7 +289,34 @@ export default defineComponent({
           })
       })
     }
+    const handleSubmitCode = (params: { mobile: string; vcode: string }) => {
+      return new Promise((resolve) => {
+        http.post('/syx/user/bind/mobile', params, false).then((res) => {
+          resolve(res)
+        })
+      })
+    }
+    const handleSyncUserInfo = () => {
+      http.post('/hbSeller/fans/syncUserInfo', {}, false).then((res) => {
+        console.log(res)
+        if (res.code === '200') {
+          store.commit('setNeedComplete', false)
+          sessionStorage.setItem('needComplete', '0')
+          Toast.success('保存成功!')
+          setTimeout(() => {
+            getUserInfo()
+          }, 3000)
+        }
+      })
+    }
     const onSubmit = () => {
+      if (!gender) {
+        if (fanGender.value === '男') {
+          gender = '1'
+        } else {
+          gender = '2'
+        }
+      }
       const params1 = {
         img: null,
         nickname: null,
@@ -279,18 +324,44 @@ export default defineComponent({
         gender
       }
       const params2 = {
-        fanMobile: fanMobile.value
+        mobile: fanMobile.value,
+        vcode: phoneCode.value
+      }
+      const httpArr = []
+      if (!(fanGenderFlag.value && birthdayFlag.value)) {
+        httpArr.push(completeUserInfo(params1))
+      }
+      if (!fanMobileFlag.value) {
+        httpArr.push(handleSubmitCode(params2))
       }
       console.log(params1, params2)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      Promise.all([completeUserInfo(params1)]).then(([res1]: any[]) => {
-        if (res1.code == 200) {
-          return
+      Promise.all(httpArr).then(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (resArr: any[]) => {
+          if (resArr.length === 2) {
+            const [res1, res2] = resArr
+            if (res1.code == 200 && res2.code == 200) {
+              handleSyncUserInfo()
+            } else {
+              const msg = `${res1.msg ? res1.msg : ''}${
+                res1.msg && res2.msg ? ',' : ''
+              }${res2.msg ? res2.msg : ''}`
+              Toast.fail(msg)
+            }
+          } else {
+            const [res1] = resArr
+            if (res1.code == 200) {
+              handleSyncUserInfo()
+            } else {
+              Toast.fail(`${res1.msg}`)
+            }
+          }
         }
-      })
+      )
     }
     onMounted(() => {
       getUserInfo()
+      Toast.success('保存成功!')
     })
     return {
       needComplete,
@@ -315,6 +386,9 @@ export default defineComponent({
       phoneCodeText,
       codeCount,
       btnDisabled,
+      fanGenderFlag,
+      birthdayFlag,
+      fanMobileFlag,
       handleGetCode,
       handleCodeChange,
       onDatetimeConfirm,
