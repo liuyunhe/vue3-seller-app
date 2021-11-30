@@ -6,6 +6,7 @@ export interface GlobalDataProps {
   shopCode: string
   loading: boolean
   bindShopFlag: boolean
+  needComplete: boolean | null
   hasMsg: boolean | null
   lat: number | null
   lng: number | null
@@ -31,6 +32,11 @@ const store = createStore<GlobalDataProps>({
     wxUrl: null,
     bindChannel: sessionStorage.getItem('bindChannel') || '',
     bindShopFlag: true,
+    needComplete: sessionStorage.getItem('needComplete')
+      ? sessionStorage.getItem('needComplete') === '1'
+        ? true
+        : false
+      : null,
     hasMsg: null
   },
   getters: {},
@@ -55,6 +61,9 @@ const store = createStore<GlobalDataProps>({
     },
     setLoading(state, status) {
       state.loading = status
+    },
+    setNeedComplete(state, status) {
+      state.needComplete = status
     },
     setHasMsg(state, status) {
       state.hasMsg = status

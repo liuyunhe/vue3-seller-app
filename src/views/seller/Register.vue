@@ -295,7 +295,7 @@
               :show-error-message="false"
               :show-error="true"
               input-align="left"
-              label-width="4rem"
+              label-width="3rem"
             >
               <van-cell-group inset>
                 <van-field
@@ -337,7 +337,21 @@
                   </template>
                 </van-field>
               </van-cell-group>
-              <div style="margin: 16px;">
+              <div class="submit-phone-tips">
+                <van-checkbox
+                  v-model="submitChecked"
+                  shape="square"
+                  icon-size="4.2vw"
+                  style="justify-content: center;"
+                  >我已阅读并同意“<a
+                    href="javascript:;"
+                    style="color:#1989fa"
+                    @click="handleClickPolicy"
+                    >私域平台隐私政策</a
+                  >”</van-checkbox
+                >
+              </div>
+              <div style="margin: 0 16px 16px;">
                 <van-button
                   block
                   type="primary"
@@ -394,6 +408,7 @@
         >
       </div>
     </template>
+    <PolicyPage v-if="showPolicy" @policyClose="handleClosePolicy" />
   </div>
 </template>
 
@@ -412,8 +427,10 @@ import axios, { http } from '@/http'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 import { MapKey } from '@/plugins/Tmap'
+import PolicyPage from '@/components/PolicyPage/index.vue'
 export default defineComponent({
   name: 'SellerRegister',
+  components: { PolicyPage },
   setup() {
     const store = useStore<GlobalDataProps>()
     const lat = computed(() => store.state.lat)
@@ -421,6 +438,8 @@ export default defineComponent({
     const iframeUrl = ref(
       `https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=${MapKey}&referer=hbseller`
     )
+    const showPolicy = ref(false)
+    const submitChecked = ref(false)
     const showBindPhone = ref(false)
     const hasPhone = ref(false)
     const contactPhone = ref('')
@@ -621,7 +640,7 @@ export default defineComponent({
         }
       )
       formData.append('file', imgFile)
-      formData.append('channel', 'hb-SellerInfo')
+      formData.append('channel', 'hebei-sellerInfo')
       console.log(formData, imgFile)
       axios
         .post('/hbact/ossCommon/uploadOne', formData, {
@@ -815,6 +834,10 @@ export default defineComponent({
     }
 
     const onSubmitPhone = () => {
+      if (!submitChecked.value) {
+        Toast.fail('请阅读并同意"私域平台隐私政策"')
+        return
+      }
       const params = {
         contactPhone: contactPhone.value,
         phoneCode: phoneCode.value
@@ -911,6 +934,15 @@ export default defineComponent({
         })
     }
 
+    const handleClickPolicy = () => {
+      showPolicy.value = true
+    }
+
+    const handleClosePolicy = () => {
+      submitChecked.value = true
+      showPolicy.value = false
+    }
+
     onMounted(async () => {
       if (!sessionStorage.getItem('SellerRegister')) {
         sessionStorage.setItem('SellerRegister', '1')
@@ -998,7 +1030,11 @@ export default defineComponent({
       handleGetCode,
       btnDisabled,
       handleCodeChange,
-      auditMsg
+      auditMsg,
+      submitChecked,
+      showPolicy,
+      handleClickPolicy,
+      handleClosePolicy
     }
   }
 })
@@ -1016,6 +1052,11 @@ export default defineComponent({
       height: 105px;
     }
   }
+}
+.submit-phone-tips {
+  margin: 10px 0;
+  font-size: 12px;
+  color: #b1b1b1;
 }
 .is-register-container {
   background-color: #f6f6f6;

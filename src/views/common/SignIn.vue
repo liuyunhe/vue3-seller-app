@@ -82,6 +82,13 @@ export default defineComponent({
                 router.push('/seller/register')
               }
             } else if (role == 2) {
+              const needComplete = res.data.needComplete as boolean
+              store.commit('setNeedComplete', needComplete)
+              if (needComplete) {
+                sessionStorage.setItem('needComplete', '1')
+              } else {
+                sessionStorage.setItem('needComplete', '0')
+              }
               router.push('/customer/home')
             } else {
               showPage.value = true

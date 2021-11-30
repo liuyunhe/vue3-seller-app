@@ -27,7 +27,7 @@
         <router-link to="/seller/myInvite">
           <div class="item">
             <i class="icon icon-invite"></i>
-            <div class="name">我的邀约</div>
+            <div class="name">我的消息</div>
           </div>
         </router-link>
         <!-- <div class="item">
@@ -54,10 +54,12 @@
         </router-link>
       </div>
       <div class="content">
-        <!-- <div class="item">
-          <i class="icon icon-survey"></i>
-          <div class="name">我的问卷</div>
-        </div> -->
+        <router-link to="/seller/bindFansQrcode">
+          <div class="item">
+            <i class="icon icon-invite-qrcode"></i>
+            <div class="name">我的邀请码</div>
+          </div>
+        </router-link>
 
         <div class="item"></div>
         <div class="item"></div>
@@ -247,6 +249,9 @@ export default defineComponent({
           }
           &.icon-opinion {
             .bg-img(33px, 33px, @icon-opinion);
+          }
+          &.icon-invite-qrcode {
+            .bg-img(33px, 33px, @icon-invite-qrcode);
           }
         }
         .name {
