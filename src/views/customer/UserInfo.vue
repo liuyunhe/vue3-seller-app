@@ -28,6 +28,7 @@
         <van-field
           v-if="!fanGenderFlag"
           v-model="fanGender"
+          readonly
           name=""
           label="性别"
           placeholder="请选择性别"
@@ -53,6 +54,7 @@
           v-model="birthday"
           name=""
           label="生日"
+          readonly
           placeholder="点击选择时间"
           error-message-align="right"
           @click="handleClickField('showDatetimePicker')"
