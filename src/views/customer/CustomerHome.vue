@@ -377,6 +377,22 @@ export default defineComponent({
               })
               markerLayer.setStyles(styles)
               markerLayer.add(markers)
+            } else {
+              styles = {
+                pMarker: new TMap.MarkerStyle({
+                  width: 20, // 样式宽
+                  height: 30, // 样式高
+                  anchor: { x: 10, y: 30 } // 描点位置
+                })
+              }
+              const markers = []
+              markers.push({
+                id: 0, //点标记唯一标识，后续如果有删除、修改位置等操作，都需要此id
+                styleId: 'pMarker', //指定样式id
+                position: new TMap.LatLng(lat, lng) //点标记坐标位置
+              })
+              markerLayer.setStyles(styles)
+              markerLayer.add(markers)
             }
           } else {
             Toast.fail(res.msg)
