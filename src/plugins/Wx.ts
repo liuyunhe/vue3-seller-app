@@ -6,7 +6,7 @@ declare const wx: any
 // 微信jssdk
 export const initWx = (callback: () => void) => {
   const init = (callback: () => void) => {
-    const src = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js' //微信JSDK
+    const src = 'https://res.wx.qq.com/open/js/jweixin-1.5.0.js' //微信JSDK
     const doc = window.document
     const scr = doc.getElementsByTagName('script')[0]
     const v = doc.createElement('script')

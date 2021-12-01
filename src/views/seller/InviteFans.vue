@@ -90,8 +90,10 @@ export default defineComponent({
         sessionStorage.setItem('ShareInviteFans', '1')
         window.location.reload()
         return
+      } else {
+        console.log('wxShare!')
+        getQrcode()
       }
-      getQrcode()
     })
 
     return { showInvite }
