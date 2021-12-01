@@ -41,11 +41,13 @@ const wxConfig = (res: {
     nonceStr: nonceStr, // 必填，生成签名的随机串
     signature: signature, // 必填，签名，见附录1
     jsApiList: [
+      'updateAppMessageShareData',
+      'updateTimelineShareData',
       'onMenuShareTimeline',
       'onMenuShareAppMessage',
       'onMenuShareQQ',
-      'onMenuShareWeibo',
       'onMenuShareQZone',
+      'onMenuShareWeibo',
       'showOptionMenu',
       'scanQRCode',
       'getLocation',
@@ -111,6 +113,32 @@ export const wxShare = (params: ShareParams) => {
   const { shareUrl, shareTitle, shareDesc, shareImg } = params
   const shareLink = `http://${sessionStorage.getItem('prefix')}${shareUrl}`
   wx.showOptionMenu()
+  wx.updateTimelineShareData({
+    title: shareTitle, // 分享标题
+    link: shareLink, // 分享链接
+    imgUrl: shareImg,
+    success: function() {
+      console.log('success')
+    },
+    error: function() {
+      console.log('error')
+    }
+  })
+  wx.updateAppMessageShareData({
+    title: shareTitle, // 分享标题
+    link: shareLink, // 分享链接
+    imgUrl: shareImg,
+    desc: shareDesc, // 分享描述
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
+  })
   wx.onMenuShareTimeline({
     title: shareTitle, // 分享标题
     link: shareLink, // 分享链接

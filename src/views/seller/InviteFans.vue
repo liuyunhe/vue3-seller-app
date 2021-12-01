@@ -29,11 +29,11 @@
       </div>
     </div>
     <!--    邀请弹层-->
-    <div class="layer" v-show="showInvite">
+    <!-- <div class="layer" v-show="showInvite">
       <div class="layer-bg"></div>
       <div class="invite-zf"></div>
       <div class="invite-gb" @click="showInvite = false"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -72,8 +72,7 @@ export default defineComponent({
                 shareTitle: '快绑定成我的粉丝吧！',
                 shareDesc:
                   '点击链接完成绑定，即可成为我的粉丝，精彩活动丰厚奖励应有尽有！',
-                shareImg:
-                  'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/icon-share.png'
+                shareImg: 'https://qoss.qrmkt.cn/hbseller_client/icon-share.png'
               })
             })
           } else {
