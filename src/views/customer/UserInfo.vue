@@ -126,11 +126,6 @@
           </template>
         </van-field>
       </van-cell-group>
-      <div class="content" @click="jumpToAddr">
-        <div class="name">我的地址</div>
-        <div class="btn"></div>
-        <div class="value">点击查看</div>
-      </div>
       <div style="margin: 40px 16px;">
         <van-button round block type="primary" native-type="submit">
           提交
