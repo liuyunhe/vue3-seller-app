@@ -43,6 +43,11 @@ const wxConfig = (res: {
     jsApiList: [
       'updateAppMessageShareData',
       'updateTimelineShareData',
+      'onMenuShareTimeline',
+      'onMenuShareAppMessage',
+      'onMenuShareQQ',
+      'onMenuShareQZone',
+      'onMenuShareWeibo',
       'showOptionMenu',
       'scanQRCode',
       'getLocation',
@@ -132,6 +137,77 @@ export const wxShare = (params: ShareParams) => {
     },
     fail: function() {
       console.log('error')
+    }
+  })
+  wx.onMenuShareTimeline({
+    title: shareTitle, // 分享标题
+    link: shareLink, // 分享链接
+    imgUrl: shareImg,
+    success: function() {
+      console.log('success')
+    },
+    error: function() {
+      console.log('error')
+    }
+  })
+  wx.onMenuShareAppMessage({
+    title: shareTitle, // 分享标题
+    link: shareLink, // 分享链接
+    imgUrl: shareImg,
+    desc: shareDesc, // 分享描述
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
+  })
+  wx.onMenuShareQQ({
+    title: shareTitle, // 分享标题
+    link: shareLink, // 分享链接
+    imgUrl: shareImg,
+    desc: shareDesc, // 分享描述
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
+  })
+  wx.onMenuShareWeibo({
+    title: shareTitle, // 分享标题
+    link: shareLink, // 分享链接
+    imgUrl: shareImg,
+    desc: shareDesc, // 分享描述
+    trigger: function() {
+      console.log('trigger')
+    },
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
+    },
+    fail: function() {
+      console.log('error')
+    }
+  })
+  wx.onMenuShareQZone({
+    title: shareTitle, // 分享标题
+    desc: shareDesc, // 分享描述
+    link: shareLink, // 分享链接
+    imgUrl: shareImg, // 分享图标
+    success: function() {
+      console.log('success')
+    },
+    cancel: function() {
+      console.log('cancel')
     }
   })
 }
