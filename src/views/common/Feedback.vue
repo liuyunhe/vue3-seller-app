@@ -63,12 +63,15 @@ export default defineComponent({
     const feedContent = ref('')
     const phoneNo = ref('')
     const phonePattern = /^1[3456789]\d{9}$/
+    let clickFlag = false
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onSubmit = (values: any) => {
+      if (clickFlag) return
       if (values.phoneNo && !phonePattern.test(values.phoneNo)) {
         Toast.fail('手机号格式错误！')
         return
       }
+      clickFlag = true
       const params = Object.assign(values, { feedFrom: props.feedFrom })
       http
         .post('/hbSeller/feedback/add', params, false)
