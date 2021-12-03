@@ -868,6 +868,10 @@ export default defineComponent({
         Toast.fail('请输入正确的手机号！')
         return
       }
+      if (!submitChecked.value) {
+        Toast.fail('请先阅读并同意本平台隐私政策说明后再使用，谢谢！')
+        return
+      }
       http
         .post(
           ' /hbSeller/seller/phoneCodeSend',
