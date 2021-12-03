@@ -29,11 +29,11 @@
       </div>
     </div>
     <!--    邀请弹层-->
-    <!-- <div class="layer" v-show="showInvite">
+    <div class="layer" v-show="showInvite">
       <div class="layer-bg"></div>
       <div class="invite-zf"></div>
       <div class="invite-gb" @click="showInvite = false"></div>
-    </div> -->
+    </div>
   </div>
 </template>
 
