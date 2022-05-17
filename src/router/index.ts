@@ -327,6 +327,18 @@ const routes: Array<RouteRecordRaw> = [
       )
   },
   {
+    path: '/customer/scanCode',
+    name: 'CustomerScanCode',
+    meta: {
+      title: '扫码验真抽奖',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/Acts/ScanCode.vue'
+      )
+  },
+  {
     path: '/customer/messageDetail',
     name: 'CustomerMessageDetail',
     props: (route) => ({
