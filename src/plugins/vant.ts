@@ -23,7 +23,8 @@ import {
   Tab,
   Tabs,
   Checkbox,
-  CheckboxGroup
+  CheckboxGroup,
+  Overlay
 } from 'vant'
 
 const plugins = [
@@ -50,7 +51,8 @@ const plugins = [
   Tab,
   Tabs,
   Checkbox,
-  CheckboxGroup
+  CheckboxGroup,
+  Overlay
 ]
 
 export const vantPlugins = {
