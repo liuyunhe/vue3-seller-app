@@ -61,7 +61,7 @@ export default defineComponent({
     const canDrawNum = ref<number>(0)
     const showTips = ref<boolean>(false)
     const showAwardPopup = ref<boolean>(false)
-    const showNoAwardPopup = ref<boolean>(true)
+    const showNoAwardPopup = ref<boolean>(false)
     const actTips = ref<string[]>(ACT_TIPS)
     const getActInfo = () => {
       http.post('/hbSeller/scanCodeAct/userActInfo', {}, false).then((res) => {
