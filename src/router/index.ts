@@ -331,7 +331,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'CustomerScanCode',
     meta: {
       title: '扫码验真抽奖',
-      keepAlive: true
+      keepAlive: false
     },
     component: () =>
       import(
