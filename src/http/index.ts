@@ -3,9 +3,14 @@ import { Toast } from 'vant'
 import { nextTick } from 'vue'
 import qs from 'qs'
 
+const NO_USE_LOADING = [
+  '/hbact/ossCommon/uploadOne',
+  '/hbSeller/seller/rebate/detail'
+]
+
 axios.defaults.timeout = 60000
 axios.interceptors.request.use((config) => {
-  if (config.url !== '/hbact/ossCommon/uploadOne') {
+  if (!NO_USE_LOADING.includes(config.url as string)) {
     Toast.loading({
       message: '加载中...',
       forbidClick: true,
