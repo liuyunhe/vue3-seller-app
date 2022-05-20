@@ -8,7 +8,8 @@ import store from '@/store'
 import axios from '@/http'
 import { initWxOnReady, wxGetLocation, wxHideMenu } from '@/plugins/Wx'
 
-const routes: Array<RouteRecordRaw> = [
+const COMMON_ROUTES: Array<RouteRecordRaw> = [
+  // 平台页面
   // 首页
   {
     path: '/',
@@ -18,8 +19,6 @@ const routes: Array<RouteRecordRaw> = [
       title: ''
     }
   },
-
-  // 平台页面
   {
     path: '/common/transform',
     name: 'Transform',
@@ -78,7 +77,10 @@ const routes: Array<RouteRecordRaw> = [
     }),
     component: () =>
       import(/* webpackChunkName: "MyGifts" */ '../views/common/MyPoints.vue')
-  },
+  }
+]
+
+const SELLER_ROUTES: Array<RouteRecordRaw> = [
   // 零售户
   {
     path: '/seller',
@@ -122,6 +124,7 @@ const routes: Array<RouteRecordRaw> = [
             /* webpackChunkName: "SellerMessage" */ '../views/seller/Message.vue'
           )
       },
+
       {
         path: 'sellerInfo',
         name: 'SellerInfo',
@@ -176,6 +179,28 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () =>
       import(/* webpackChunkName: "FansBind" */ '../views/seller/FansBind.vue')
+  },
+  {
+    path: '/seller/sellerRebateDetail',
+    name: 'SellerRebateDetail',
+    meta: {
+      title: '扫码返佣'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMessage" */ '../views/seller/RebateDetail.vue'
+      )
+  },
+  {
+    path: '/seller/myRebate',
+    name: 'SellerMyRebate',
+    meta: {
+      title: '我的返佣'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMessage" */ '../views/seller/MyRebate.vue'
+      )
   },
   {
     path: '/seller/bindFansQrcode',
@@ -254,7 +279,10 @@ const routes: Array<RouteRecordRaw> = [
       import(
         /* webpackChunkName: "SelllerMessageDetail" */ '../views/seller/InviteDetail.vue'
       )
-  },
+  }
+]
+
+const CUSTOMRT_ROUTES: Array<RouteRecordRaw> = [
   // 消费者
   {
     path: '/customer',
@@ -364,6 +392,12 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "CustomerUserInfo" */ '../views/customer/UserInfo.vue'
       )
   }
+]
+
+const routes: Array<RouteRecordRaw> = [
+  ...COMMON_ROUTES,
+  ...CUSTOMRT_ROUTES,
+  ...SELLER_ROUTES
 ]
 
 const router = createRouter({

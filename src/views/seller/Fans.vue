@@ -10,8 +10,8 @@
         <div class="name">扫烟码数</div>
       </div>
       <div class="data-item">
-        <div class="number">{{ shopScanActNum }}</div>
-        <div class="name">核销数</div>
+        <div class="name1">核销数</div>
+        <div class="name" style="color:#999999">（暂未开放）</div>
       </div>
     </div>
     <div class="router-bar">
@@ -24,9 +24,9 @@
         </router-link>
       </div>
       <div class="router-item">
-        <!-- <router-link to="/seller/inviteFans"> -->
-        <img src="https://qoss.qrmkt.cn/hbseller_client/fy-icon.png" alt="" />
-        <!-- </router-link> -->
+        <router-link to="/seller/sellerRebateDetail">
+          <img src="https://qoss.qrmkt.cn/hbseller_client/fy-icon.png" alt="" />
+        </router-link>
       </div>
     </div>
     <div class="fans-bar">
@@ -152,6 +152,13 @@ export default defineComponent({
         font-size: 12px;
         text-align: center;
         line-height: 19px;
+        color: #2b333b;
+      }
+      .name1 {
+        height: 21px;
+        font-size: 12px;
+        text-align: center;
+        line-height: 21px;
         color: #2b333b;
       }
       &:nth-child(1) {
