@@ -7,4 +7,6 @@ interface ActLink {
 export const CUSTOMER_ACT_LINK: ActLink = {
   scanDraw: '/customer/scanCode'
 }
-export const SELLER_ACT_LINK = {}
+export const SELLER_ACT_LINK = {
+  newFansRank: '/seller/fansRank'
+}
