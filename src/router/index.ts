@@ -186,6 +186,9 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
     meta: {
       title: '扫码返佣'
     },
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
     component: () =>
       import(
         /* webpackChunkName: "SellerMessage" */ '../views/seller/RebateDetail.vue'
@@ -200,6 +203,20 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
     component: () =>
       import(
         /* webpackChunkName: "SellerMessage" */ '../views/seller/MyRebate.vue'
+      )
+  },
+  {
+    path: '/seller/fansRank',
+    name: 'SellerFansRank',
+    meta: {
+      title: '零售店排行榜'
+    },
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMessage" */ '../views/seller/Acts/FansRank.vue'
       )
   },
   {
