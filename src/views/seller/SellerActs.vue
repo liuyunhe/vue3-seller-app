@@ -2,20 +2,25 @@
   <div class="customer-home-container">
     <ul class="act-list">
       <template v-for="item in actList" :key="item.id">
-        <!-- <router-link :to="CUSTOMER_ACT_LINK[item.actTypeCode]"> -->
-        <li class="act-item">
-          <div class="img">
-            <img :src="item.actPic" alt="" />
-          </div>
-          <div class="bottom">
-            <div class="content">
-              <div class="title">{{ item.actName }}</div>
-              <div class="time">{{ item.stime }} - {{ item.etime }}</div>
+        <router-link
+          :to="`${SELLER_ACT_LINK[item.actTypeCode]}?actCode=${item.actCode}`"
+          v-if="item.actTypeCode === 'newFansRank'"
+        >
+          <li class="act-item">
+            <div class="img">
+              <img :src="item.actPic" alt="" />
             </div>
-            <div class="btn"></div>
-          </div>
-        </li>
-        <!-- </router-link> -->
+            <div class="bottom">
+              <div class="content">
+                <div class="title">{{ item.actName }}</div>
+                <div class="time" v-if="item.actTypeCode === 'newFansRank'">
+                  {{ item.stime }} - {{ item.etime }}
+                </div>
+              </div>
+              <div class="btn"></div>
+            </div>
+          </li>
+        </router-link>
       </template>
     </ul>
     <p class="building-tips">— 更多活动 敬请期待 —</p>
@@ -26,7 +31,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { http } from '@/http'
 import { Toast } from 'vant'
-import { CUSTOMER_ACT_LINK } from '@/plugins/acts-link'
+import { SELLER_ACT_LINK } from '@/plugins/acts-link'
 
 interface Act {
   id: number
@@ -83,7 +88,7 @@ export default defineComponent({
       getActList()
     })
     return {
-      CUSTOMER_ACT_LINK,
+      SELLER_ACT_LINK,
       actList
     }
   }

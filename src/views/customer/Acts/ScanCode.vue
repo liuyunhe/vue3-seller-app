@@ -45,13 +45,8 @@ import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
 
 const ACT_TIPS = [
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-  '啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊'
+  '1、扫码参加常规的扫码验真活动，参与完成后，首扫烟包记录同步到私域平台，还可参与零售户线上扫码活动。（首扫1次，可获得1次抽奖机会，未用完的机会当天清零）;',
+  '2、返佣-消费者参与线上扫码配置规格，绑定店铺将得到一定的返佣奖励（奖品类型包括：鼓励金、荷石璧）。'
 ]
 
 export default defineComponent({
@@ -190,10 +185,11 @@ export default defineComponent({
       height: 250px;
       overflow-x: scroll;
       p {
-        font-size: 16px;
+        font-size: 14px;
         color: #4c0404;
         text-align: justify;
         margin: 10px 0;
+        line-height: 1.3;
         &.title {
           text-align: center;
           font-size: 20px;

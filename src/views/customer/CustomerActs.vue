@@ -2,7 +2,9 @@
   <div class="customer-home-container">
     <ul class="act-list">
       <template v-for="item in actList" :key="item.id">
-        <router-link :to="CUSTOMER_ACT_LINK[item.actTypeCode]">
+        <router-link
+          :to="`${CUSTOMER_ACT_LINK[item.actTypeCode]}?actCode=${item.actCode}`"
+        >
           <li class="act-item">
             <div class="img">
               <img :src="item.actPic" alt="" />
@@ -10,7 +12,7 @@
             <div class="bottom">
               <div class="content">
                 <div class="title">{{ item.actName }}</div>
-                <div class="time">{{ item.stime }} - {{ item.etime }}</div>
+                <!-- <div class="time">{{ item.stime }} - {{ item.etime }}</div> -->
               </div>
               <div class="btn"></div>
             </div>
