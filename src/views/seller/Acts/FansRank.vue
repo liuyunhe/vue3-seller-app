@@ -109,9 +109,11 @@ export default defineComponent({
               newFansNum.value = res.data.rankInfo.newFansNum || 0
               statisTime.value = res.data.statisTime || 0
               rankList.value = JSON.parse(res.data.rankList)
-              if (rankList.value.length == 0) {
+              if (rankList.value.length == 0 || rankList.value == null) {
                 showNoList.value = true
               }
+            } else {
+              showNoList.value = true
             }
           } else {
             Toast.fail(res.msg)

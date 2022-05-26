@@ -82,21 +82,21 @@
         </van-tab>
         <van-tab title="积分" name="js">
           <div class="data">
-            <div class="title">可提现金额（元）</div>
+            <div class="title">可提出积分</div>
             <div class="number">
               <span>{{ dataNumber.pointsBalance }}</span>
               <van-button class="btn" type="primary" size="small"
-                >提现到微信</van-button
+                >提取积分</van-button
               >
             </div>
             <div class="line"></div>
             <div class="bottom">
               <div class="item left">
-                <div class="name">总收益（元）</div>
+                <div class="name">总积分</div>
                 <div class="number">{{ dataNumber.pointsTotalIncome }}</div>
               </div>
               <div class="item right">
-                <div class="name">总提现（元）</div>
+                <div class="name">总提出积分</div>
                 <div class="number">{{ dataNumber.pointsTotalPay }}</div>
               </div>
             </div>
