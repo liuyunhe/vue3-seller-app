@@ -5,7 +5,8 @@ import qs from 'qs'
 
 const NO_USE_LOADING = [
   '/hbact/ossCommon/uploadOne',
-  '/hbSeller/seller/rebate/detail'
+  '/hbSeller/seller/rebate/detail',
+  '/syx/awd/list'
 ]
 
 axios.defaults.timeout = 60000
