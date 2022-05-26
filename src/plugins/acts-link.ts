@@ -5,8 +5,9 @@ interface ActLink {
 }
 
 export const CUSTOMER_ACT_LINK: ActLink = {
-  scanDraw: '/customer/scanCode'
+  scanDraw: '/customer/scanCode',
+  signDraw: '/customer/sign'
 }
-export const SELLER_ACT_LINK = {
+export const SELLER_ACT_LINK: ActLink = {
   newFansRank: '/seller/fansRank'
 }

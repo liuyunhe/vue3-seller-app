@@ -384,6 +384,18 @@ const CUSTOMRT_ROUTES: Array<RouteRecordRaw> = [
       )
   },
   {
+    path: '/customer/sign',
+    name: 'CustomerSign',
+    meta: {
+      title: '签到有礼',
+      keepAlive: false
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/Acts/Sign.vue'
+      )
+  },
+  {
     path: '/customer/messageDetail',
     name: 'CustomerMessageDetail',
     props: (route) => ({
