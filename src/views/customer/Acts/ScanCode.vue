@@ -12,22 +12,24 @@
         </div>
       </div>
     </act-tips-popup>
-    <award-popup :show="showAwardPopup" @close="handleCloseAwardPopup">
+    <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
         <div class="title">恭喜您获得</div>
-        <img class="pic" src="" alt="" />
-        <div class="name">5元鼓励奖</div>
-        <div class="btn">立即领取</div>
+        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
+        <div class="name">{{ drawData && drawData.awdName }}</div>
+        <div class="btn" @click="handleReceive(drawData, nextStep)">
+          立即领取
+        </div>
       </div>
     </award-popup>
-    <award-popup :show="showNoAwardPopup" @close="handleCloseNoAwardPopup">
+    <award-popup :show="showNoAwardPopup" @close="nextStep">
       <div class="no-award-warp">
-        <div class="btn">我知道了</div>
+        <div class="btn" @click="nextStep">我知道了</div>
       </div>
     </award-popup>
     <div class="bg">
       <div class="btn-tips" @click="showTips = true"></div>
-      <div class="btn-gift"></div>
+      <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="btn-draw" @click="getDrawTicket"></div>
       <div class="draw-tips">
         当前剩余 <span>{{ canDrawNum }}</span> 次抽奖机会
@@ -40,9 +42,11 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { http } from '@/http'
 import { Dialog, Toast } from 'vant'
-import { Draw } from '@/plugins/hbsDraw'
+import { Draw, DrawData, handleReceive } from '@/plugins/hbsDraw'
 import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
+import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
+import { useRouter } from 'vue-router'
 
 const ACT_TIPS = [
   '1、扫码参加常规的扫码验真活动，参与完成后，首扫烟包记录同步到私域平台，还可参与零售户线上扫码活动。（首扫1次，可获得1次抽奖机会，未用完的机会当天清零）;',
@@ -58,6 +62,11 @@ export default defineComponent({
     const showAwardPopup = ref<boolean>(false)
     const showNoAwardPopup = ref<boolean>(false)
     const actTips = ref<string[]>(ACT_TIPS)
+    const drawData = ref<DrawData | null>(null)
+    const router = useRouter()
+    const handleClickGiftsBtn = () => {
+      handleClickJumpBtn(router, '/common/myGifts')
+    }
     const getActInfo = () => {
       http.post('/hbSeller/scanCodeAct/userActInfo', {}, false).then((res) => {
         if (res.code === '200') {
@@ -73,6 +82,12 @@ export default defineComponent({
           const { actCode, ticket } = res.data
           Draw({ actCode, ticket }).then((award) => {
             console.log(award)
+            drawData.value = award as DrawData | null
+            if (drawData.value) {
+              showAwardPopup.value = true
+            } else {
+              showNoAwardPopup.value = true
+            }
           })
         } else {
           Dialog.alert({
@@ -93,6 +108,11 @@ export default defineComponent({
     const handleCloseNoAwardPopup = () => {
       showNoAwardPopup.value = false
     }
+    const nextStep = () => {
+      handleCloseAwardPopup()
+      handleCloseNoAwardPopup()
+      getActInfo()
+    }
     onMounted(() => {
       getActInfo()
     })
@@ -102,10 +122,14 @@ export default defineComponent({
       showAwardPopup,
       showNoAwardPopup,
       canDrawNum,
+      drawData,
       getDrawTicket,
       handleColseTips,
       handleCloseAwardPopup,
-      handleCloseNoAwardPopup
+      handleCloseNoAwardPopup,
+      handleReceive,
+      nextStep,
+      handleClickGiftsBtn
     }
   }
 })

@@ -20,35 +20,39 @@
         </div>
       </div>
     </act-tips-popup>
-    <award-popup :show="showAwardPopup" @close="handleCloseAwardPopup">
+    <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
-        <img class="pic" src="" alt="" />
-        <div class="name">5元鼓励奖</div>
-        <div class="btn"></div>
+        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
+        <div class="name">{{ drawData && drawData.awdName }}</div>
+        <div class="btn" @click="handleReceive(drawData, nextStep)"></div>
       </div>
     </award-popup>
     <award-popup :show="showSignPopup" @close="handleCloseSignPopup">
       <div class="sign-award-warp">
-        <img class="pic" src="" alt="" />
+        <img
+          class="pic"
+          src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/jf.png"
+          alt=""
+        />
         <div class="name">
           {{
             signPointsList.length == 2
-              ? `${signPointsList[0]}积分+${signPointsList[1]}积分`
-              : `${signPointsList[0]}积分`
+              ? `${signPointsList[0]}荷石璧+${signPointsList[1]}荷石璧`
+              : `${signPointsList[0]}荷石璧`
           }}
         </div>
-        <div class="btn"></div>
+        <div class="btn" @click="handleGetSignedAward"></div>
       </div>
     </award-popup>
-    <award-popup :show="showNoAwardPopup" @close="handleCloseNoAwardPopup">
+    <award-popup :show="showNoAwardPopup" @close="nextStep">
       <div class="no-award-warp">
         <div class="name">未中奖</div>
-        <div class="btn"></div>
+        <div class="btn" @click="nextStep"></div>
       </div>
     </award-popup>
     <div class="bg">
       <div class="btn-tips" @click="showTips = true"></div>
-      <div class="btn-gift"></div>
+      <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <!-- 日历 -->
       <div class="content-box">
         <div class="title">{{ showYear }}年{{ showMonth }}月</div>
@@ -69,25 +73,30 @@
           </table>
         </div>
         <div class="bottom">
-          <div class="text">
-            已连续签到<span style="color:#ED4C4A">{{ contDay }}</span
-            >天
-          </div>
-          <div class="text2">
-            连续签到{{ nextSignInfo.contSignDays }}天即可获得{{
-              nextSignInfo.points
-            }}荷石壁
-          </div>
+          <template v-if="contSignFlag">
+            <div class="text">
+              已连续签到<span style="color:#ED4C4A">{{ contDay }}</span
+              >天
+            </div>
+            <div class="text2" v-if="!isMaxContDay">
+              连续签到{{ nextSignInfo.contSignDays }}天即可获得{{
+                nextSignInfo.points
+              }}荷石壁
+            </div>
+            <div class="text2" v-if="isMaxContDay">
+              已连签{{ contDay }}天,继续下一轮签到活动吧！
+            </div>
+          </template>
           <div
             class="btn-sign active"
-            v-if="!isMaxContDay"
+            v-if="!isSignToday"
             @click="handleClickSign"
           ></div>
-          <div class="btn-sign " v-if="isMaxContDay"></div>
+          <div class="btn-sign " v-if="isSignToday"></div>
         </div>
       </div>
       <!-- 抽奖 -->
-      <div class="draw-box">
+      <div class="draw-box" v-if="drawFlag">
         <div class="title">
           <span style="float:left">签到抽奖活动</span>
           <span class="right" style="float:right"
@@ -101,7 +110,21 @@
           @click="getDrawTicket"
         ></div>
         <div class="draw-note" @click="handleClickSignNotes"></div>
-        <div class="draw-tips">签到满{{ drawContDays }}天，可获得抽奖机会</div>
+        <!-- 2: 累计签到未开始 4:累计签到已结束 -->
+        <template v-if="ljSignStatus == 1">
+          <div class="draw-tips" v-if="!canDraw">
+            签到满{{ drawContDays }}天，可获得抽奖机会
+          </div>
+          <div class="draw-tips" v-if="canDraw">
+            抽奖机会剩余{{ canDrawNum }}次
+          </div>
+        </template>
+        <template v-if="ljSignStatus == 2">
+          <div class="draw-tips">活动未开始</div>
+        </template>
+        <template v-if="ljSignStatus == 4">
+          <div class="draw-tips">活动已结束，请关注下期活动～</div>
+        </template>
       </div>
     </div>
   </div>
@@ -111,13 +134,16 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { http } from '@/http'
 import { Dialog, Toast } from 'vant'
-import { Draw } from '@/plugins/hbsDraw'
+import { Draw, DrawData, handleReceive } from '@/plugins/hbsDraw'
 import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
+import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
+import { useRouter } from 'vue-router'
 
 const ACT_TIPS = [
-  '1、扫码参加常规的扫码验真活动，参与完成后，首扫烟包记录同步到私域平台，还可参与零售户线上扫码活动。（首扫1次，可获得1次抽奖机会，未用完的机会当天清零）;',
-  '2、返佣-消费者参与线上扫码配置规格，绑定店铺将得到一定的返佣奖励（奖品类型包括：鼓励金、荷石璧）。'
+  '1、消费者在活动期间内连续打卡7天，每日签到可获得28荷石璧，完成连续签到每天可额外获得一定值的荷石璧奖励',
+  '2、中间断签，则重新开始计算连续签到记录，对应奖励也会重新计算',
+  '3、开启百天签到活动，活动期间签到100天，即可获得1次抽奖机会，可有机会获得鼓励金、实物、荷石璧等奖励'
 ]
 interface SignRecord {
   ctime: string
@@ -135,30 +161,50 @@ export default defineComponent({
     const ljSignDay = ref<number>(0)
     const contDay = ref<number>(0)
     const drawContDays = ref<number>(0)
+    const canDrawNum = ref<number>(0)
+    const ljSignStatus = ref<number>(0) // 1: 累计签到进行中 2: 累计签到未开始 4:累计签到已结束
     const showTips = ref<boolean>(false)
     const showDrawNotes = ref<boolean>(false)
     const showAwardPopup = ref<boolean>(false)
     const showNoAwardPopup = ref<boolean>(false)
     const showSignPopup = ref<boolean>(false)
     const actTips = ref<string[]>(ACT_TIPS)
-    let canDraw = ref(false)
-    let isMaxContDay = ref(false)
+    const canDraw = ref(false)
+    const isMaxContDay = ref(false)
+    const contSignFlag = ref(false)
+    const drawFlag = ref(false)
+    const isSignToday = ref(false)
     const nextSignInfo = ref({
       contSignDays: 0, //需要连续签到的天数
       points: 0 //连续签到赠送的积分数量
     })
+    const router = useRouter()
+    const handleClickGiftsBtn = () => {
+      handleClickJumpBtn(router, '/common/myGifts')
+    }
+    const drawData = ref<DrawData | null>(null)
     const getActInfo = (): Promise<SignRecord[]> => {
       return new Promise((resolve) => {
         http.post(' /hbSeller/fansSign/actInfo', {}, false).then((res) => {
           let signRecords: SignRecord[] = []
           if (res.code === '200') {
-            ljSignDay.value = res.data.ljSignDay || 0
-            contDay.value = res.data.contDay || 0
-            drawContDays.value = res.data.actConf.drawContDays || 0
-            canDraw = res.data.canDraw
-            isMaxContDay = res.data.canDraw
-            nextSignInfo.value.contSignDays = res.data.nextSignInfo.contSignDays
-            nextSignInfo.value.points = res.data.nextSignInfo.points
+            drawFlag.value = res.data.actConf.drawFlag
+            contSignFlag.value = res.data.actConf.contSignFlag
+            isSignToday.value = res.data.isSignToday
+            ljSignStatus.value = res.data.ljSignStatus
+            if (drawFlag.value) {
+              canDraw.value = res.data.canDraw
+              canDrawNum.value = res.data.canDrawNum
+              drawContDays.value = res.data.actConf.drawContDays || 0
+              ljSignDay.value = res.data.ljSignDay || 0
+            }
+            if (contSignFlag.value) {
+              contDay.value = res.data.contDay || 0
+              isMaxContDay.value = res.data.isMaxContDay
+              nextSignInfo.value.contSignDays =
+                res.data.nextSignInfo.contSignDays
+              nextSignInfo.value.points = res.data.nextSignInfo.points
+            }
             signRecords = res.data.signRecords || []
           } else {
             Toast.fail(res.msg)
@@ -168,24 +214,11 @@ export default defineComponent({
       })
     }
     const signPointsList = ref<number[]>([])
-    const handleClickSign = () => {
-      http.post('/hbSeller/fansSign/doSign', {}, false).then((res) => {
-        if (res.code === '200') {
-          signPointsList.value = res.data.pointsList
-          showSignPopup.value = true
-          const nowday = document.getElementsByClassName('nowday')
-          nowday[0].classList.add('signed')
-        } else {
-          Dialog.alert({
-            title: '提示',
-            message: res.msg
-          }).then(() => {
-            // on close
-          })
-        }
-      })
-    }
 
+    const handleGetSignedAward = () => {
+      showSignPopup.value = false
+      Toast.success('领取成功!')
+    }
     const drawHis = ref<DrawNote[]>([])
     const handleClickSignNotes = () => {
       http.post('/hbSeller/fansSign/drawHis', {}, false).then((res) => {
@@ -202,12 +235,19 @@ export default defineComponent({
         }
       })
     }
+
     const getDrawTicket = () => {
       http.post('/hbSeller/fansSign/drawTicket', {}, false).then((res) => {
         if (res.code === '200') {
           const { actCode, ticket } = res.data
           Draw({ actCode, ticket }).then((award) => {
             console.log(award)
+            drawData.value = award as DrawData | null
+            if (drawData.value) {
+              showAwardPopup.value = true
+            } else {
+              showNoAwardPopup.value = true
+            }
           })
         } else {
           Dialog.alert({
@@ -336,12 +376,42 @@ export default defineComponent({
     //     setCalender(showYear.value, 0)
     //   }
     // }
-    onMounted(() => {
+    const initAct = () => {
       getActInfo().then((signRecords) => {
         setCalender(date.getFullYear(), date.getMonth(), signRecords)
       })
+    }
+    const handleClickSign = () => {
+      http.post('/hbSeller/fansSign/doSign', {}, false).then((res) => {
+        if (res.code === '200') {
+          signPointsList.value = res.data.pointsList || []
+          if (signPointsList.value.length) {
+            showSignPopup.value = true
+          } else {
+            Toast.success('恭喜您，签到成功!')
+          }
+          initAct()
+        } else {
+          Dialog.alert({
+            title: '提示',
+            message: res.msg
+          }).then(() => {
+            // on close
+          })
+        }
+      })
+    }
+    const nextStep = () => {
+      handleCloseAwardPopup()
+      handleCloseNoAwardPopup()
+      initAct()
+    }
+    onMounted(() => {
+      initAct()
     })
+
     return {
+      contSignFlag,
       actTips,
       showTips,
       showDrawNotes,
@@ -353,6 +423,16 @@ export default defineComponent({
       drawContDays,
       showYear,
       showMonth,
+      nextSignInfo,
+      canDraw,
+      isMaxContDay,
+      isSignToday,
+      drawFlag,
+      signPointsList,
+      drawHis,
+      drawData,
+      canDrawNum,
+      ljSignStatus,
       getDrawTicket,
       handleClickSign,
       handleColseTips,
@@ -360,11 +440,10 @@ export default defineComponent({
       handleCloseNoAwardPopup,
       handleCloseSignPopup,
       handleClickSignNotes,
-      nextSignInfo,
-      canDraw,
-      isMaxContDay,
-      signPointsList,
-      drawHis
+      handleGetSignedAward,
+      nextStep,
+      handleReceive,
+      handleClickGiftsBtn
     }
   }
 })
@@ -577,19 +656,20 @@ export default defineComponent({
       322px,
       'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/sign/draw-notes-bg.png'
     );
-    padding: 60px 30px 20px;
+    padding: 60px 20px 20px;
     box-sizing: border-box;
     .text {
       width: 100%;
       height: 240px;
       overflow-x: scroll;
       p {
-        font-size: 14px;
+        font-size: 12px;
         color: #a55600;
         text-align: justify;
         line-height: 36px;
         border-bottom: 1px solid #a55600;
         height: 36px;
+        .text-overflow();
         .left {
           float: left;
         }

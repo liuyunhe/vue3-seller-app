@@ -9,23 +9,23 @@
         </div>
       </div>
     </act-tips-popup>
-    <award-popup :show="showAwardPopup" @close="handleCloseAwardPopup">
+    <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
         <div class="title"></div>
-        <img class="pic" src="" alt="" />
-        <div class="name">5元鼓励奖</div>
-        <div class="btn"></div>
+        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
+        <div class="name">{{ drawData && drawData.awdName }}</div>
+        <div class="btn" @click="handleReceive(drawData, nextStep)"></div>
       </div>
     </award-popup>
-    <award-popup :show="showNoAwardPopup" @close="handleCloseNoAwardPopup">
+    <award-popup :show="showNoAwardPopup" @close="nextStep">
       <div class="no-award-warp">
         <div class="name">未中奖</div>
-        <div class="btn"></div>
+        <div class="btn" @click="nextStep"></div>
       </div>
     </award-popup>
     <div class="bg">
       <div class="btn-tips" @click="showTips = true"></div>
-      <div class="btn-gift"></div>
+      <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="rank-data">
         <div class="item left">
           <div class="title">截止{{ statisTime }}排名</div>
@@ -59,6 +59,9 @@ import { http } from '@/http'
 import { Dialog, Toast } from 'vant'
 import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
+import { DrawData, handleReceive } from '@/plugins/hbsDraw'
+import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
+import { useRouter } from 'vue-router'
 
 const ACT_TIPS = [
   '1、在活动时间2022年2月14日10:00至2022年2月18日18:00期间关联绑定新粉丝，按粉丝数排名统计，有机会获得实物、荷石璧、鼓励金等奖励;',
@@ -91,10 +94,14 @@ export default defineComponent({
     const rankList = ref<RankItem[]>([])
     const showNoList = ref<boolean>(false)
     const showTips = ref<boolean>(false)
-    const awardInfo = ref<null | {}>(null)
+    const drawData = ref<DrawData | null>(null)
     const showAwardPopup = ref<boolean>(false)
     const showNoAwardPopup = ref<boolean>(false)
     const actTips = ref<string[]>(ACT_TIPS)
+    const router = useRouter()
+    const handleClickGiftsBtn = () => {
+      handleClickJumpBtn(router, '/common/myGifts')
+    }
     const getActInfo = () => {
       http
         .post(
@@ -166,7 +173,8 @@ export default defineComponent({
                   break
                 case 4:
                   if (userAward != null) {
-                    awardInfo.value = userAward
+                    drawData.value = userAward
+                    showAwardPopup.value = true
                   }
                   break
                 case 5:
@@ -198,6 +206,11 @@ export default defineComponent({
     const handleCloseNoAwardPopup = () => {
       showNoAwardPopup.value = false
     }
+    const nextStep = () => {
+      handleCloseAwardPopup()
+      handleCloseNoAwardPopup()
+      getActInfo()
+    }
     onMounted(() => {
       getActInfo()
       getRankAwdInfo()
@@ -212,9 +225,13 @@ export default defineComponent({
       showNoList,
       newFansNum,
       statisTime,
+      drawData,
       handleColseTips,
       handleCloseAwardPopup,
-      handleCloseNoAwardPopup
+      handleCloseNoAwardPopup,
+      nextStep,
+      handleReceive,
+      handleClickGiftsBtn
     }
   }
 })
