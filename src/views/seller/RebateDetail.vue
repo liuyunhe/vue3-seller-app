@@ -36,6 +36,7 @@
               </div>
             </template>
           </van-list>
+          <div class="h30"></div>
         </van-tab>
         <van-tab title="积分" name="jf">
           <template v-if="showNoJf">
@@ -71,6 +72,7 @@
               </div>
             </template>
           </van-list>
+          <div class="h30"></div>
         </van-tab>
       </div>
     </van-tabs>
@@ -269,6 +271,9 @@ export default defineComponent({
         color: #ff7600;
       }
     }
+  }
+  .h30 {
+    height: 30px;
   }
 }
 </style>
