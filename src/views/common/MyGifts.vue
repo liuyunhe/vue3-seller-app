@@ -72,6 +72,7 @@ export default defineComponent({
     const finishedText = ref('没有更多了')
     const giftsList = ref<Array<DrawData>>([])
     const params = {
+      actTypeMain: 2, //  1: 营销平台, 2:私域平台。
       recordId: 0,
       size: 10
     }
@@ -91,7 +92,6 @@ export default defineComponent({
             loading.value = false
             giftsList.value.push(...res.data)
           }
-          giftsList.value.push(...res.data)
         } else {
           Toast.fail(res.msg)
         }
@@ -128,6 +128,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@import '@/theme/common';
 .myGifts-container {
   height: 100vh;
   background-color: #f4f4f4;
@@ -198,13 +199,14 @@ export default defineComponent({
       .content-zone {
         margin-left: 80px;
         .name {
-          width: 4.1rem;
+          width: 150px;
           line-height: 20px;
           font-size: 14px;
           color: #444;
           margin-bottom: 7px;
           overflow: hidden;
           max-height: 40px;
+          .text-overflow();
         }
         .tips {
           height: 20px;
