@@ -24,6 +24,7 @@
     </award-popup>
     <award-popup :show="showNoAwardPopup" @close="nextStep">
       <div class="no-award-warp">
+        <div class="title">未中奖</div>
         <div class="btn" @click="nextStep">我知道了</div>
       </div>
     </award-popup>
@@ -271,6 +272,15 @@ export default defineComponent({
       322px,
       'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/scanCode/no-award-bg.png'
     );
+    .title {
+      position: relative;
+      top: 180px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: bolder;
+      color: #a55600;
+    }
     .btn {
       position: relative;
       width: 240px;

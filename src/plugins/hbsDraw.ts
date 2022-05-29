@@ -46,7 +46,7 @@ export const Draw = (params: DrawParams) => {
     })
   })
 }
-const getGift = (params: DrawData, cb: () => void) => {
+const getGift = (params: DrawData, cb: (code?: string) => void) => {
   if (params.awdType == 1) {
     window.location.href = '/yx/views/general/order-preview.html'
   } else {
@@ -99,7 +99,7 @@ const getGift = (params: DrawData, cb: () => void) => {
             Toast.success({
               message: msg,
               onClose: () => {
-                cb()
+                cb(res.code)
               }
             })
             break
@@ -148,7 +148,10 @@ const getGift = (params: DrawData, cb: () => void) => {
   }
 }
 
-export const handleReceive = (params: DrawData | null, cb: () => void) => {
+export const handleReceive = (
+  params: DrawData | null,
+  cb: (code?: string) => void
+) => {
   if (params == null) return
   if (params.awdStatus === 0) {
     if (params.awdType != 1) {

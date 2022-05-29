@@ -105,7 +105,10 @@ export default defineComponent({
     }
     const getReceive = (item: DrawData) => {
       if (item.awdStatus == 0) {
-        handleReceive(item, () => {
+        handleReceive(item, (code) => {
+          if (code == '200') {
+            item.awdStatus = 1
+          }
           console.log('received')
         })
       }
