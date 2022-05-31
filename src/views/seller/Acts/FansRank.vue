@@ -9,18 +9,25 @@
         </div>
       </div>
     </act-tips-popup>
-    <award-popup :show="showAwardPopup" @close="nextStep">
+    <award-popup :show="showAwardPopup" @close="handleCloseAwardPopup">
       <div class="award-warp">
         <div class="title"></div>
         <img class="pic" :src="drawData && drawData.awdPic" alt="" />
         <div class="name">{{ drawData && drawData.awdName }}</div>
-        <div class="btn" @click="handleReceive(drawData, nextStep)"></div>
+        <div
+          class="btn"
+          @click="
+            handleReceive(drawData, () => {
+              showAwardPopup = false
+            })
+          "
+        ></div>
       </div>
     </award-popup>
-    <award-popup :show="showNoAwardPopup" @close="nextStep">
+    <award-popup :show="showNoAwardPopup" @close="handleCloseNoAwardPopup">
       <div class="no-award-warp">
         <div class="name">未中奖</div>
-        <div class="btn" @click="nextStep"></div>
+        <div class="btn" @click="handleCloseNoAwardPopup"></div>
       </div>
     </award-popup>
     <div class="bg">
@@ -28,12 +35,16 @@
       <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="rank-data">
         <div class="item left">
-          <div class="title">截止{{ statisTime }}排名</div>
-          <div class="data">第{{ rankNum }}名</div>
+          <div class="title">
+            {{ statisTime ? `截止${statisTime}排名` : '—' }}
+          </div>
+          <div class="data">{{ rankNum == 0 ? '暂无' : `第${rankNum}名` }}</div>
         </div>
         <div class="item right">
           <div class="title">本期绑定粉丝数</div>
-          <div class="data">{{ newFansNum }}个</div>
+          <div class="data">
+            {{ newFansNum == 0 ? '暂无' : `${newFansNum}个` }}
+          </div>
         </div>
       </div>
       <div class="rank-list">
@@ -121,6 +132,13 @@ export default defineComponent({
               }
             } else {
               showNoList.value = true
+              Dialog.alert({
+                title: '提示',
+                message:
+                  '拉新排行榜活动火热进行中，赶紧邀请您的好友成为您的粉丝吧！相关数据会在每天0点更新后显示，请持续关注哦！'
+              }).then(() => {
+                // on close
+              })
             }
           } else {
             Toast.fail(res.msg)
@@ -158,7 +176,7 @@ export default defineComponent({
                 case 2:
                   Dialog.alert({
                     title: '提示',
-                    message: '恭喜在排名内，开奖中，请耐心等待'
+                    message: '抱歉，未开排名奖励内，请下次再接再厉！'
                   }).then(() => {
                     // on close
                   })
@@ -166,7 +184,7 @@ export default defineComponent({
                 case 3:
                   Dialog.alert({
                     title: '提示',
-                    message: '抱歉，未开排名奖励内，请下次再接再厉！'
+                    message: '恭喜在排名内，开奖中，请耐心等待'
                   }).then(() => {
                     // on close
                   })
@@ -178,8 +196,20 @@ export default defineComponent({
                   }
                   break
                 case 5:
+                  Dialog.alert({
+                    title: '提示',
+                    message: '活动奖品已领取\n请进入<我的礼品>中查看～'
+                  }).then(() => {
+                    // on close
+                  })
                   break
                 case 6:
+                  Dialog.alert({
+                    title: '提示',
+                    message: '很遗憾，奖品一直未领取，已过期~'
+                  }).then(() => {
+                    // on close
+                  })
                   break
                 default:
                   break
@@ -202,15 +232,12 @@ export default defineComponent({
     }
     const handleCloseAwardPopup = () => {
       showAwardPopup.value = false
+      Toast(`活动奖品已领取\n请进入<我的礼品>中查看～`)
     }
     const handleCloseNoAwardPopup = () => {
       showNoAwardPopup.value = false
     }
-    const nextStep = () => {
-      handleCloseAwardPopup()
-      handleCloseNoAwardPopup()
-      getActInfo()
-    }
+
     onMounted(() => {
       getActInfo()
       getRankAwdInfo()
@@ -229,7 +256,6 @@ export default defineComponent({
       handleColseTips,
       handleCloseAwardPopup,
       handleCloseNoAwardPopup,
-      nextStep,
       handleReceive,
       handleClickGiftsBtn
     }

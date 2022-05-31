@@ -20,6 +20,16 @@
         </div>
       </div>
     </act-tips-popup>
+    <act-tips-popup :show="showGetChancePopup" @close="nextStep">
+      <div class="get-chance-content">
+        <div class="title">恭喜您！</div>
+        <div class="text">累计签到活动获得1次抽奖机 会，马上去抽奖吧～</div>
+        <div class="btn" @click="getDrawTicket"></div>
+        <div class="tips">
+          备注：活动结束，未消耗掉的抽奖机会 视为放弃哦～建议获得机会及时消耗
+        </div>
+      </div>
+    </act-tips-popup>
     <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
         <img class="pic" :src="drawData && drawData.awdPic" alt="" />
@@ -168,12 +178,14 @@ export default defineComponent({
     const showAwardPopup = ref<boolean>(false)
     const showNoAwardPopup = ref<boolean>(false)
     const showSignPopup = ref<boolean>(false)
+    const showGetChancePopup = ref<boolean>(false)
     const actTips = ref<string[]>(ACT_TIPS)
     const canDraw = ref(false)
     const isMaxContDay = ref(false)
     const contSignFlag = ref(false)
     const drawFlag = ref(false)
     const isSignToday = ref(false)
+    const ljSignDrawChance = ref(false)
     const nextSignInfo = ref({
       contSignDays: 0, //需要连续签到的天数
       points: 0 //连续签到赠送的积分数量
@@ -215,10 +227,6 @@ export default defineComponent({
     }
     const signPointsList = ref<number[]>([])
 
-    const handleGetSignedAward = () => {
-      showSignPopup.value = false
-      Toast.success('领取成功!')
-    }
     const drawHis = ref<DrawNote[]>([])
     const handleClickSignNotes = () => {
       http.post('/hbSeller/fansSign/drawHis', {}, false).then((res) => {
@@ -267,11 +275,21 @@ export default defineComponent({
     }
     const handleCloseSignPopup = () => {
       showSignPopup.value = false
+      if (ljSignDrawChance.value) {
+        showGetChancePopup.value = true
+        ljSignDrawChance.value = false
+      }
     }
     const handleCloseNoAwardPopup = () => {
       showNoAwardPopup.value = false
     }
-
+    const handleCloseGetChancePopup = () => {
+      showGetChancePopup.value = false
+    }
+    const handleGetSignedAward = () => {
+      Toast.success('领取成功!')
+      handleCloseSignPopup()
+    }
     const con = document.getElementsByClassName('con')
     const date = new Date()
     const showYear = ref(date.getFullYear()) //展示在页面上的年份
@@ -385,10 +403,15 @@ export default defineComponent({
       http.post('/hbSeller/fansSign/doSign', {}, false).then((res) => {
         if (res.code === '200') {
           signPointsList.value = res.data.pointsList || []
+
           if (signPointsList.value.length) {
             showSignPopup.value = true
           } else {
-            Toast.success('恭喜您，签到成功!')
+            if (res.data.ljSignDrawChance) {
+              showGetChancePopup.value = true
+            } else {
+              Toast.success('恭喜您，签到成功!')
+            }
           }
           initAct()
         } else {
@@ -404,6 +427,7 @@ export default defineComponent({
     const nextStep = () => {
       handleCloseAwardPopup()
       handleCloseNoAwardPopup()
+      handleCloseGetChancePopup()
       initAct()
     }
     onMounted(() => {
@@ -417,6 +441,7 @@ export default defineComponent({
       showDrawNotes,
       showAwardPopup,
       showNoAwardPopup,
+      showGetChancePopup,
       showSignPopup,
       ljSignDay,
       contDay,
@@ -683,6 +708,42 @@ export default defineComponent({
         font-size: 14px;
         color: #a55600;
       }
+    }
+  }
+  .get-chance-content {
+    .bg-img(
+      330px,
+      320px,
+      'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/sign/get-chance-bg.png'
+    );
+    padding: 36px;
+    box-sizing: border-box;
+    text-align: center;
+    .title {
+      line-height: 25px;
+      height: 25px;
+      font-size: 25px;
+      color: #a55600;
+      margin-bottom: 34px;
+    }
+    .text {
+      font-size: 20px;
+      color: #a55600;
+      line-height: 31px;
+      margin-bottom: 25px;
+    }
+    .btn {
+      .bg-img(
+        210px,
+        50px,
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/sign/get-chance-btn.png'
+      );
+      margin: 0 auto 20px;
+    }
+    .tips {
+      font-size: 15px;
+      color: #a55600;
+      line-height: 21px;
     }
   }
   .award-warp {

@@ -7,9 +7,9 @@
             <div class="title">可提现金额（元）</div>
             <div class="number">
               <span>{{ dataNumber.redpackBalance.toFixed(2) }}</span>
-              <van-button class="btn" type="primary" size="small"
+              <!-- <van-button class="btn" type="primary" size="small"
                 >提现到微信</van-button
-              >
+              > -->
             </div>
             <div class="line"></div>
             <div class="bottom">
@@ -85,9 +85,9 @@
             <div class="title">可提出积分</div>
             <div class="number">
               <span>{{ dataNumber.pointsBalance }}</span>
-              <van-button class="btn" type="primary" size="small"
+              <!-- <van-button class="btn" type="primary" size="small"
                 >提取积分</van-button
-              >
+              > -->
             </div>
             <div class="line"></div>
             <div class="bottom">
