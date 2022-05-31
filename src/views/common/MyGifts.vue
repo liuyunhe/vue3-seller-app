@@ -16,7 +16,7 @@
             ></div>
             <div class="content-zone">
               <div class="name">{{ item.awdName }}</div>
-              <div class="name" style="font-size: 0.32rem">
+              <div class="actName">
                 {{ item.actName }}
               </div>
               <div class="tips" v-if="item.awdType != 3 && item.awdStatus == 0">
@@ -205,6 +205,16 @@ export default defineComponent({
           width: 150px;
           line-height: 20px;
           font-size: 14px;
+          color: #444;
+          margin-bottom: 7px;
+          overflow: hidden;
+          max-height: 40px;
+          .text-overflow();
+        }
+        .actName {
+          width: 150px;
+          line-height: 20px;
+          font-size: 12px;
           color: #444;
           margin-bottom: 7px;
           overflow: hidden;
