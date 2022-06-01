@@ -301,7 +301,7 @@ export default defineComponent({
     ) => {
       con[0].innerHTML = ''
       const records = signRecords.map((item) => {
-        return item.day.slice(6)
+        return Number(item.day.slice(6)) + ''
       })
       const date = new Date()
       const nowyear = date.getFullYear() //保存当前时间，写在方法里是因为避免使用过程中超过了晚上12点而日期无变化
@@ -694,9 +694,10 @@ export default defineComponent({
         line-height: 36px;
         border-bottom: 1px solid #a55600;
         height: 36px;
-        .text-overflow();
         .left {
           float: left;
+          width: 55%;
+          .text-overflow();
         }
         .right {
           float: right;
