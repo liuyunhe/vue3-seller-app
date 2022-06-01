@@ -324,7 +324,7 @@ export default defineComponent({
         overflow: hidden;
         .title {
           line-height: 34px;
-          font-size: 13px;
+          font-size: 12px;
           color: #333333;
           text-align: center;
         }
