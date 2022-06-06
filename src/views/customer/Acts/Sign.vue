@@ -23,7 +23,7 @@
     <act-tips-popup :show="showGetChancePopup" @close="nextStep">
       <div class="get-chance-content">
         <div class="title">恭喜您！</div>
-        <div class="text">累计签到活动获得1次抽奖机 会，马上去抽奖吧～</div>
+        <div class="text">累计签到活动获得1次抽奖机会，马上去抽奖吧～</div>
         <div class="btn" @click="getDrawTicket"></div>
         <div class="tips">
           备注：活动结束，未消耗掉的抽奖机会 视为放弃哦～建议获得机会及时消耗

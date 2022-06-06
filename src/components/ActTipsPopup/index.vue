@@ -1,5 +1,5 @@
 <template>
-  <van-overlay :show="show">
+  <van-overlay :show="show" :lock-scroll="false">
     <div class="wrapper">
       <div class="content">
         <slot></slot>
