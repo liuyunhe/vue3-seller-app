@@ -403,7 +403,7 @@ export default defineComponent({
       http.post('/hbSeller/fansSign/doSign', {}, false).then((res) => {
         if (res.code === '200') {
           signPointsList.value = res.data.pointsList || []
-
+          if (res.data.ljSignDrawChance) ljSignDrawChance.value = true
           if (signPointsList.value.length) {
             showSignPopup.value = true
           } else {
