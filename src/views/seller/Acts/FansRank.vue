@@ -36,7 +36,7 @@
       <div class="rank-data">
         <div class="item left">
           <div class="title">
-            {{ statisTime ? `截止${statisTime}排名` : '—' }}
+            {{ statisTime ? `截止${statisTime.substr(5)}排名` : '—' }}
           </div>
           <div class="data">{{ rankNum == 0 ? '暂无' : `第${rankNum}名` }}</div>
         </div>
@@ -101,7 +101,7 @@ export default defineComponent({
   setup(props) {
     const rankNum = ref<number>(0)
     const newFansNum = ref<number>(0)
-    const statisTime = ref<string>('')
+    const statisTime = ref<string>('2022-05-17 20:20:20')
     const rankList = ref<RankItem[]>([])
     const showNoList = ref<boolean>(false)
     const showTips = ref<boolean>(false)
@@ -320,7 +320,7 @@ export default defineComponent({
       padding: 20px 36px;
       box-sizing: border-box;
       .item {
-        width: 180px;
+        width: 160px;
         overflow: hidden;
         .title {
           line-height: 34px;
@@ -339,7 +339,7 @@ export default defineComponent({
           float: left;
         }
         &.right {
-          width: 110px;
+          width: 130px;
           float: right;
         }
       }

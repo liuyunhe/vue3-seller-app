@@ -201,21 +201,6 @@ export default defineComponent({
     const getMyWallet = () => {
       http.post('/hbSeller/seller/rebate/wallet', {}, false).then((res) => {
         if (res.code === '200') {
-          res.data = {
-            id: 5,
-            sellerId: 30,
-            redpackTotalIncome: 4.1, //红包总收益
-            redpackTotalPay: 0, //红包提现金额
-            redpackBalance: 4.1, //红包余额
-            redPackNum: 3,
-            rebateNum: 5,
-            pointsTotalIncome: 20, //积分总收入
-            pointsTotalPay: 0, //积分提现额度
-            pointsBalance: 20, //积分余额
-            pointsNum: 2,
-            ctime: '2022-04-12 13:17:29',
-            utime: '2022-04-12 13:25:38'
-          }
           if (res.data) {
             dataNumber.value.redpackTotalIncome = res.data.redpackTotalIncome
             dataNumber.value.redpackTotalPay = res.data.redpackTotalPay

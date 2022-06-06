@@ -91,7 +91,7 @@
             <div class="text2" v-if="!isMaxContDay">
               连续签到{{ nextSignInfo.contSignDays }}天即可获得{{
                 nextSignInfo.points
-              }}荷石壁
+              }}荷石璧
             </div>
             <div class="text2" v-if="isMaxContDay">
               已连签{{ contDay }}天,继续下一轮签到活动吧！
@@ -245,6 +245,7 @@ export default defineComponent({
     }
 
     const getDrawTicket = () => {
+      showGetChancePopup.value = false
       http.post('/hbSeller/fansSign/drawTicket', {}, false).then((res) => {
         if (res.code === '200') {
           const { actCode, ticket } = res.data
