@@ -2,11 +2,7 @@
   <div class="fans-rank-container">
     <act-tips-popup :show="showTips" @close="handleColseTips">
       <div class="tips-content">
-        <div class="text">
-          <p v-for="(item, index) in actTips" :key="index">
-            {{ item }}
-          </p>
-        </div>
+        <div class="text" v-html="actTips"></div>
       </div>
     </act-tips-popup>
     <award-popup :show="showAwardPopup" @close="handleCloseAwardPopup">
@@ -70,16 +66,9 @@ import { http } from '@/http'
 import { Dialog, Toast } from 'vant'
 import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
-import { DrawData, handleReceive } from '@/plugins/hbsDraw'
+import { DrawData, handleReceive, getActRules } from '@/plugins/hbsDraw'
 import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
 import { useRouter } from 'vue-router'
-
-const ACT_TIPS = [
-  '1、在活动时间2022年2月14日10:00至2022年2月18日18:00期间关联绑定新粉丝，按粉丝数排名统计，有机会获得实物、荷石璧、鼓励金等奖励;',
-  '2、活动结束后，中奖用户可收到中奖推送消息，请留言关注;',
-  '3、每天0点后更新排名;',
-  '4、参与时间截止后，再绑定的粉丝不计入本期的排行数据中。'
-]
 
 interface RankItem {
   id: number
@@ -108,7 +97,7 @@ export default defineComponent({
     const drawData = ref<DrawData | null>(null)
     const showAwardPopup = ref<boolean>(false)
     const showNoAwardPopup = ref<boolean>(false)
-    const actTips = ref<string[]>(ACT_TIPS)
+    const actTips = ref<string>('')
     const router = useRouter()
     const handleClickGiftsBtn = () => {
       handleClickJumpBtn(router, '/common/myGifts')
@@ -238,6 +227,10 @@ export default defineComponent({
       showNoAwardPopup.value = false
     }
 
+    getActRules(props.actCode).then((rules) => {
+      actTips.value = rules
+    })
+
     onMounted(() => {
       getActInfo()
       getRankAwdInfo()
@@ -262,7 +255,15 @@ export default defineComponent({
   }
 })
 </script>
-
+<style>
+.tips-content .text p {
+  font-size: 14px;
+  color: #4c0404;
+  text-align: justify;
+  margin: 10px 0;
+  line-height: 1.3;
+}
+</style>
 <style lang="less" scoped>
 @import '@/theme/common';
 .fans-rank-container {

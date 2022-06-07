@@ -172,3 +172,20 @@ export const handleReceive = (
     return
   }
 }
+
+export const getActRules = (actCode: string): Promise<string> => {
+  return new Promise((resolve) => {
+    http.post('/hbSeller/act/ruleDesc', { actCode }, false).then((res) => {
+      if (res.code === '200') {
+        resolve((res.data.actRuleDesc as string) || '')
+      } else {
+        Dialog.alert({
+          title: '提示',
+          message: res.msg
+        }).then(() => {
+          // on close
+        })
+      }
+    })
+  })
+}

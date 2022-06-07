@@ -374,6 +374,9 @@ const CUSTOMRT_ROUTES: Array<RouteRecordRaw> = [
   {
     path: '/customer/scanCode',
     name: 'CustomerScanCode',
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
     meta: {
       title: '扫码验真抽奖',
       keepAlive: false
@@ -386,6 +389,9 @@ const CUSTOMRT_ROUTES: Array<RouteRecordRaw> = [
   {
     path: '/customer/sign',
     name: 'CustomerSign',
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
     meta: {
       title: '签到有礼',
       keepAlive: false

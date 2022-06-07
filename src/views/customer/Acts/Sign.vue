@@ -2,11 +2,7 @@
   <div class="customer-sign-container">
     <act-tips-popup :show="showTips" @close="handleColseTips">
       <div class="tips-content">
-        <div class="text">
-          <p v-for="(item, index) in actTips" :key="index">
-            {{ item }}
-          </p>
-        </div>
+        <div class="text" v-html="actTips"></div>
       </div>
     </act-tips-popup>
     <act-tips-popup :show="showDrawNotes" @close="showDrawNotes = false">
@@ -144,17 +140,12 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { http } from '@/http'
 import { Dialog, Toast } from 'vant'
-import { Draw, DrawData, handleReceive } from '@/plugins/hbsDraw'
+import { Draw, DrawData, handleReceive, getActRules } from '@/plugins/hbsDraw'
 import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
 import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
 import { useRouter } from 'vue-router'
 
-const ACT_TIPS = [
-  '1、消费者在活动期间内连续打卡7天，每日签到可获得28荷石璧，完成连续签到每天可额外获得一定值的荷石璧奖励',
-  '2、中间断签，则重新开始计算连续签到记录，对应奖励也会重新计算',
-  '3、开启百天签到活动，活动期间签到100天，即可获得1次抽奖机会，可有机会获得鼓励金、实物、荷石璧等奖励'
-]
 interface SignRecord {
   ctime: string
   day: string
@@ -167,7 +158,13 @@ interface DrawNote {
 export default defineComponent({
   name: 'Sign',
   components: { ActTipsPopup, AwardPopup },
-  setup() {
+  props: {
+    actCode: {
+      type: String,
+      default: ''
+    }
+  },
+  setup(props) {
     const ljSignDay = ref<number>(0)
     const contDay = ref<number>(0)
     const drawContDays = ref<number>(0)
@@ -179,7 +176,7 @@ export default defineComponent({
     const showNoAwardPopup = ref<boolean>(false)
     const showSignPopup = ref<boolean>(false)
     const showGetChancePopup = ref<boolean>(false)
-    const actTips = ref<string[]>(ACT_TIPS)
+    const actTips = ref<string>('')
     const canDraw = ref(false)
     const isMaxContDay = ref(false)
     const contSignFlag = ref(false)
@@ -431,6 +428,9 @@ export default defineComponent({
       handleCloseGetChancePopup()
       initAct()
     }
+    getActRules(props.actCode).then((rules) => {
+      actTips.value = rules
+    })
     onMounted(() => {
       initAct()
     })
@@ -491,6 +491,13 @@ export default defineComponent({
   background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/sign/sign.png');
   background-repeat: no-repeat;
   background-position: 18px 16px;
+}
+.tips-content .text p {
+  font-size: 14px;
+  color: #a55600;
+  text-align: justify;
+  margin: 10px 0;
+  line-height: 1.3;
 }
 </style>
 <style lang="less" scoped>
@@ -727,6 +734,7 @@ export default defineComponent({
       font-size: 25px;
       color: #a55600;
       margin-bottom: 34px;
+      font-weight: bolder;
     }
     .text {
       font-size: 20px;
@@ -743,7 +751,7 @@ export default defineComponent({
       margin: 0 auto 20px;
     }
     .tips {
-      font-size: 15px;
+      font-size: 14px;
       color: #a55600;
       line-height: 21px;
     }
