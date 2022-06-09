@@ -29,6 +29,7 @@
     <div class="bg">
       <div class="btn-tips" @click="showTips = true"></div>
       <div class="btn-gift" @click="handleClickGiftsBtn"></div>
+      <div class="join-etime">参与截止时间：{{ joinEtime }}</div>
       <div class="rank-data">
         <div class="item left">
           <div class="title">
@@ -90,50 +91,20 @@ export default defineComponent({
   setup(props) {
     const rankNum = ref<number>(0)
     const newFansNum = ref<number>(0)
-    const statisTime = ref<string>('2022-05-17 20:20:20')
+    const statisTime = ref<string>('')
     const rankList = ref<RankItem[]>([])
     const showNoList = ref<boolean>(false)
     const showTips = ref<boolean>(false)
     const drawData = ref<DrawData | null>(null)
     const showAwardPopup = ref<boolean>(false)
     const showNoAwardPopup = ref<boolean>(false)
+    const joinEtime = ref<string | null>(null)
     const actTips = ref<string>('')
     const router = useRouter()
     const handleClickGiftsBtn = () => {
       handleClickJumpBtn(router, '/common/myGifts')
     }
-    const getActInfo = () => {
-      http
-        .post(
-          '/hbSeller/seller/fansRankAct/rankInfo',
-          { actCode: props.actCode },
-          false
-        )
-        .then((res) => {
-          if (res.code === '200') {
-            if (res.data.rankInfo) {
-              rankNum.value = res.data.rankInfo.rankNum || 0
-              newFansNum.value = res.data.rankInfo.newFansNum || 0
-              statisTime.value = res.data.statisTime || 0
-              rankList.value = JSON.parse(res.data.rankList)
-              if (rankList.value.length == 0 || rankList.value == null) {
-                showNoList.value = true
-              }
-            } else {
-              showNoList.value = true
-              Dialog.alert({
-                title: '提示',
-                message:
-                  '拉新排行榜活动火热进行中，赶紧邀请您的好友成为您的粉丝吧！相关数据会在每天0点更新后显示，请持续关注哦！'
-              }).then(() => {
-                // on close
-              })
-            }
-          } else {
-            Toast.fail(res.msg)
-          }
-        })
-    }
+
     const getRankAwdInfo = () => {
       http
         .post(
@@ -216,12 +187,68 @@ export default defineComponent({
           }
         })
     }
+    const getActInfo = () => {
+      http
+        .post(
+          '/hbSeller/seller/fansRankAct/rankInfo',
+          { actCode: props.actCode },
+          false
+        )
+        .then((res) => {
+          if (res.code === '200') {
+            joinEtime.value = res.data.joinEtime || null
+            statisTime.value = res.data.statisTime || ''
+            if (res.data.rankInfo) {
+              rankNum.value = res.data.rankInfo.rankNum || 0
+              newFansNum.value = res.data.rankInfo.newFansNum || 0
+            }
+            if (res.data.joinEnd) {
+              // 参与截止时间后
+              if (res.data.rankList) {
+                // 有更新数据
+                rankList.value = JSON.parse(res.data.rankList)
+                getRankAwdInfo()
+              } else {
+                // 未更新数据
+                showNoList.value = true
+                Dialog.alert({
+                  title: '提示',
+                  message: '参与时间已截止，排名正在统计中...'
+                }).then(() => {
+                  // on close
+                })
+              }
+            } else {
+              // 参与截止时间前
+              if (res.data.rankList) {
+                // 有更新数据
+                rankList.value = JSON.parse(res.data.rankList)
+              } else {
+                // 未更新数据
+                showNoList.value = true
+                Dialog.alert({
+                  title: '提示',
+                  message:
+                    '拉新排行榜活动火热进行中，赶紧邀请您的好友成为您的粉丝吧！相关数据会在每天0点更新后显示，请持续关注哦！'
+                }).then(() => {
+                  // on close
+                })
+              }
+            }
+            if (rankList.value.length == 0 || rankList.value == null) {
+              showNoList.value = true
+            }
+          } else {
+            Toast.fail(res.msg)
+          }
+        })
+    }
     const handleColseTips = () => {
       showTips.value = false
     }
     const handleCloseAwardPopup = () => {
       showAwardPopup.value = false
-      Toast(`活动奖品已领取\n请进入<我的礼品>中查看～`)
+      Toast(`活动奖品，请进入<我的礼品>中查看～`)
     }
     const handleCloseNoAwardPopup = () => {
       showNoAwardPopup.value = false
@@ -233,7 +260,6 @@ export default defineComponent({
 
     onMounted(() => {
       getActInfo()
-      getRankAwdInfo()
     })
     return {
       actTips,
@@ -246,6 +272,7 @@ export default defineComponent({
       newFansNum,
       statisTime,
       drawData,
+      joinEtime,
       handleColseTips,
       handleCloseAwardPopup,
       handleCloseNoAwardPopup,
@@ -298,6 +325,16 @@ export default defineComponent({
       position: absolute;
       top: 52px;
       right: 12px;
+    }
+    .join-etime {
+      position: absolute;
+      width: 100%;
+      top: 223px;
+      left: 0;
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
+      color: #fff;
     }
     .btn-draw {
       .bg-img(

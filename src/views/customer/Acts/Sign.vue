@@ -22,7 +22,7 @@
         <div class="text">累计签到活动获得1次抽奖机会，马上去抽奖吧～</div>
         <div class="btn" @click="getDrawTicket"></div>
         <div class="tips">
-          备注：活动结束，未消耗掉的抽奖机会 视为放弃哦～建议获得机会及时消耗
+          提醒：活动结束，未消耗掉的抽奖机会 视为放弃哦～建议获得机会及时消耗!
         </div>
       </div>
     </act-tips-popup>

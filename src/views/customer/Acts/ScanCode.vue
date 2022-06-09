@@ -30,6 +30,7 @@
       <div class="btn-tips" @click="showTips = true"></div>
       <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="btn-draw" @click="getDrawTicket"></div>
+      <div class="btn-scan" @click="wxScanQRCode"></div>
       <div class="draw-tips">
         当前剩余 <span>{{ canDrawNum }}</span> 次抽奖机会
       </div>
@@ -46,6 +47,7 @@ import ActTipsPopup from '@/components/ActTipsPopup/index.vue'
 import AwardPopup from '@/components/AwardPopup/index.vue'
 import { handleClickJumpBtn } from '@/hooks/useJumpBtn'
 import { useRouter } from 'vue-router'
+import { wxScanQRCode } from '@/plugins/Wx'
 
 export default defineComponent({
   name: 'ScanCode',
@@ -132,7 +134,8 @@ export default defineComponent({
       handleCloseNoAwardPopup,
       handleReceive,
       nextStep,
-      handleClickGiftsBtn
+      handleClickGiftsBtn,
+      wxScanQRCode
     }
   }
 })
@@ -185,13 +188,23 @@ export default defineComponent({
     }
     .btn-draw {
       .bg-img(
-        326px,
+        160px,
         51px,
-        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/scanCode/btn-start.png'
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/scanCode/btn-draw.png'
       );
       position: absolute;
       top: 607px;
-      left: 26px;
+      left: 23px;
+    }
+    .btn-scan {
+      .bg-img(
+        160px,
+        51px,
+        'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/scanCode/btn-scan.png'
+      );
+      position: absolute;
+      top: 607px;
+      right: 23px;
     }
     .draw-tips {
       position: absolute;
