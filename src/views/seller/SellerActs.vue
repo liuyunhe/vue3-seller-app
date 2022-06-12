@@ -22,6 +22,38 @@
           </li>
         </router-link>
       </template>
+      <router-link to="/seller/actDetail?actCode=fansScan">
+        <li class="act-item">
+          <div class="img">
+            <img
+              src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/fanScan-banner.png"
+              alt=""
+            />
+          </div>
+          <div class="bottom">
+            <div class="content">
+              <div class="title">粉丝扫码享返佣</div>
+            </div>
+            <div class="btn"></div>
+          </div>
+        </li>
+      </router-link>
+      <router-link to="/seller/actDetail?actCode=fansNew">
+        <li class="act-item">
+          <div class="img">
+            <img
+              src="https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/fansNew-baner.png"
+              alt=""
+            />
+          </div>
+          <div class="bottom">
+            <div class="content">
+              <div class="title">粉丝入驻有奖励</div>
+            </div>
+            <div class="btn"></div>
+          </div>
+        </li>
+      </router-link>
     </ul>
     <p class="building-tips">— 更多活动 敬请期待 —</p>
   </div>

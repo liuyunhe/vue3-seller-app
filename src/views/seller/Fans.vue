@@ -6,7 +6,7 @@
         <div class="name">粉丝数</div>
       </div>
       <div class="data-item">
-        <div class="number">{{ sacnCodeNum }}</div>
+        <div class="number">{{ scanCodeNum }}</div>
         <div class="name">扫烟码数</div>
       </div>
       <div class="data-item">
@@ -65,7 +65,7 @@ export default defineComponent({
   name: 'SellerFans',
   setup() {
     const fansNum = ref<string | number>('') // 粉丝数目
-    const sacnCodeNum = ref<string | number>('') // 扫烟码数
+    const scanCodeNum = ref<string | number>('') // 扫烟码数
     const shopScanActNum = ref<string | number>('') // 核销数量
     const fansList = ref<FanInfo[]>([])
 
@@ -76,11 +76,11 @@ export default defineComponent({
           if (res.code === '200') {
             if (res.data) {
               fansNum.value = res.data.fansNum || 0
-              sacnCodeNum.value = res.data.sacnCodeNum || 0
+              scanCodeNum.value = res.data.scanCodeNum || 0
               shopScanActNum.value = res.data.shopScanActNum || 0
             } else {
               fansNum.value = '0'
-              sacnCodeNum.value = '0'
+              scanCodeNum.value = '0'
               shopScanActNum.value = '0'
             }
           } else {
@@ -113,7 +113,7 @@ export default defineComponent({
     })
     return {
       fansNum,
-      sacnCodeNum,
+      scanCodeNum,
       shopScanActNum,
       fansList
     }

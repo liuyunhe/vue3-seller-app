@@ -7,7 +7,7 @@
         </div>
         <div class="user-info">
           <div class="t">{{ nickname }}</div>
-          <div class="numb">{{ point }}</div>
+          <div class="numb">{{ point }}荷石璧</div>
         </div>
       </div>
       <div class="title">积分明细</div>

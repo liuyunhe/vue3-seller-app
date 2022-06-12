@@ -151,6 +151,9 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
   {
     path: '/seller/actDetail',
     name: 'SellerActDetail',
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
     meta: {
       title: '活动详情',
       keepAlive: true
