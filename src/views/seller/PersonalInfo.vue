@@ -24,16 +24,19 @@
     <div class="main">
       <div class="title">我的功能</div>
       <div class="content">
+        <router-link to="/seller/myRebate">
+          <div class="item">
+            <i class="icon icon-wallet"></i>
+            <div class="name">我的返佣</div>
+          </div>
+        </router-link>
         <router-link to="/seller/myInvite">
           <div class="item">
             <i class="icon icon-invite"></i>
             <div class="name">我的消息</div>
           </div>
         </router-link>
-        <!-- <div class="item">
-          <i class="icon icon-wallet"></i>
-          <div class="name">我的返佣</div>
-        </div> -->
+
         <router-link to="/common/myGifts">
           <div class="item">
             <i class="icon icon-gift"></i>
@@ -46,14 +49,14 @@
             <div class="name">我的积分</div>
           </div>
         </router-link>
+      </div>
+      <div class="content">
         <router-link to="/common/feedback?feedFrom=2">
           <div class="item">
             <i class="icon icon-opinion"></i>
             <div class="name">意见反馈</div>
           </div>
         </router-link>
-      </div>
-      <div class="content">
         <router-link to="/seller/bindFansQrcode">
           <div class="item">
             <i class="icon icon-invite-qrcode"></i>
@@ -61,7 +64,6 @@
           </div>
         </router-link>
 
-        <div class="item"></div>
         <div class="item"></div>
         <div class="item"></div>
       </div>

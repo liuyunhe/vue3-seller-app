@@ -25,6 +25,21 @@ export default defineComponent({
     const isLoading = computed(() => store.state.loading)
     const token = computed(() => store.state.token)
     sessionStorage.setItem('token', token.value)
+
+    window.onload = () => {
+      let isPageHide = false
+      // 页面加载（是没有刷新页面的，跟页面刷新有着本质的不同）
+      window.addEventListener('pageshow', function() {
+        if (isPageHide) {
+          window.location.reload()
+          console.log('pageshow')
+        }
+      })
+      window.addEventListener('pagehide', function() {
+        isPageHide = true
+      })
+    }
+
     return {
       isLoading,
       includeRoutes

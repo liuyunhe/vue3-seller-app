@@ -8,7 +8,8 @@ import store from '@/store'
 import axios from '@/http'
 import { initWxOnReady, wxGetLocation, wxHideMenu } from '@/plugins/Wx'
 
-const routes: Array<RouteRecordRaw> = [
+const COMMON_ROUTES: Array<RouteRecordRaw> = [
+  // 平台页面
   // 首页
   {
     path: '/',
@@ -18,8 +19,6 @@ const routes: Array<RouteRecordRaw> = [
       title: ''
     }
   },
-
-  // 平台页面
   {
     path: '/common/transform',
     name: 'Transform',
@@ -78,7 +77,10 @@ const routes: Array<RouteRecordRaw> = [
     }),
     component: () =>
       import(/* webpackChunkName: "MyGifts" */ '../views/common/MyPoints.vue')
-  },
+  }
+]
+
+const SELLER_ROUTES: Array<RouteRecordRaw> = [
   // 零售户
   {
     path: '/seller',
@@ -122,6 +124,7 @@ const routes: Array<RouteRecordRaw> = [
             /* webpackChunkName: "SellerMessage" */ '../views/seller/Message.vue'
           )
       },
+
       {
         path: 'sellerInfo',
         name: 'SellerInfo',
@@ -148,6 +151,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/seller/actDetail',
     name: 'SellerActDetail',
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
     meta: {
       title: '活动详情',
       keepAlive: true
@@ -176,6 +182,45 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () =>
       import(/* webpackChunkName: "FansBind" */ '../views/seller/FansBind.vue')
+  },
+  {
+    path: '/seller/sellerRebateDetail',
+    name: 'SellerRebateDetail',
+    meta: {
+      title: '扫码返佣'
+    },
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMessage" */ '../views/seller/RebateDetail.vue'
+      )
+  },
+  {
+    path: '/seller/myRebate',
+    name: 'SellerMyRebate',
+    meta: {
+      title: '我的返佣'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMessage" */ '../views/seller/MyRebate.vue'
+      )
+  },
+  {
+    path: '/seller/fansRank',
+    name: 'SellerFansRank',
+    meta: {
+      title: '零售店排行榜'
+    },
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerMessage" */ '../views/seller/Acts/FansRank.vue'
+      )
   },
   {
     path: '/seller/bindFansQrcode',
@@ -254,7 +299,10 @@ const routes: Array<RouteRecordRaw> = [
       import(
         /* webpackChunkName: "SelllerMessageDetail" */ '../views/seller/InviteDetail.vue'
       )
-  },
+  }
+]
+
+const CUSTOMRT_ROUTES: Array<RouteRecordRaw> = [
   // 消费者
   {
     path: '/customer',
@@ -327,6 +375,36 @@ const routes: Array<RouteRecordRaw> = [
       )
   },
   {
+    path: '/customer/scanCode',
+    name: 'CustomerScanCode',
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
+    meta: {
+      title: '扫码验真抽奖',
+      keepAlive: false
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/Acts/ScanCode.vue'
+      )
+  },
+  {
+    path: '/customer/sign',
+    name: 'CustomerSign',
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
+    meta: {
+      title: '签到有礼',
+      keepAlive: false
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "Register" */ '../views/customer/Acts/Sign.vue'
+      )
+  },
+  {
     path: '/customer/messageDetail',
     name: 'CustomerMessageDetail',
     props: (route) => ({
@@ -352,6 +430,12 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "CustomerUserInfo" */ '../views/customer/UserInfo.vue'
       )
   }
+]
+
+const routes: Array<RouteRecordRaw> = [
+  ...COMMON_ROUTES,
+  ...CUSTOMRT_ROUTES,
+  ...SELLER_ROUTES
 ]
 
 const router = createRouter({

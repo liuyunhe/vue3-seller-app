@@ -1,14 +1,23 @@
 <template>
-  <div class="seller-act-detail-container"></div>
+  <div class="seller-act-detail-container">
+    <div class="act-bg" :class="act"></div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'SellerActDetail',
-  setup() {
-    return {}
+  props: {
+    actCode: {
+      type: String,
+      default: ''
+    }
+  },
+  setup(props) {
+    const act = ref<string>(props.actCode)
+    return { act }
   }
 })
 </script>
@@ -16,10 +25,21 @@ export default defineComponent({
 <style lang="less" scoped>
 @import '@/theme/common';
 .seller-act-detail-container {
-  .bg-img(
-    375px,
-    875px,
-    'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/fans-bg-act-detail.jpg'
-  );
+  height: 100vh;
+  background-color: #3566cf;
+  .act-bg {
+    .bg-img(
+      375px,
+      667px,
+      'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/fansScan-bg.png'
+    );
+    background-image: none;
+    &.fansScan {
+      background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/fansScan-bg.png');
+    }
+    &.fansNew {
+      background-image: url('https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/fansNew-bg.png');
+    }
+  }
 }
 </style>

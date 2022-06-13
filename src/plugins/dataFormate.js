@@ -84,5 +84,11 @@ Date.prototype.pattern = function (fmt) {
   return fmt
 }
 
+Date.prototype.ToTimeStamp = function (fmt) {
+  let dateTmp = fmt.replace(/-/g, '/')
+  let timestamp = Date.parse(dateTmp)
+  return timestamp
+}
+
 // var date = new Date();
 // window.alert(date.pattern("yyyy-MM-dd hh:mm:ss"));
