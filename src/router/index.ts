@@ -491,11 +491,12 @@ router.beforeEach((to, from, next) => {
       const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
         ? `${location.origin}/HbsClient${to.fullPath}`
         : location.href.split('#')[0]
-
-      initWxOnReady(url, () => {
-        wxGetLocation()
-        wxHideMenu()
-      })
+      if (to.path !== '/common/transform') {
+        initWxOnReady(url, () => {
+          wxGetLocation()
+          wxHideMenu()
+        })
+      }
     }
   }
   if (token) {
