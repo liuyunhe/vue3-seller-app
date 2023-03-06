@@ -32,32 +32,32 @@
       <div class="join-etime" v-if="!showActTips">
         参与截止时间：{{ joinEtime }}
       </div>
-      <div class="act-tips" v-if="showActTips && resultFlag == 2">
+      <div class="act-tips" v-if="showActTips && resultFlagType == 2">
         参与时间已结束，未获得排名奖励，请下次再接再厉~
       </div>
-      <div class="act-tips" v-if="showActTips && resultFlag >= 4">
+      <div class="act-tips t" v-if="showActTips && resultFlagType >= 4">
         参与时间已结束，恭喜获得排名奖励，奖励可前往“我的礼品”中查看，若已领取请忽略
       </div>
       <div class="rank-data1">
         <div class="rank-data-title">本期荷芯粉丝活动零售户排名</div>
-        <div class="no-data" v-if="actOnGoingStatus == 1">
+        <div class="no-data" v-if="actOnStatus == 1">
           <div class="icon"></div>
           <div class="tips">参与截止后，统计展示符合条件的 零售户排名</div>
         </div>
-        <div class="item left" v-if="actOnGoingStatus == 2">
+        <div class="item left" v-if="actOnStatus == 2">
           <div class="title">零售户排名</div>
           <div class="data">
             {{ rankNum == 0 ? '暂无' : `第${rankNum}名` }}
           </div>
         </div>
-        <div class="item right" v-if="actOnGoingStatus == 2">
+        <div class="item right" v-if="actOnStatus == 2">
           <div class="title">荷芯粉丝数</div>
           <div class="data">
             {{ finishFanNum == 0 ? '暂无' : `${finishFanNum}个` }}
           </div>
         </div>
       </div>
-      <div class="rank-data2" v-if="actOnGoingStatus == 1">
+      <div class="rank-data2" v-if="actOnStatus == 1">
         <div class="rank-data-title">
           <div class="top">昨日数据展示</div>
           <div class="bottom">截止到：{{ statisTime ? statisTime : '-' }}</div>
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="rank-list" v-if="actOnGoingStatus == 1">
+      <div class="rank-list" v-if="actOnStatus == 1">
         <ul>
           <li v-for="(item, index) in rankList" :key="item.id">
             <div class="icon first" v-if="index == 0"></div>
@@ -91,7 +91,7 @@
           </div>
         </ul>
       </div>
-      <div class="rank-list finish" v-if="actOnGoingStatus == 2">
+      <div class="rank-list finish" v-if="actOnStatus == 2">
         <ul>
           <li v-for="(item, index) in rankList" :key="item.id">
             <div class="icon first" v-if="index == 0"></div>
@@ -106,6 +106,10 @@
             <div class="no-list-tips">当前暂无统计数据</div>
           </div>
         </ul>
+      </div>
+      <div class="finish-tips" v-if="actOnStatus == 2">
+        <span class="icon-tips"></span
+        >补充说明：未进入榜单的零售户则代表其店铺的粉丝均未达到活动要求的扫码天数。
       </div>
     </div>
   </div>
@@ -141,8 +145,8 @@ export default defineComponent({
   },
   components: { ActTipsPopup, AwardPopup },
   setup(props) {
-    const actOnGoingStatus = ref<number>(1)
-    const resultFlag = ref<number>(0)
+    const actOnStatus = ref<number>(1)
+    const resultFlagType = ref<number>(0)
     const scanFanNum = ref<number>(0)
     const scanCodeNum = ref<number>(0)
     const rankNum = ref<number>(0)
@@ -171,13 +175,13 @@ export default defineComponent({
         .then((res) => {
           if (res.code === '200') {
             rankList.value = res.data.data
-            if (rankList.value.length == 0 || rankList.value == null) {
-              showNoList.value = true
-            }
+          }
+          if (rankList.value.length == 0 || rankList.value == null) {
+            showNoList.value = true
           }
         })
     }
-    const getFinishRankList = () => {
+    const getFinishRankList = (resultFlag: number) => {
       http
         .post(
           '/hbSeller/seller/corefanAct/finishRankList',
@@ -186,31 +190,37 @@ export default defineComponent({
         )
         .then((res) => {
           if (res.code === '200') {
-            rankList.value = res.data.data || [
-              {
-                id: 2,
-                rcdNote: null,
-                actCode: 'ACT-hbsCoreFan-230227MB3276F',
-                sellerId: 46,
-                shopName: null,
-                rankNum: 20,
-                //排名
-                finishFanNum: 100 //达标粉丝数
-              },
-              {
-                id: 1,
-                rcdNote: null,
-                actCode: 'ACT-hbsCoreFan-230227MB3276F',
-                sellerId: 48,
-                shopName: null,
-                rankNum: 100,
-                //排名
-                finishFanNum: 66 //达标粉丝数
-              }
-            ]
-            if (rankList.value.length == 0 || rankList.value == null) {
-              showNoList.value = true
-            }
+            rankList.value = res.data.data
+          }
+          if (rankList.value.length == 0 || rankList.value == null) {
+            showNoList.value = true
+          }
+          switch (resultFlag) {
+            // 1: 参与时间已结束，请耐心等待统计排名…;
+            // 2: 统计数据已出,但没有排名;
+            // 3: 统计数据已出,等待开奖;
+            // 4: 统计数据已出,待领奖;
+            // 5: 统计数据已出,奖品已领;
+            // 6: 统计数据已出,奖品过期;
+            case 1:
+              Toast({
+                duration: 0,
+                forbidClick: true,
+                message:
+                  '参与时间已结束，系统正在统计零售户排名，请耐心等待…\n可通过刷新页面，或者退出稍后重新进入查看排名结果'
+              })
+              break
+            case 2:
+              Toast({
+                duration: 3000,
+                forbidClick: true,
+                message:
+                  '本期排行榜活动已结束，未在排名奖励内，请下次再接再厉～'
+              })
+              break
+
+            default:
+              break
           }
         })
     }
@@ -227,6 +237,7 @@ export default defineComponent({
             const { userAward } = res.data
             joinEtime.value = res.data.joinEtime || null
             statisTime.value = res.data.statisTime || ''
+            actOnStatus.value = actOnGoingStatus
             // 1. 活动进行中 2.参与已截止
             if (actOnGoingStatus == 1) {
               getScanCodeRankList()
@@ -236,13 +247,14 @@ export default defineComponent({
               }
             }
             if (actOnGoingStatus == 2) {
-              showActTips.value = false
-              getFinishRankList()
+              showActTips.value = true
+
               if (res.data.rankInfo) {
                 rankNum.value = res.data.rankInfo.rankNum || 0
                 finishFanNum.value = res.data.rankInfo.finishFanNum || 0
               }
-              resultFlag.value = resultFlag
+              resultFlagType.value = resultFlag
+              getFinishRankList(resultFlag)
               switch (resultFlag) {
                 // 1: 参与时间已结束，请耐心等待统计排名…;
                 // 2: 统计数据已出,但没有排名;
@@ -250,22 +262,7 @@ export default defineComponent({
                 // 4: 统计数据已出,待领奖;
                 // 5: 统计数据已出,奖品已领;
                 // 6: 统计数据已出,奖品过期;
-                case 1:
-                  Toast({
-                    duration: 0,
-                    forbidClick: true,
-                    message:
-                      '参与时间已结束，系统正在统计零售户排名，请耐心等待…'
-                  })
-                  break
-                case 2:
-                  Toast({
-                    duration: 3000,
-                    forbidClick: true,
-                    message:
-                      '本期排行榜活动已结束，未在排名奖励内，请下次再接再厉～'
-                  })
-                  break
+
                 case 3:
                   Dialog.alert({
                     title: '提示',
@@ -329,7 +326,7 @@ export default defineComponent({
       showActTips,
       showAwardPopup,
       showNoAwardPopup,
-      actOnGoingStatus,
+      actOnStatus,
       scanFanNum,
       rankList,
       showNoList,
@@ -339,7 +336,7 @@ export default defineComponent({
       joinEtime,
       rankNum,
       finishFanNum,
-      resultFlag,
+      resultFlagType,
       handleColseTips,
       handleCloseAwardPopup,
       handleCloseNoAwardPopup,
@@ -418,6 +415,10 @@ export default defineComponent({
       font-weight: 400;
       color: #fe522a;
       line-height: 40px;
+      &.t {
+        padding-top: 5px;
+        line-height: 15px;
+      }
     }
     .btn-draw {
       .bg-img(
@@ -652,6 +653,29 @@ export default defineComponent({
             color: #e48b00;
           }
         }
+      }
+    }
+    .finish-tips {
+      width: 345px;
+      height: 50px;
+      margin: 0 auto;
+      background: #2420ff;
+      color: #fff;
+      padding: 12px 15px 10px;
+      box-sizing: border-box;
+      line-height: 14px;
+      font-size: 12px;
+      border-radius: 8px;
+      .icon-tips {
+        .bg-img(
+          13px,
+          13px,
+          'https://qrmkt.oss-cn-beijing.aliyuncs.com/hbseller_client/act/scanFansRank/icon-tips.png'
+        );
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 2px;
+        margin-right: 2px;
       }
     }
   }
