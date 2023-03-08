@@ -174,9 +174,10 @@ export default defineComponent({
         )
         .then((res) => {
           if (res.code === '200') {
-            rankList.value = res.data.data
+            rankList.value = (res.data && res.data.data) || []
           }
-          if (rankList.value.length == 0 || rankList.value == null) {
+          console.log(rankList.value)
+          if (rankList.value.length == 0) {
             showNoList.value = true
           }
         })
@@ -190,9 +191,9 @@ export default defineComponent({
         )
         .then((res) => {
           if (res.code === '200') {
-            rankList.value = res.data.data
+            rankList.value = (res.data && res.data.data) || []
           }
-          if (rankList.value.length == 0 || rankList.value == null) {
+          if (rankList.value.length == 0) {
             showNoList.value = true
           }
           switch (resultFlag) {
