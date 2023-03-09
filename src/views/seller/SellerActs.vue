@@ -21,6 +21,25 @@
             </div>
           </li>
         </router-link>
+        <router-link
+          :to="`${SELLER_ACT_LINK[item.actTypeCode]}?actCode=${item.actCode}`"
+          v-if="item.actTypeCode === 'coreFan'"
+        >
+          <li class="act-item">
+            <div class="img">
+              <img :src="item.actPic" alt="" />
+            </div>
+            <div class="bottom">
+              <div class="content">
+                <div class="title">{{ item.actName }}</div>
+                <div class="time" v-if="item.actTypeCode === 'coreFan'">
+                  {{ item.stime }} - {{ item.etime }}
+                </div>
+              </div>
+              <div class="btn"></div>
+            </div>
+          </li>
+        </router-link>
       </template>
       <router-link to="/seller/actDetail?actCode=fansScan">
         <li class="act-item">

@@ -159,7 +159,9 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
       keepAlive: true
     },
     component: () =>
-      import(/* webpackChunkName: "Register" */ '../views/seller/ActDetail.vue')
+      import(
+        /* webpackChunkName: "SellerActDetail" */ '../views/seller/ActDetail.vue'
+      )
   },
   {
     path: '/seller/inviteFans',
@@ -194,7 +196,7 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
     }),
     component: () =>
       import(
-        /* webpackChunkName: "SellerMessage" */ '../views/seller/RebateDetail.vue'
+        /* webpackChunkName: "SellerRebateDetail" */ '../views/seller/RebateDetail.vue'
       )
   },
   {
@@ -205,7 +207,7 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "SellerMessage" */ '../views/seller/MyRebate.vue'
+        /* webpackChunkName: "SellerMyRebate" */ '../views/seller/MyRebate.vue'
       )
   },
   {
@@ -219,7 +221,21 @@ const SELLER_ROUTES: Array<RouteRecordRaw> = [
     }),
     component: () =>
       import(
-        /* webpackChunkName: "SellerMessage" */ '../views/seller/Acts/FansRank.vue'
+        /* webpackChunkName: "SellerFansRank" */ '../views/seller/Acts/FansRank.vue'
+      )
+  },
+  {
+    path: '/seller/scanFansRank',
+    name: 'SellerScanFansRank',
+    meta: {
+      title: '扫码粉丝排行榜'
+    },
+    props: (route) => ({
+      actCode: route.query.actCode
+    }),
+    component: () =>
+      import(
+        /* webpackChunkName: "SellerScanFansRank" */ '../views/seller/Acts/ScanFansRank.vue'
       )
   },
   {
@@ -475,11 +491,12 @@ router.beforeEach((to, from, next) => {
       const url: string = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
         ? `${location.origin}/HbsClient${to.fullPath}`
         : location.href.split('#')[0]
-
-      initWxOnReady(url, () => {
-        wxGetLocation()
-        wxHideMenu()
-      })
+      if (to.path !== '/common/transform') {
+        initWxOnReady(url, () => {
+          wxGetLocation()
+          wxHideMenu()
+        })
+      }
     }
   }
   if (token) {

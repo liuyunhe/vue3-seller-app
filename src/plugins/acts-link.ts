@@ -9,5 +9,6 @@ export const CUSTOMER_ACT_LINK: ActLink = {
   signDraw: '/customer/sign'
 }
 export const SELLER_ACT_LINK: ActLink = {
-  newFansRank: '/seller/fansRank'
+  newFansRank: '/seller/fansRank',
+  coreFan: '/seller/scanFansRank'
 }
