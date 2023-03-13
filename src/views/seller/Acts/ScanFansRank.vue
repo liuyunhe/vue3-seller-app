@@ -59,8 +59,8 @@
       </div>
       <div class="rank-data2" v-if="actOnStatus == 1">
         <div class="rank-data-title">
-          <div class="top">昨日数据展示</div>
-          <div class="bottom">截止到：{{ statisTime ? statisTime : '-' }}</div>
+          <div class="top" :class="{ noSt: !statisTime }">昨日数据展示</div>
+          <div class="bottom" v-if="statisTime">截止到：{{ statisTime }}</div>
         </div>
         <div class="item left">
           <div class="title">扫码粉丝数</div>
@@ -531,6 +531,10 @@ export default defineComponent({
           font-size: 18px;
           text-align: center;
           color: #ffffff;
+          &.noSt {
+            line-height: 63px;
+            height: 63px;
+          }
         }
         .bottom {
           height: 30px;
