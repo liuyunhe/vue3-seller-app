@@ -28,7 +28,7 @@
     </act-tips-popup>
     <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
-        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
+        <img class="pic" :src="drawData ? drawData.awdPic : ''" alt="" />
         <div class="name">{{ drawData && drawData.awdName }}</div>
         <div class="btn" @click="handleReceive(drawData, nextStep)"></div>
       </div>

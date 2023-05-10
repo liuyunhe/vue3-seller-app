@@ -13,7 +13,7 @@
     <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
         <div class="title">恭喜您获得</div>
-        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
+        <img class="pic" :src="drawData ? drawData.awdPic : ''" alt="" />
         <div class="name">{{ drawData && drawData.awdName }}</div>
         <div class="btn" @click="handleReceive(drawData, nextStep)">
           立即领取
@@ -30,7 +30,7 @@
       <div class="btn-tips" @click="showTips = true"></div>
       <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="btn-draw" @click="getDrawTicket"></div>
-      <div class="btn-scan" @click="wxScanQRCode"></div>
+      <div class="btn-scan" @click="() => wxScanQRCode"></div>
       <div class="draw-tips">
         当前剩余 <span>{{ canDrawNum }}</span> 次抽奖机会
       </div>
