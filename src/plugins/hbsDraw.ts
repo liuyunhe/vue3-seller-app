@@ -153,6 +153,16 @@ export const handleReceive = (
   cb: (code?: string) => void
 ) => {
   if (params == null) return
+  // 线下实物领奖
+  if (params.awdType == 10) {
+    Toast.success({
+      message: '领取成功！',
+      onClose: () => {
+        cb('200')
+      }
+    })
+    return
+  }
   if (params.awdStatus === 0) {
     if (params.awdType != 1) {
       getGift(params, cb)
