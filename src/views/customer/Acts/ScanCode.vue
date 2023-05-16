@@ -35,7 +35,7 @@
       <div class="btn-tips" @click="showTips = true"></div>
       <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="btn-draw" @click="getDrawTicket"></div>
-      <div class="btn-scan" @click="() => wxScanQRCode"></div>
+      <div class="btn-scan" @click="handleClickScan"></div>
       <div class="draw-tips">
         当前剩余 <span>{{ canDrawNum }}</span> 次抽奖机会
       </div>
@@ -106,6 +106,9 @@ export default defineComponent({
         }
       })
     }
+    const handleClickScan = () => {
+      wxScanQRCode()
+    }
     const handleColseTips = () => {
       showTips.value = false
     }
@@ -134,6 +137,7 @@ export default defineComponent({
       canDrawNum,
       drawData,
       getDrawTicket,
+      handleClickScan,
       handleColseTips,
       handleCloseAwardPopup,
       handleCloseNoAwardPopup,
