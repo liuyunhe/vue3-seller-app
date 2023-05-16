@@ -19,14 +19,19 @@
               <div class="actName">
                 {{ item.actName }}
               </div>
-              <div class="tips" v-if="item.awdType != 3 && item.awdStatus == 0">
+              <div
+                class="tips"
+                v-if="
+                  item.awdType != 3 && item.awdType != 10 && item.awdStatus == 0
+                "
+              >
                 请在7天内领取
               </div>
               <div class="tips" v-if="item.awdType == 3 && item.awdStatus == 0">
                 请在24小时内领取
               </div>
               <div class="tips" v-if="item.awdType == 10">
-                48小时内有效，请前往已绑定零售户店领取
+                7天内有效，请前往已绑定零售户店领取
               </div>
             </div>
             <div class="receive-btn" v-if="item.awdStatus == 0">待领取</div>

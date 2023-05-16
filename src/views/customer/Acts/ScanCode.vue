@@ -18,7 +18,7 @@
           {{ drawData && drawData.awdName }}
         </div>
         <div class="tips" v-if="drawData && drawData.awdType == 10">
-          48小时内有效，请前往已绑定零售户店领取
+          7天内有效，请前往已绑定零售户店领取
         </div>
         <div class="btn" @click="handleReceive(drawData, nextStep)">
           立即领取
