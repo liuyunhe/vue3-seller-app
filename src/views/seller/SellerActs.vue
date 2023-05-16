@@ -41,7 +41,7 @@
           </li>
         </router-link>
       </template>
-      <router-link to="/seller/actDetail?actCode=fansScan">
+      <!-- <router-link to="/seller/actDetail?actCode=fansScan">
         <li class="act-item">
           <div class="img">
             <img
@@ -56,8 +56,8 @@
             <div class="btn"></div>
           </div>
         </li>
-      </router-link>
-      <router-link to="/seller/actDetail?actCode=fansNew">
+      </router-link> -->
+      <!-- <router-link to="/seller/actDetail?actCode=fansNew">
         <li class="act-item">
           <div class="img">
             <img
@@ -72,7 +72,7 @@
             <div class="btn"></div>
           </div>
         </li>
-      </router-link>
+      </router-link> -->
     </ul>
     <p class="building-tips">— 更多活动 敬请期待 —</p>
   </div>

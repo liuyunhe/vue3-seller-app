@@ -8,7 +8,7 @@
     <award-popup :show="showAwardPopup" @close="handleCloseAwardPopup">
       <div class="award-warp">
         <div class="title"></div>
-        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
+        <img class="pic" :src="drawData ? drawData.awdPic : ''" alt="" />
         <div class="name">{{ drawData && drawData.awdName }}</div>
         <div
           class="btn"

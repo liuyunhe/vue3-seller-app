@@ -13,8 +13,13 @@
     <award-popup :show="showAwardPopup" @close="nextStep">
       <div class="award-warp">
         <div class="title">恭喜您获得</div>
-        <img class="pic" :src="drawData && drawData.awdPic" alt="" />
-        <div class="name">{{ drawData && drawData.awdName }}</div>
+        <img class="pic" :src="drawData ? drawData.awdPic : ''" alt="" />
+        <div class="name" :class="{ mb5: drawData && drawData.awdType == 10 }">
+          {{ drawData && drawData.awdName }}
+        </div>
+        <div class="tips" v-if="drawData && drawData.awdType == 10">
+          48小时内有效，请前往已绑定零售户店领取
+        </div>
         <div class="btn" @click="handleReceive(drawData, nextStep)">
           立即领取
         </div>
@@ -30,7 +35,7 @@
       <div class="btn-tips" @click="showTips = true"></div>
       <div class="btn-gift" @click="handleClickGiftsBtn"></div>
       <div class="btn-draw" @click="getDrawTicket"></div>
-      <div class="btn-scan" @click="wxScanQRCode"></div>
+      <div class="btn-scan" @click="() => wxScanQRCode"></div>
       <div class="draw-tips">
         当前剩余 <span>{{ canDrawNum }}</span> 次抽奖机会
       </div>
@@ -277,6 +282,16 @@ export default defineComponent({
       line-height: 20px;
       margin-bottom: 30px;
       font-weight: bolder;
+      &.mb5 {
+        margin-bottom: 5px;
+      }
+    }
+    .tips {
+      text-align: center;
+      font-size: 14px;
+      line-height: 30px;
+      margin-bottom: 5px;
+      color: #fff;
     }
     .btn {
       width: 240px;

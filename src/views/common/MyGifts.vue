@@ -25,6 +25,9 @@
               <div class="tips" v-if="item.awdType == 3 && item.awdStatus == 0">
                 请在24小时内领取
               </div>
+              <div class="tips" v-if="item.awdType == 10">
+                48小时内有效，请前往已绑定零售户店领取
+              </div>
             </div>
             <div class="receive-btn" v-if="item.awdStatus == 0">待领取</div>
             <div class="receive-btn used" v-if="item.awdStatus == 1">
